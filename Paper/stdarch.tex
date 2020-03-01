@@ -1,0 +1,74 @@
+\section{Efficient Architecture Design}\label{stdarch}
+
+
+
+
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Architecture} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  & \textbf{Parameters} & \textbf{Memory} \\
+ & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & & \textbf{Footprint} \\
+\hline
+SqueezeNet & 88.21\% & 81.92\% & \cellcolor{green!25}53.07\% & 1.2M & 5 MB\\
+MobileNetV2 & 97.50\% & 87.24\% & \cellcolor{green!25}55.57\% & 3.5M & 14 MB\\
+\hline
+AlexNet & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% & 61M & 240 MB\\
+VGG11 & 99.13\% & 86.43\% & \cellcolor{red!25}58.04\% & 132M & 507 MB\\
+VGG16 & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\% & 138M &  528 MB\\
+VGG19 & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% & 143M & 549 MB\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Privacy Risks for Efficient Architectures.}
+\label{stdarch}
+\end{table}
+
+\begin{figure}[hb!]
+\resizebox{0.8\columnwidth}{!}{%
+\begin{tikzpicture}
+\begin{axis}[
+legend style={font=\tiny},
+legend pos =  north east,
+line width=2.0pt,
+mark size=2.0pt,
+ymin=50,
+legend entries={MobileNetV2, SqueezeNet},
+ylabel={Inference Accuracy},
+xlabel={Temperature Parameter},
+% extra x ticks={1,10,...,400},
+% extra y ticks={0,0.5,...,10},
+% extra y tick labels={},
+% extra x tick labels={},
+% extra x tick style={grid=major},
+% extra y tick style={grid=major},
+grid=major
+]
+\addplot[
+    color=black,
+    solid,
+    mark=*,
+    mark options={solid},
+    smooth
+    ]
+    coordinates {
+    (1,55.57)(5,54.25)(10,53.21)(15,52.85)(20,52.62)
+      };
+\addplot[
+      color=black,
+      dashed,
+      mark=*,
+      mark options={solid},
+      smooth
+    ]
+    coordinates {
+    (1,53.25)(5,51.37)(10,51.08)(15,50.99)(20,50.93)
+      };
+\end{axis}
+\end{tikzpicture}
+}
+\caption{Standard Effiicent Architecture Design. CIFAR10}
+\end{figure}

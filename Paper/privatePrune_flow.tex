@@ -1,0 +1,35 @@
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
+
+
+\tikzstyle{input} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=gray!15]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+\begin{figure}[!hb]
+\centering
+\begin{tikzpicture}[node distance=2cm, line width=1pt,every node/.style={align=center}]
+
+
+\node (step1) [input]  at (-3,0) {\ding{202} Train Neural Network};
+\node (step2) [input]  at (-3,-1.5) {\ding{203} Prune Network};
+\node (step3) [input]  at (-3,-3) {\ding{204} Check Accuracy Constraint};
+\node (step4) [input]  at (-3,-4.5) {\ding{205} Check Inference Constraint};
+\node (step5) [input]  at (1.75,-3.75) {\ding{206} Fine Tune Network};
+
+\begin{scope}[on background layer]
+    \node (check) [fit=(step3) (step4), fill= gray!20, rounded corners, inner sep=.2cm] {};
+\end{scope}
+
+
+\draw [arrow] (step1.south) -- node[anchor=west] {} (step2);
+\draw [arrow] (step2.south) -- node[anchor=west] {} (check.north);
+\draw [arrow] (check.east) -- node[anchor=north] {No} (step5.west);
+\draw [arrow] (step5.north) |- node[anchor=north] {} (step2.east);
+
+
+\end{tikzpicture}
+\caption{\underline{\textbf{Privacy Aware Pruning.}} Flow chart for pruning the model guided by the membership inference accuracy.}
+\label{fig:advclassifier}
+\end{figure}

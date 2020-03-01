@@ -1,0 +1,87 @@
+\documentclass[sigconf]{acmart}
+%\documentclass[conference]{IEEEtran}
+
+\settopmatter{printacmref=false} % Removes citation information below abstract
+\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{dblfloatfix}
+\usepackage{pifont}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{backgrounds, positioning, fit}
+\usetikzlibrary{shapes.geometric}
+\usepackage{amsmath}
+\usetikzlibrary{patterns}
+\usetikzlibrary{pgfplots.groupplots}
+\newcommand{\ballnumber}[1]{\tikz[baseline=(myanchor.base)] \node[circle,fill=.,inner sep=1pt] (myanchor) {\color{-.}\bfseries\footnotesize #1};}
+
+
+\begin{document}
+
+\title{Privacy Risks of Embedded Deep Learning}
+
+\author{Vasisht Duddu$^1$, temp$^1$}
+\affiliation{\institution{$^1$ \large inst\\ $^2$ \large temp}}
+\email{vduddu@tutamail.com}
+
+%\author{
+%    \IEEEauthorblockN{Vasisht Duddu\IEEEauthorrefmark{1}, D. Vijay Rao\IEEEauthorrefmark{2}, Valentina E. Balas\IEEEauthorrefmark{3}}
+%    \IEEEauthorblockA{\IEEEauthorrefmark{1}Indraprastha Institute of Information Technology, Delhi, India}
+%    \IEEEauthorblockA{\IEEEauthorrefmark{2}Institute for Systems Studies and Analyses, Delhi, India}
+%    \IEEEauthorblockA{\IEEEauthorrefmark{3}Aurel Vlaicu University of Arad, Arad, Romania}
+%    \IEEEauthorblockA{vduddu@tutamail.com, vijayrao@issa.drdo.in, valentina.balas@uav.ro}
+%}
+
+
+
+\begin{abstract}
+Low powered devices demand on-device processing algorithms to meet the memory, power-efficiency and computational constraints.
+In order to bring the high performing Neural Networks to edge devices, several state of the art optimizations such as model compression through \textit{pruning}, \textit{quantization}, and careful \textit{design of efficient architectures} have been extensively adopted.
+These algorithms face efficiency-accuracy trade-off, but when deployed to real world sensitive applications, such as healthcare monitoring wearables, requires design for efficiency within the constraints of privacy leakage.
+In this work, the three-dimensional \textit{privacy-accuracy-efficiency} tradeoff for Deep Neural Networks is addressed by evaluating the privacy risks against inference attacks on state of the art efficiency oriented Deep Learning techniques.
+This privacy leakage is quantified using membership inference attacks where the adversary aims to infer whether a given data point was a member of the training data or not.
+This work indicates that while stand-alone pruning reduces inference accuracy, \textit{pruning followed by retraining} (NeurIPS'15) and increasing \textit{sparsity} to the model parameters leaks more training data information.
+On the other hand, aggressive quantization of Neural Network's parameters and activations lowers the membership inference risk, however, at the cost of utility.
+Based on these observations, two empirical defenses: \textit{Privacy Aware Pruning} and \textit{Distilled Quantization} have been proposed that mitigate membership privacy risks \textit{while ensuring efficiency constraints}.
+Further, this work extends the understanding of membership inference attacks beyond overfitting and indicates the influence of model capacity and parameter distribution.
+where we explicitly add efficiency of private inference computation as a design objective of deep learning.  We use the inference-time overhead of Neural Networks as a criterion for the selection of the architecture and parameters of a model.  Given the flexibility of modifying a model during training, we can find accurate models that are also efficient for private computation.
+
+\end{abstract}
+\keywords{Membership Privacy, Inference Attacks, Efficient Deep Learning, Edge Computing.}
+
+\maketitle
+
+
+
+
+\input{introduction}
+\input{algoback}
+\input{inferenceback}
+\input{setting}
+\input{stdarch}
+\input{quantization}
+\input{distilledQuantization}
+\input{pruning}
+\input{privatePruning}
+\input{compare_defense}
+\input{related}
+\input{conclusions}
+
+
+%{\footnotesize
+%\bibliographystyle{IEEEtranS}
+%\bibliography{paper.bib}
+%}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{paper}
+
+
+
+\end{document}
+\endinput

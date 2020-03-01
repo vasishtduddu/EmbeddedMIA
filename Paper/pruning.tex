@@ -1,0 +1,84 @@
+\section{Pruning and Compression}\label{pruning}
+
+
+\begin{table*}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{8}{|c|}{\textbf{FashionMNIST Dataset}}\\
+\multicolumn{2}{|c}{\textbf{Baseline Model =>}} & \multicolumn{2}{c}{\textbf{Train Accuracy:} 98.64\%} & \multicolumn{2}{c}{\textbf{Test Accuracy:} 89.66\%} & \multicolumn{2}{c|}{\textbf{Inference Accuracy:} 55.26\%}\\
+\hline
+\multirow{3}{*}{\textbf{Sensitivity}} & \multicolumn{4}{|c|}{On Pruning} & \multicolumn{3}{|c|}{Retraining}\\
+\hline
+ & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  & \textbf{Compression} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+                      & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Rate} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+
+\hline
+0.25 & 98.58\% & 89.47\% & \cellcolor{green!25}55.18\% & 1.35x & 99.47\% & 89.53\% & \cellcolor{red!25}55.61\%\\
+0.5 & 97.78\% & 89.17\% & \cellcolor{green!25}54.87\% & 1.87x & 99.56\% & 90.00\% & \cellcolor{red!25}55.82\%\\
+0.75 & 94.97\% & 87.43\% & \cellcolor{green!25}53.86\% & 2.63x & 99.66\% & 89.56\% & \cellcolor{red!25}55.91\%\\
+1 & 90.31\% & 84.45\% & \cellcolor{green!25}53.18\% & 3.76x & 99.65\% & 89.76\% & \cellcolor{red!25}55.84\%\\
+1.25 & 86.68\% & 81.8\% & \cellcolor{green!25}52.46\% & 5.40x & 99.85\% & 89.73\% & \cellcolor{red!25}56.04\%\\
+1.5 & 69.12\% & 65.94\% & \cellcolor{green!25}51.77\% & 7.80x & 99.75\% & 89.47\% & \cellcolor{red!25}56.04\%\\
+1.75 & 49.24\% & 47.35\% & \cellcolor{green!25}51.40\% & 11.20x & 99.77\% & 89.01\% & \cellcolor{red!25}56.20\%\\
+2 & 31.69\% & 30.38\% & \cellcolor{green!25}50.82\% & 15.95x & 99.89\% & 88.38\% & \cellcolor{red!25}56.69\%\\
+\hline
+\hline
+\multicolumn{8}{|c|}{\textbf{Purchase Dataset}}\\
+\multicolumn{2}{|c}{\textbf{Baseline Model =>}} & \multicolumn{2}{c}{\textbf{Train Accuracy:} 98.24\%} & \multicolumn{2}{c}{\textbf{Test Accuracy:} 88.22\%} & \multicolumn{2}{c|}{\textbf{Inference Accuracy:} 57.64\%}\\
+\hline
+0.25 & 98.20\% & 88.15\% & \cellcolor{green!25}57.62\% & 1.26x & 98.67\% & 87.95\% & \cellcolor{red!25}58.12\%\\
+0.5 & 95.39\% & 85.37\% & \cellcolor{green!25}56.21\% & 1.65x & 99.12\% & 88.66\% & \cellcolor{red!25}58.52\%\\
+0.75 & 84.78\% & 76.96\% & \cellcolor{green!25}54.04\% & 2.24x & 99.52\% & 88.94\% & \cellcolor{red!25}58.83\%\\
+1 & 61.17\% & 58.04\% & \cellcolor{green!25}51.60\% & 3.13x & 99.74\% & 89.28\% & \cellcolor{red!25}59.01\%\\
+1.25 & 41.22\% & 39.96\% & \cellcolor{green!25}50.81\% & 4.45x & 99.69\% & 88.51\% & \cellcolor{red!25}59.04\%\\
+1.5 & 22.97\% & 22.78\% & \cellcolor{green!25}50.38\% & 6.37x & 99.89\% & 87.61\% & \cellcolor{red!25}59.71\%\\
+1.75 & 15.72\% & 15.58\% & \cellcolor{green!25}50.34\% & 8.96x & 99.82\% & 85.28\% & \cellcolor{red!25}60.44\%\\
+2 & 12.62\% & 12.20\% & \cellcolor{green!25}50.31\% & 12.10x & 99.64\% & 82.50\% & \cellcolor{red!25}61.05\%\\
+\hline
+\hline
+\multicolumn{8}{|c|}{\textbf{Location Dataset}}\\
+\multicolumn{2}{|c}{\textbf{Baseline Model =>}} & \multicolumn{2}{c}{\textbf{Train Accuracy:} 100.00\%} & \multicolumn{2}{c}{\textbf{Test Accuracy:} 62.3\%} & \multicolumn{2}{c|}{\textbf{Inference Accuracy:} 83.32\%}\\
+\hline
+0.5 & 100.00\% & 64.78\% & \cellcolor{green!25}82.54\% & 1.50x & 100\% & 64.61\% & \cellcolor{red!25}85.75\%\\
+0.75 & 100.00\% & 62.70\% & \cellcolor{green!25}82.68\% & 1.94x & 100\% & 61.95\% & \cellcolor{red!25}87.69\%\\
+1 & 99.96\% & 62.03\% & \cellcolor{green!25}78.76\% & 2.81x & 100\% & 62.43\% & \cellcolor{red!25}86.34\%\\
+1.25 & 99.38\% & 60.39\% & \cellcolor{green!25}75.29\% & 3.43x & 100\% & 62.03\% & \cellcolor{red!25}85.25\%\\
+1.5 & 95.60\% & 57.82\% & \cellcolor{green!25}70.98\% & 4.62x & 100\% & 61.15\% & \cellcolor{red!25}84.60\%\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Privacy Risks for Pruning Neural Networks.}
+\label{fmnist_pruning}
+\end{table*}
+
+
+
+
+
+
+
+
+
+
+\subsection{Sparsity vs Pruning}
+
+We consider both the apporaches of sparsity and Pruning and evaluate their impact on membership privacy risks.
+Sparsity zeros out the T\% of the parameters close to zero. In other words, the approach removes the frequently occurring parameters in the network, and forcing the model to train on the remaining network.
+On the other hand, pruning ranks all the parameters and filters in a Neural Network and removes the unnecessary less occurring parameters in the network.
+From the perspective of parameter distribution, pruning removes the parameters from the tail end of the distribution while sparsity removes the parameters closer to zero.
+
+\input{sparsity_fig}
+
+
+
+
+\subsection{Pruning + Weight sharing}
+DeepCompression
+We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
+We use the same model after pruning with Sensitivity since, it leaks the most information and evaluate the effective of quantization and whehter it can enable a good balance between test accuracy and inference accuracy.
+
+
+\input{wtsharing_fig}

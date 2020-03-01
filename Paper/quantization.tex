@@ -1,0 +1,65 @@
+\section{Quantization}\label{quantization}
+
+Quantization enables to reducing precision which results in lowering the model complexity.
+Unlike pruning which reduces the model capacity directly by removing unnecessary nodes, quantization discretizes both the parameters and weights during inference.
+The goal is to reduce the bitwidths of the tensors during computation from 32 or 64 bit floating point resulting in a significant decrease in the memory storage requirements.
+For instance, the extreme case of quantization reduces the precision to binary values, i.e, the parameters and activations (during forward pass) takes the values \{+1,-1\}.
+
+We evaluate two majoralgorithms for quantization, namely, Quantization aware training and Post-Training Quantization.
+\textit{Quantization Aware Training (QAT).}
+
+\textit{Post-Training Quantization (PTQ).}
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{\textbf{FashionMNIST}}\\
+\hline
+\textbf{Architecture} & \textbf{Memory} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+ & \textbf{Accuracy} &  \textbf{Footprint} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+\multicolumn{5}{|c|}{Convolutional Neural Network}\\
+Full & 38.39 MB & 100\% & 92.35\% & \cellcolor{red!25}57.46\%\\
+BinaryNet & 1.62 MB & 88.68\% & 86.9\% & \cellcolor{green!25}55.45\%\\
+XNOR-Net & 1.62 MB & 87.19\% & 85.68\% & \cellcolor{green!25}51.05\%\\ %1,626,824 parameters
+\hline
+\multicolumn{5}{|c|}{Multilayer Perceptron}\\
+Full & 29.83 MB & 99.34\% & 89.88\% & \cellcolor{red!25}54.86\% \\
+BinaryNet & 0.93 MB & 97.61\% & 89.60\% & \cellcolor{green!25}54.30\%\\
+XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000parameters
+\hline
+\hline
+\multicolumn{5}{|c|}{\textbf{CIFAR10}} \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Architecture}} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+ \multicolumn{2}{|c|}{} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+\multirow{2}{*}{NiN} & Full Precision & 98.16\% & 86.16\% & \cellcolor{red!25}56.69\% \\
+& Binary Precision & 81.93\% & 78.74\% & \cellcolor{green!25}51.76\% \\
+\hline
+\multirow{2}{*}{AlexNet} & Full Precision & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% \\
+& Binary Precision & 68.62\% & 66.8\% & \cellcolor{green!25}51.40\% \\
+\hline
+\multirow{2}{*}{VGG16} & Full Precision & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\%\\
+& Binary Precision & 79.67\% & 74.64\% & \cellcolor{green!25}52.65\%\\
+\hline
+\hline
+\multicolumn{5}{|c|}{\textbf{Purchase100}} \\
+\hline
+\multicolumn{2}{|c|}{Full Precision} & \% & \% & \cellcolor{red!25}\% \\
+\multicolumn{2}{|c|}{Binary Precision} & \% & \% & \cellcolor{green!25}\% \\
+\hline
+\hline
+\multicolumn{5}{|c|}{\textbf{Location}} \\
+\hline
+\multicolumn{2}{|c|}{Full Precision} & \% & \% & \cellcolor{red!25}\% \\
+\multicolumn{2}{|c|}{Binary Precision} & \% & \% & \cellcolor{green!25}\% \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Privacy Risks for Low Precision Neural Networks. FashionMNIST dataset}
+\label{fmnist_quantize}
+\end{table}
