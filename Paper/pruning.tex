@@ -1,6 +1,11 @@
 \section{Pruning and Compression}\label{pruning}
 
 
+Note that s is a quality parameter / sensitivity value according to the paper.
+  According to Song Han's previous paper (Learning both Weights and Connections for Efficient Neural Networks),
+  'The pruning threshold is chosen as a quality parameter multiplied by the standard deviation of a layer’s weights'
+threshold = np.std(module.weight.data.cpu().numpy()) * s
+
 \begin{table*}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
@@ -58,10 +63,48 @@
 
 
 
+\cite{45932}\cite{cap}
+The capacity is measured using the mutual information, defined as a measure of the amount of information that one random variable contains about another random variable. The mutual information of a trained network with N input samples is calculated as follows:
+\begin{equation}
+I ( Y ; Y_{\theta}' | X ) = H ( Y | X ) - H ( Y | Y_{\theta}' , X )
+\end{equation}
+\begin{equation}
+=N (1-(plog2 p+(1-p)log2 (1-p)) )
+\end{equation}
+where p is the mean classification accuracy for all samples under trained parameter theta. If the training accuracy is 1, the model memorizes all random samples and the I (Y ; Y' |X ) becomes the number
+of samples N . If the training accuracy is 0.5, I (Y ; Y' |X ) goes to theta.
+The accuracy, p, may vary depending on the training method of the model. We find N and p that maximize the mutual information of the networks by iteratively training the models.
+X = \{$X_1,...,X_N$\},Xi $\in$ $(0,1)^{|N|}$
+Y = $\{Y_1,...,Y_N\}$,$Y_i$ $\in$ (0,1),
+Y' = $\{Y_1', ..., Y_N'\}, Y_i$' = f($\theta, X_i$),
+where $f(\theta,X_i)$ is the predict of a network when the input is $X_i$. Under our experimental setting, both X and Y have uniform random distribution. Note that X and Y are independent as well as $Y_i$ and $Y_j$ when i not= j. Therefore
+$P (Y_i|X_i) = P (Y_i) = 1/2$, and $H(Y) = H(Y_1, ..., Y_N ) = N H(Y_1) = N$.
 
+And we use the network’s average accuracy p as a probability of Yi = Y'i, so that
 
+\[
+    P(Yi|Y'i)=
+\begin{cases}
+    p, & \text{if } Yi =Y'i\\
+    (1 - p),  & \text{otherwise}
+\end{cases}
+\]
 
-
+Finally, the equation is derived as:
+\begin{equation}
+I(Y;Y'|X)= H ( Y | X ) - H ( Y | Y' , X )
+\end{equation}
+\begin{equation}
+= H ( Y ) - H ( Y | Y' ) = N -   H ( Y i | Y' i )
+\end{equation}
+\begin{equation}
+= N -   H ( Y i | Y' i )
+\end{equation}
+\begin{equation}
+=N-N plog2 p+(1-p)log2 (1-p)
+\end{equation}
+This captures
+the amount of information stored in the parameters about the mapping between X and Y. To get an estimate of bits per parameter, we divide by the number of parameters,
 
 \subsection{Sparsity vs Pruning}
 
