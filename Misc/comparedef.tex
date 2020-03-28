@@ -1,0 +1,20 @@
+\begin{table*}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c||c|c|c||c|c|c||c|c|c||c|c|c|}
+\hline
+\textbf{Architecture} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  & \textbf{Train}  & \textbf{Test}  & \textbf{Inference} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+ & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}\\
+\hline
+& \multicolumn{3}{|c|}{Full Precision} & \multicolumn{3}{c|}{Adversarial Regularization} & \multicolumn{3}{c|}{Differential Privacy} & \multicolumn{3}{c|}{Distilled Quantization}\\
+\hline
+NiN & 98.16\% & 86.16\% & 56.69\% & 87.48\% & 83.66\% & 51.92\%  & 92.80\% & 85.11\% & 54.09\%  & 90.49\% & 83.52\% & 53.90\%\\
+AlexNet & 97.86\% & 80.34\% & 60.40\% & 73.97\% & 71.02\% & 51.83\%  & 84.76\% & 79.27\% & 52.81\%  & 76.79\% & 73.5\% & 51.85\%\\
+VGG16 & 99.58\% & 88.95\% & 58.70\% & 89.09\% & 85.19\% & 53.33\%  & 90.46\% & 84.91\% & 52.90\%  & 93.45\% & 85.8\% & 54.17\%\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Privacy Risks for Efficient Architectures.}
+\label{stdarch}
+\end{table*}

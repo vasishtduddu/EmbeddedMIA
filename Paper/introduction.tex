@@ -1,47 +1,55 @@
 \section{Introduction}\label{introduction}
 
-The tremendous performance improvement in Machine Learning algorithms, specifically Deep Learning, has resulted in deployment of these algorithms to large number of applications ranging from low-powered edge devices to industrial systems.
-Specifically, edge computing and wearable devices extensively prefer on-device processing to reduce communication latency and overhead as well as preserving the privacy of data against an untrusted data aggregator \cite{8110880}.
-In order to address the efficiency aspect of Deep Learning models, several algorithms have been proposed in literature based on algorithm-hardware co-design techniques for enhancing efficiency used are extensively by the industry for real world deployment \cite{8114708}.
-These applications include embedded devices for IoT, healthcare monitoring devices, speech recognition on mobile devices, autonomous vehicles and robotics.
-For sensitive applications such as healthcare, location tracking and user preferences, the privacy leakage of user's data is critical and the application should conform with the Health Insurance Portability and Accountability Act (HIPAA) to protect individuals' identifiable health information.
-This work focusses on the specific threat of Membership Inference attacks against resource efficient Deep Learning algorithms.
-More concretely, \textit{What is the impact of designing resource efficient Deep Learning algorithms on individual's privacy leakage?}
+The tremendous performance of Deep Learning has resulted in their deployment to low-powered edge devices and embedded systems.
+Specifically, applications such as devices used in Internet of Things and wearable devices extensively prefer on-device processing to reduce communication latency and overhead as well as preserving the privacy of data against an untrusted data aggregator \cite{8110880}.
+The design of efficient Deep Learning requires algorithm-hardware co-design techniques which includes model compression, quantization and designing special architectures with higher efficiency.
+In order to address the efficiency aspect of Deep Learning models, several algorithms have been proposed in literature based on  for enhancing efficiency used are extensively by the industry for real world deployment \cite{8114708}.
+On-device processing based applications using Machine Learning require to conform within memory, energy computation constraints for embedded devices.
 
+The current state of the art Deep Neural Networks have huge memory and computation requirements (e.g. AlexNet takes up ~500MB) which limit their deployment to memory constrained embedded devices.
+The models have to specifically optimized to ensure computational efficiency: less number of Multiply Accumulate Operations (FLOPS), memory efficiency: smaller memory footprint and power efficiency: less energy consumed during the computation.
+In order to satisfy these three efficiency requirements,  algorithm-hardware co-design approaches are adopted to design neural networks [].
+Deep Learning models are over-parameterized and \textit{pruning} removes unnecessary connections in the network improving efficiency [].
+On the other hand, reducing the precision of the model parameters and activation from 32 bit to \{1,2,3,4,8,16\} bits through \textit{quantization} also improves efficiency [].
+Some machine learning models are specifically designed to achieve efficiency by replacing complex computations with simple approximations (e.g. SqueezeNet) which we refer to as \textit{off-the-shelf} architectures [].
+However, these algorithms depict an accuracy-efficiency trade-off, i.e, models have higher efficiency at the cost of lower predictive accuracy.
 
-A complementary privacy requirement is to resist against inference attacks, where an attacker uses the authorized observables (e.g., predictions) to infer sensitive information about the unobservable and confidential data (e.g., training data).  For example, in black-box membership inference attacks~\cite{shokri2017membership}, the attacker can determine whether or not a particular data has been part of the model's training set, just by analyzing the model predictions.  In such cases, the privacy requirement is beyond data confidentiality, as the attacker exploits the mutual information between observables and confidential sensitive data.  We refer to computations that achieve inference-resistance privacy as {\em privacy-preserving computation}.  Statistical and probabilistic mechanisms, such as differential privacy mechanisms~\cite{dwork2006calibrating, abadi2016deep}, can be used to protect data privacy against inference attacks.
-
-
-Deep Neural Networks are susceptible to various inference attacks such as reconstruction and membership inference attacks since the models tend to memorize the training data.
-In a blackbox setting, models leak membership information of individual data points in the training data through the output predictions while in a whitebox setting, the parameters and gradients of the model have shown to leak training data information.
-This is a major concern for privacy since this reveals details about individuals in the data set including, personal preference, medical details, location traces, financial records.
-The privacy leakage in Machine Learning is quantified using Membership Inference (Tracing) attacks where the goal of adversary is to infer whether a particular individual's data was a member of the training data or not \cite{shokri2017membership}.
-The success of the membership inference attacks is mainly due to overfitting in the model, i.e, the performance of model on training data is distinct from the performance on unseen test data.
-This allows the adversary to infer the membership of a given user in the training data as a binary classification problem.
+Privacy of user's data is an important requirement for embedded devices running Deep Learning models on sensitive data such as healthcare, location tracking and user preferences, should conform with the HIPAA\footnote{https://www.hhs.gov/hipaa/index.html} and GDPR\footnote{https://gdpr.eu/} policy guidelines.
+For example, in membership inference attacks~\cite{shokri2017membership}, the attacker can determine whether or not a particular data has been part of the model's training set, just by analyzing the model predictions.
+In such cases, it crucial to design model with resistance against inference attacks, where the adversary infers sensitive (unobservable) information from the confidential training data using observable information (e.g. model predictions).
 Consider the case of wearable devices for constant health monitoring which rely on Machine Learning for processing body vitals to make predictions about the individual's health status.
-The data for training the predictive algorithms is collected from large number of users and contains sensitive medical details about the individuals.
-An adversary, through Membership Inference attacks, can infer the victim's health status based on whether particular user data is a member of the dataset or not.
+The data for training the predictive algorithms is collected from large number of users and contains sensitive medical details about the individuals which can be inferred by the adversary through membership inference attacks.
+Several statistical and probabilistic mechanisms can be used to protect data privacy against inference attacks~\cite{dwork2006calibrating, abadi2016deep}.
+We refer to computations that achieve inference-resistance privacy as {\em privacy-preserving computation}.
+Such privacy preserving computation mechanisms, however, affects the model's predictive accuracy resulting in a privacy-accuracy trade-off.
 
-Such on-device processing based applications using Machine Learning require to conform within memory and computation constraints for embedded low-power devices.
-For instance, the state of the art Deep Neural Networks such as AlexNet takes up ~500MB of memory which cannot be deployed for edge computing devices with a memory capacity of few MBs.
-Industry applications have hence adopted some state of the art techniques to improve efficiency through algorithm-hardware co-design.
-On the basis that Deep Learning models are over-parameterized, \textit{pruning} removes unnecessary connections in the network to reduce the model size.
-On the other hand, reducing the precision of the model parameters from 32 bit to \{1,2,3,4,8,16\} bits through \textit{quantization} which reduces the overall model capacity.
-For instance, \textit{model compression} reduced the number of parameters and hence model size in the model by iterative pruning and quantization resulting in lower memory footprint and faster inference time.
-These algorithms result in an accuracy-efficiency trade-off.
-Within this trade-off, the impact of designing efficient Deep Learning model on model's privacy is not fully understood.
-To this extent, this work helps to answer the following questions,
-\begin{itemize}
-\item \textit{Can we reconcile privacy and efficiency in Deep Neural Networks without a significant loss in utility?}
-\item \textit{What algorithms to improve computation efficiency leak relatively more information about the data and how can we mitigate them?}
-\item \textit{What other factors beyond overfitting such as model complexity and parameter distribution, impact the membership inference accuracy?}
-\end{itemize}
+In order to design Deep Neural Networks for embedded devices, the model designer has three objectives: (a) high performance measured using test accuracy, (b) high efficiency to conform the computation to memory and power constraints and (c) preserving privacy of the user's data.
+However, these attributes are currently at odds with each other, i.e, designing a model to preserve privacy or to satisfy efficiency requirements is done at the cost of the model's predictive accuracy.
+This research challenge can be summarized as: \textit{Can we reconcile privacy and efficiency in Deep Neural Networks without a significant loss in utility?}
+Alternatively, \textit{How can we redesign neural network algorithms for privacy-preserving computation while achieving acceptable accuracy and efficiency simultaneously?}
 
-\textbf{\textit{Our Contributions.}} In this paper, a comprehensive privacy analysis of designing efficient Neural Networks through various algorithms is addressed.
-We consider state of the art algorithms for designing efficient Neural Networks for devices with constrained resources: pruning, quantization and efficient architecture models.
-The privacy risk is quantified as the membership inference accuracy in a black box setting where the adversary is assumed to have no information about the target model.
+\noindent\textbf{Contributions.} To answer the above question, we present \method ---  a two phase approach for designing neural networks optimized specifically for performance, accuracy and privacy.
+In this paper, we provide directions to design neural networks for private inference and low private computation, memory and energy consumption overhead.
+First, in order to choose the optimal neural network design to satisfy computation, memory and power efficiency, we evaluate the privacy leakage of three state of the art hardware software co-design techniques, namely, model compression (pruning), quantization (reducing precision) and off-the shelf architectures designed specifically for efficiency.
+We show that model compression leaks more information compared to baseline (uncompressed) models indicating a higher privacy risk to the user's data.
+Further, these algorithms may not provide computation efficiency.
+Alternatively, off-the-shelf architectures do not ensure computation and energy efficiency but provide memory efficiency with acceptable privacy leakage.
 
+These observations drive our design choice of architectures used as part of \method\hspace{0.02in} training algorithm.
+As part of Phase I of \method, the model parameters and activations are binarized, i.e, constrained to \{-1,+1\} to reduce the memory and energy consumption overhead.
+To ensure computation efficiency, we replace the expensive multiply accumulate operations between parameter matrices and activation vectors from previous layers to simple and cheap XNOR operations.
+As our main contribution, we show that neural network algorithms, heavily optimized in Phase I for executing efficiently on embedded devices, ensures privacy-preserving computation by showing higher resistance to membership inference attacks.
 
+Phase I of \method\hspace{0.02in} optimizes for efficiency \textit{and} privacy but at the cost of a significant drop in accuracy.
+In Phase II, we restore the accuracy to acceptable standard compared original (full precision) accuracy by transferring knowledge from larger full precision models to the quantized models.
+Here, the quantized XNOR model uses the output predictions of the full precision state of the art models as labels instead of using the true labels during training.
+This results in significantly increasing the predictive power of the model with a small but acceptable increase in privacy leakage.
+In summary, \method\hspace{0.02in} training algorithm comprises of Phase I of \textit{Quantizing}, to reduce the precision of model with binary values with XNOR computations, followed by Phase II of \textit{Distillation}, transferring the knowledge learnt from the larger full precision model to the efficient and private quantized model.
+Finally, we compare the models trained using \method\hspace{0.02in} with prior state of the art defences: Adversarial Regularization and Differential Privacy, and show that our proposed models performance is comparable to the state of the art.
+However, our models provide an additional guarantee of higher efficiency which models trained with prior defences fail to provide.
 
-This comprehensive study of privacy risks of various efficient Deep Learning algorithms enables to understand the relative privacy risks of different resource constraint training algorithms and mitigate them.
-On on the other hand, this work extends the understanding regarding the factors influencing membership privacy risks beyond overfitting by exploring the impact of model capacity and complexity, parameter distribution and network sparsity.
+The major cause for Membership Inference attacks is an active area of reasearch [][], where model's overfitting has been indicated as a primary cause for leakage.
+This paper aims to address this gap by suggesting an alternate explanation for membership inference attacks in machine learning models.
+Specifically, the paper addressed \textit{What other factors beyond overfitting impact the membership inference accuracy?}
+In this work, we show that overfitting is a sufficient condition but not a necessary condition and modification of parameter distribution is the fundamental reason for leakage of training data.
+Further, overfitting is a specific case of modifying parameter distribution indicated by a higher standard deviation compared to regularized model which has been proposed as a potential solution to mitigate inference attacks.

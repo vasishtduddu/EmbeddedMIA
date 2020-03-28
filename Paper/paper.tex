@@ -20,57 +20,58 @@
 \usetikzlibrary{patterns}
 \usetikzlibrary{pgfplots.groupplots}
 \newcommand{\ballnumber}[1]{\tikz[baseline=(myanchor.base)] \node[circle,fill=.,inner sep=1pt] (myanchor) {\color{-.}\bfseries\footnotesize #1};}
+\newcommand{\method}{{\scshape Gecko}}
 
+\begin{filecontents}{comparedef.txt}
+z   n   pFA pFB
+10  FP   98.16   86.16
+10  AdvReg   87.48   83.66
+10  DP   92.80   85.11
+10  Gecko   90.49   83.52
+20  {}  0   0
+20  FP   97.86   80.34
+20  AdvReg   73.97  71.02
+20  DP   84.76  79.27
+20  Gecko   76.79  73.5
+30  {}  0   0
+30  DP   99.58  88.95
+30  AdvReg   89.09  85.19
+30  DP   90.46  84.91
+30  Gecko   93.45  85.8
+\end{filecontents}
 
 \begin{document}
 
-\title{Privacy Risks of Embedded Deep Learning}
+\title{\method: Privacy, Accuracy and Efficiency in Embedded Deep Neural Networks}
 
-\author{Vasisht Duddu$^1$, temp$^1$}
-\affiliation{\institution{$^1$ \large inst\\ $^2$ \large temp}}
-\email{vduddu@tutamail.com}
-
-%\author{
-%    \IEEEauthorblockN{Vasisht Duddu\IEEEauthorrefmark{1}, D. Vijay Rao\IEEEauthorrefmark{2}, Valentina E. Balas\IEEEauthorrefmark{3}}
-%    \IEEEauthorblockA{\IEEEauthorrefmark{1}Indraprastha Institute of Information Technology, Delhi, India}
-%    \IEEEauthorblockA{\IEEEauthorrefmark{2}Institute for Systems Studies and Analyses, Delhi, India}
-%    \IEEEauthorblockA{\IEEEauthorrefmark{3}Aurel Vlaicu University of Arad, Arad, Romania}
-%    \IEEEauthorblockA{vduddu@tutamail.com, vijayrao@issa.drdo.in, valentina.balas@uav.ro}
-%}
-
+\author{Vasisht Duddu$^1$,.$^2$}
+\affiliation{\institution{$^1$ \large inst\\ $^2$ \large ..}}
+\email{vduddu@tutamail.com, ..}
 
 
 \begin{abstract}
-Low powered devices demand on-device processing algorithms to meet the memory, power-efficiency and computational constraints.
+Embedded systems demand on-device processing of data using Neural Networks while conforming to the memory, power and computation constraints.
 In order to bring the high performing Neural Networks to edge devices, several state of the art optimizations such as model compression through \textit{pruning}, \textit{quantization}, and careful \textit{design of efficient architectures} have been extensively adopted.
-These algorithms face efficiency-accuracy trade-off, but when deployed to real world sensitive applications, such as healthcare monitoring wearables, requires design for efficiency within the constraints of privacy leakage.
-In this work, the three-dimensional \textit{privacy-accuracy-efficiency} tradeoff for Deep Neural Networks is addressed by evaluating the privacy risks against inference attacks on state of the art efficiency oriented Deep Learning techniques.
-This privacy leakage is quantified using membership inference attacks where the adversary aims to infer whether a given data point was a member of the training data or not.
-This work indicates that while stand-alone pruning reduces inference accuracy, \textit{pruning followed by retraining} (NeurIPS'15) and increasing \textit{sparsity} to the model parameters leaks more training data information.
-On the other hand, aggressive quantization of Neural Network's parameters and activations lowers the membership inference risk, however, at the cost of utility.
-Based on these observations, two empirical defenses: \textit{Privacy Aware Pruning} and \textit{Distilled Quantization} have been proposed that mitigate membership privacy risks \textit{while ensuring efficiency constraints}.
-Further, this work extends the understanding of membership inference attacks beyond overfitting and indicates the influence of model capacity and parameter distribution.
-where we explicitly add efficiency of private inference computation as a design objective of deep learning.  We use the inference-time overhead of Neural Networks as a criterion for the selection of the architecture and parameters of a model.  Given the flexibility of modifying a model during training, we can find accurate models that are also efficient for private computation.
-
+These algorithms when deployed to real world sensitive applications, such as healthcare monitoring wearables, requires to resist inference attacks to protect privacy of user's training data.
+We quantify this privacy leakage using membership inference attacks where the adversary aims to infer whether a given data point was a member of the training data or not.
+In this work, we address the three-dimensional \textit{privacy-accuracy-efficiency} tradeoff in neural networks for embedded systems and propose \method\hspace{0.02in} training methodology where we explicitly add efficiency of membership private inference as a design objective of neural networks.
+We use the inference-time memory, computation and power constraints of embedded devices as a criterion for designing neural network architecture while ensuring privacy-preserving computation.
+Given the flexibility of modifying a model during training, we choose quantization as our design choice resulting in highly efficient and private models.
+This choice is driven by the observation that compressed models leaks more information compared to baseline models while off-the-shelf efficient architecture designs depict poor efficiency and privacy trade-off.
+We show that models trained using \method\hspace{0.02in} methodology are comparable to prior state of the art defences against blackbox membership inference attacks in terms of test accuracy and privacy while additionally providing efficiency.
+Further, this work extends the understanding of membership inference attacks beyond overfitting and indicates the influence of model capacity and parameter distribution for privacy leakage.
 \end{abstract}
-\keywords{Membership Privacy, Inference Attacks, Efficient Deep Learning, Edge Computing.}
+\keywords{Membership Privacy, Inference Attacks, Efficient Deep Learning, Embedded Computing.}
 
 \maketitle
 
 
-
-
 \input{introduction}
-\input{algoback}
-\input{inferenceback}
-\input{setting}
-\input{stdarch}
-\input{quantization}
-\input{distilledQuantization}
-\input{pruning}
-\input{privatePruning}
-\input{compare_defense}
-\input{related}
+\input{background}
+\input{attack}
+\input{motivation}
+\input{design}
+\input{evaluation}
 \input{conclusions}
 
 

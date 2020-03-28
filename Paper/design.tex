@@ -1,0 +1,52 @@
+\section{\method: Design Overview}\label{design}
+
+
+
+
+
+
+Computation Efficiency:
+Instead of using multiplication and addition circuits, we perform XNOR operations on the inputs followed by a bitcount operation. This reduces the overall number of non-XOR gates used to compute the operation. The equation can be represented as follows.
+
+\begin{align}
+\mathbf{x} \cdot \mathbf{w} =
+N - 2\times\operatorname{bitcount}(\operatorname{xnor}(\mathbf{x}, \mathbf{w}))
+\end{align}
+
+As our main contribution, we show that neural network algorithms can be heavily optimized to execute efficiently using garbled circuits. We observe that the efficiency of evaluating an inference circuit depends on two key factors: the model parameters and the network structure.  With this observation,  selects optimal parameter size and network structure to guarantee acceptable {\em performance}. Last but not the least, to ensure high {\em accuracy} of the model,  uses an architecture search approach to find the best model with high accuracy and efficiency on garbled circuits.
+
+One approach of improving efficiency for Neural Networks is through quantizing the parameter values and hence, reducing the precision of parameters number of bits required to represent the values in hardware \cite{Hubara:2017:QNN:3122009.3242044}.
+
+A specific case of quantized Neural networks is using binary parameter and activation values\{-1,+1\} \cite{NIPS2016_6573}\cite{NIPS2015_5647}
+For such binarized Neural Networks, the computation overhead due to matrix multiplication can be replaced by cheaper XNOR computation \cite{rastegari2016xnornet}\cite{DBLP:journals/corr/ZhouNZWWZ16}.
+BNNs result in lower accuracy compared to full precision counterparts and several research papers and explored improving the accuracy-efficiency trade-off \cite{AAAI1714619}.
+Ternary weighted Networks provide better accuracy compared to BNNs at the cost of higher precision with weights \{-W,0,+W\} where the threshold $W$ can be learned for higher performance \cite{DBLP:journals/corr/ZhuHMD16}\cite{Li2016TernaryWN}
+
+\begin{algorithm}
+\begin{algorithmic}
+    \FOR{$k=1$ to $L$}
+        \STATE $W_k^b \leftarrow {\rm Binarize}(W_k)$
+        \STATE $a_k \leftarrow a_{k-1}^b W_k^b$
+        \IF{$k < L$}
+            \STATE $a_k^b \leftarrow {\rm Binarize}(a_k)$
+        \ENDIF
+    \ENDFOR
+
+\end{algorithmic}
+\caption{
+Inference Stage of Binary Neural Network; Binarize() function is deterministic thresholding scheme; $W_k^b$ are the binarized weights($W_k$) and $a_k$ is the activation of the $k^{th}$ layer
+}
+\label{alg:train}
+\end{algorithm}
+
+Memory Efficiency: Quantization of parameters reduces the memory overhead by 32x to 64x.
+
+Energy Efficiency: These optimization result in reduceing the
+Two such Neural Network models are SqueezeNet \cite{DBLP:journals/corr/IandolaMAHDK16} and MobileNetV2 \cite{conf/cvpr/SandlerHZZC18} which are specifically designed to have less number of parameters and memory footprint. (does not ensure energy efficiency)
+
+Dense sparse dense training \cite{DBLP:journals/corr/HanPNMTECTD16}
+Model compression pipeline cobining pruning, quantization and huffman coding \cite{DBLP:journals/corr/HanMD15}
+Huffman Coding is used for representation while storing in the hardware and in our experiments, we use pruning followed by quantization to achieve model compression.
+
+
+In this paper, we provide directions to design neural networks for secure inference and low private computation overhead. We show that our optimized neural network architectures execute faster than Gazelle, the most efficient existing solution on privacy-preserving deep learning inference.

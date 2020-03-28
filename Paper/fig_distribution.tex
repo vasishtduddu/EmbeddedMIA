@@ -3,10 +3,10 @@
 }
 
 
-\begin{figure*}[ht!]
+\begin{figure}[ht!]
 \begin{center}% note that \centering uses less vspace...
-\resizebox{2\columnwidth}{!}{%
-\begin{tabular}{lllll}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llll}
 
 
 \begin{tikzpicture}
@@ -67,45 +67,6 @@
 \draw[->] (0,0) -- (6.2,0) node[right] {};
 %\draw[->] (0,0) -- (0,5) node[above] {};
 
-\end{tikzpicture} &
-
-
-
-
-
-%
-\begin{tikzpicture}
-% define normal distribution function 'normaltwo'
-\def\normaltwo{\x,{4*1/exp(((\x-3)^2)/2)}}
-
-% input y parameter
-\def\y{4}
-\def\z{2}
-
-% this line calculates f(y)
-\def\fy{4*1/exp(((\y-3)^2)/2)}
-\def\fz{4*1/exp(((\z-3)^2)/2)}
-
-% Shade orange area underneath curve.
-\fill [fill=orange!60] (0,0) -- plot[domain=0:2] (\normaltwo) -- ({\z},0)  -- cycle;
-\fill [fill=orange!60] (4,0) -- plot[domain=4:6] (\normaltwo) -- (6,0)  -- cycle;
-
-% Draw and label normal distribution function
-\draw[color=black,domain=0:6] plot (\normaltwo) node[right] {};
-
-% Add dashed line dropping down from normal.
-\draw[dashed] ({\y},{\fy}) -- ({\y},0) node[below] {$T$};
-\draw[dashed] ({\z},{\fz}) -- ({\z},0) node[below] {$-T$};
-
-
-% Optional: Add axis labels
-\draw (-.2,2.5) node[left,rotate=90] {Frequency};
-\draw (3,-.5) node[below] {Parameter Values};
-
-% Optional: Add axes
-\draw[->] (0,0) -- (6.2,0) node[right] {};
-%\draw[->] (0,0) -- (0,5) node[above] {};
-
 \end{tikzpicture}
 
 \end{tabular}
@@ -113,4 +74,4 @@
 \caption{.}
 \label{fig:loss}
 \end{center}
-\end{figure*}
+\end{figure}

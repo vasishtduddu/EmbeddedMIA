@@ -7,4 +7,4 @@ all:
 	pdflatex $(PAPERNAME)
 	pdflatex $(PAPERNAME)
 clean:
-	rm -f *.ps $(PAPERNAME).pdf *.dvi *.aux *.log *.blg *.bbl *~ *.ilg *.idx *.out *.in
+	rm -f *.ps $(PAPERNAME).pdf *.dvi *.txt *.aux *.log *.blg *.bbl *~ *.ilg *.idx *.out *.in

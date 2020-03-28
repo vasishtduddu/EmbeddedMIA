@@ -1,0 +1,73 @@
+\section{Evaluation}\label{evaluation}
+
+
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{\textbf{CIFAR10}} \\
+\hline
+\multicolumn{2}{|c|}{\textbf{Architecture}} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+ \multicolumn{2}{|c|}{} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+\multirow{2}{*}{NiN} & Full Precision & 98.16\% & 86.16\% & \cellcolor{red!25}56.69\% \\
+& Binary Precision & 81.93\% & 78.74\% & \cellcolor{green!25}51.76\% \\
+\hline
+\multirow{2}{*}{AlexNet} & Full Precision & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% \\
+& Binary Precision & 68.62\% & 66.8\% & \cellcolor{green!25}51.40\% \\
+\hline
+\multirow{2}{*}{VGG16} & Full Precision & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\%\\
+& Binary Precision & 79.67\% & 74.64\% & \cellcolor{green!25}52.65\%\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Reducing the precision of models lowers the membership privacy leakage through membership inference attacks but at the cost of accuracy}
+\label{fmnist_quantize}
+\end{table}
+
+
+\input{plot_defence}
+
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Teacher} & \textbf{Student} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+&  & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+Binary NiN & None & 81.93\% & 78.74\% & 51.76\% \\
+Binary AlexNet & None & 68.62\% & 66.8\% & 51.40\% \\
+Binary VGG16 & None & 79.67\% & 74.64\% & 52.65\%\\
+\hline
+NiN & Binary NiN & 90.49\% & 83.52\% & 53.90\% \\
+AlexNet & Binary AlexNet & 76.79\% & 73.5\% & 51.85\% \\
+VGG16 & Binary VGG16 & 89.45\% & 81.58\% & 54.98\%\\
+\hline
+DenseNet169 & NiN & 92.84\% & 83.71\% & 54.95\%\\
+DenseNet169 & AlexNet & 81.87\% & 76.23\% & 53.51\%\\
+DenseNet169 & VGG16 & 93.45\% & 85.8\% & 54.17\%\\
+\hline
+ResNet50 & NiN & 91.74\% & 83.77\% & 54.53\% \\
+ResNet50 & AlexNet & 80.12\% & 74.92\% & 53.12\%\\
+ResNet50 & VGG16 & 94.23\% & 86.52\% & 54.46\%\\
+\hline
+\end{tabular}
+\end{center}
+\caption{CIFAR10 Cross Architecture. Heterogeneous}
+\label{kd}
+\end{table}
+
+
+\subsection{Comparison with other Defenses}
+
+
+
+\input{fig_comparedef}
+
+%plot gen error cdf
