@@ -21,7 +21,7 @@ We assert that this is a practical solution as deep learning algorithms are flex
 
 
 
-\subsection{Algorithms to enhance efficiency}
+\subsection{Efficiency Optimization Algorithms}
 
 In designing \method, we make several design choices with the goal of achieving efficiency over existing solutions.
 The most important among them is the selection of the underlying algorithm to design Neural Networks with high efficiency.
@@ -84,10 +84,14 @@ In this work, we specifcally consider the case of aggreesive quantization where 
 
 YODANN
 
-\noindent\textbf{Efficient Architecture Design.}
+\noindent\textbf{Off-the-Shelf Efficient Architectures.}
 
 Morphnet, Mobilenet squeezenet, netadapt
 
+MobileNet~\cite{conf/cvpr/SandlerHZZC18}
+SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}
+morphnet~\cite{46505}
+netadapt~\cite{eccv_2018_yang_netadapt} automatically adapts a pre-trained deep neural netwo incorporates direct metrics into its adaptation algorithm
 Compact Network Architectures: The number of parameters and complexity of etwork can be optimized by careful design of the network architecture itself.
 Here, instead of replacing larger filters with a set of smaller filters which have fewer weights in total when the filters are applied sequentially they have same overall receptive field.
 For instance, one 5x5 filter can be replace with 2 3x3 filters. 1x1 convolutional layers can be used to reduce the number of channels in output feature map and hence the overall computation.
@@ -98,7 +102,7 @@ ecrease the number of input channels to 3x3 filters.Consider a convolution layer
 Downsample late in the network so that convolution layers have large activationmaps.In a convolutional network, each convolution layer produces an output activation map witha spatial resolution that is at least 1x1 and often much larger than 1x1.
 
 
-\subsection{Efficiency and Privacy Comparison}
+\subsection{Comparing Efficiency and Privacy}
 
 \begin{table}[!htb]
 \begin{center}
@@ -112,7 +116,7 @@ Computation & $\checkmark$$\times$  & $\checkmark$   & $\times$ \\
 \hline
 Memory &  $\checkmark$$\times$ & $\checkmark$   & $\checkmark$ \\
 \hline
-Energy &  $\checkmark$   & $\checkmark$   & $\checkmark$ \\
+Energy &  $\checkmark$   & $\checkmark$   & $\times$ \\
 \hline
 Privacy &  Low   & High   & Medium \\
 \hline
@@ -168,7 +172,7 @@ reduce the number of operations by designing compact models, pruning and exploit
 
 Comparison of efficiency have been widely studied for all the three cases and we refer to [][][] for more details about the computation, energy and memroy efficiency of such optimization techniques.
 
-\subsection{Comparison of Privacy}
+\noindent\textbf{Privacy Leakage.}
 
 However, so far the privacy implication of optimization of deep neural networks have bot been studied.
 To this extent, we address this gap and compare different optimizations based on the privacy leakage.

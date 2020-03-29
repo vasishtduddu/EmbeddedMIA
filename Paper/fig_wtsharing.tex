@@ -163,7 +163,7 @@ axis x line=none
 
 \end{tabular}
 }
-\caption{FashionMNIST(left) Purchase100(Center) Location(Right). Dashed is Inference accuracy, solid is generalisaton error}
+\caption{\underline{Pruning followed by Weight Sharing (Quantization).} While the retraining after pruning is necessary to restore the predictive accuracy, clustering the weights to reduce the precision lowers the inference accuracy (dashed line) risk while reducing the generalization error (solid line) for FashionMNIST(left), Purchase100(Center) and Location(Right) dataset.}
 \label{fig:loss}
 \end{center}
 \end{figure*}

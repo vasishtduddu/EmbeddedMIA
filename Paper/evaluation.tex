@@ -1,6 +1,6 @@
 \section{Evaluation}\label{evaluation}
 
-
+Difficult to train binarized model~\cite{AAAI1714619}
 
 \begin{table}[!htb]
 \begin{center}
@@ -64,10 +64,31 @@ ResNet50 & VGG16 & 94.23\% & 86.52\% & 54.46\%\\
 \end{table}
 
 
-\subsection{Comparison with other Defenses}
+\subsection{Comparison with prior Defenses}
+
+\subsubsection{Baselines}
+
+Several works have explored approaches to defend against membership inference attacks.
+These defences have mainly focuessed on improving the model's generalization and reduce overfitting which has been considered as the main cause for leakage through membership inference attacks.
 
 
+\noindent\textbf{Adversarial Regularization (AdvReg).}~\cite{DBLP:conf/ccs/NasrSH18}
+
+
+\noindent\textbf{Differential Privacy (DP).}~\cite{Abadi:2016:DLD:2976749.2978318}
 
 \input{fig_comparedef}
 
 %plot gen error cdf
+
+
+\subsubsection{Comparison with MemGuard}
+
+The defences proposed so far can be categorized into (a) regularization based train-time defences and (b) post-training inference time defence.
+Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
+Our proposed training framework exploits is part of category (a) where we modify the training of the machine learning model in order to provide acceptable levels of privacy and accuracy.
+MemGuard~\cite{10.1145/3319535.3363201}, on the other hand, is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
+The defence is based on the idea that the adversary's attack model is a machine learning classifier which is vulnerable to change in output with a carefully added noise to input (referred to as adversarial examples).
+However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework.
+Further, the attack that we use does not rely on an attack classification network but rather relies on output posterior to perform the attack.
+Hence, within the threat model considered, the defence is not valid and we only compare our work with the state of the art defences that modify the training algorithm namely, Adversarial Regularization and Differential Privacy.
