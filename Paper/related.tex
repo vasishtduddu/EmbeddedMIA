@@ -29,10 +29,10 @@ However, none of the works consider the design of neural networks with efficienc
 The majority of energy consumption is from accessing the data from the main memory and is typically higher than the actual computation performed~\cite{6757323}.
 The design of energy efficient Neural Networks has mainly followed two directions: (a) reducing the precision of operands and (b) reducing the total number of computations.
 Lowering the precision has been explored by reducing the precision of activation and weights of the model to binary~\cite{NIPS2015_5647, NIPS2016_6573} and ternary precision~\cite{Li2016TernaryWN,DBLP:journals/corr/ZhuHMD16}.
-While the models can be quantized to arbitrary precisio~\cite{Hubara:2017:QNN:3122009.3242044}, binarized models enable to replace complex MAC operations with simple binary operations~\cite{rastegari2016xnornet,DBLP:journals/corr/ZhouNZWWZ16}.
+While the models can be quantized to arbitrary precision~\cite{Hubara:2017:QNN:3122009.3242044}, binarized models enable to replace complex MAC operations with simple binary operations~\cite{rastegari2016xnornet,DBLP:journals/corr/ZhouNZWWZ16}.
 Such optimization reduces the energy consumption by reducing the number of memory access by increasing the throughput while fetching the parameters.
 Further, hardware optimizations for low precision Neural Networks have been explored that aim to increase the efficiency of quantized models~\cite{AndCav2016YodaNN,Umuroglu2017FINNAF}.
-The second optimization aims to reduce the total number of computations by pruning redundant parameters~\cite{Han:2015:LBW:2969239.2969366} or replacing complex convolutions with multiple smaller convolutions~\cite{DBLP:journals/corr/IandolaMAHDK16}.
+The second optimization aims to reduce the total number of computations by pruning redundant parameters~\cite{Han:2015:LBW:2969239.2969366} or replacing complex convolutions with multiple smaller convolutions (designing efficient architectures)~\cite{conf/cvpr/SandlerHZZC18,46505,eccv_2018_yang_netadapt,DBLP:journals/corr/IandolaMAHDK16}.
 These require specialized hardware optimizations to benefit in terms of efficiency.
 Hardware accelerators which reuse weights and intermediate computation by exploiting spatial architecture with local scratchpad memory enabling to store locally and reducing memory access from the main memory~\cite{7551407,10.1109/ISCA.2016.30}.
 

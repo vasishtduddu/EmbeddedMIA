@@ -14,6 +14,7 @@
 \usepackage{pifont}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{wasysym}
 \usetikzlibrary{backgrounds, positioning, fit}
 \usetikzlibrary{shapes.geometric}
 \usepackage{amsmath}
@@ -21,6 +22,10 @@
 \usetikzlibrary{pgfplots.groupplots}
 \newcommand{\ballnumber}[1]{\tikz[baseline=(myanchor.base)] \node[circle,fill=.,inner sep=1pt] (myanchor) {\color{-.}\bfseries\footnotesize #1};}
 \newcommand{\method}{{\scshape Gecko}}
+\newcommand{\cmark}{\CIRCLE}
+\newcommand{\xmark}{\Circle}
+\newcommand{\smark}{\LEFTcircle}
+
 
 \begin{filecontents}{comparedef.txt}
 z   n   pFA pFB
@@ -44,9 +49,9 @@ z   n   pFA pFB
 
 \title{\method: Privacy, Accuracy and Efficiency in Embedded Deep Neural Networks}
 
-\author{Vasisht Duddu$^1$,.$^2$}
-\affiliation{\institution{$^1$ \large inst\\ $^2$ \large ..}}
-\email{vduddu@tutamail.com, ..}
+\author{Vasisht Duddu$^1$, Virat Shejwalkar$^2$, $^1$}
+\affiliation{\institution{$^1$ \large inst\\ $^2$ \large University of Massachusetts Amherst}}
+\email{vduddu@tutamail.com, vshejwalkar@cs.umass.edu, ...}
 
 
 \begin{abstract}
