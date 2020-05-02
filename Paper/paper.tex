@@ -1,4 +1,4 @@
-\documentclass[sigconf]{acmart}
+\documentclass[sigplan]{acmart}
 %\documentclass[conference]{IEEEtran}
 
 \settopmatter{printacmref=false} % Removes citation information below abstract
@@ -14,6 +14,7 @@
 \usepackage{pifont}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{enumitem}
 \usepackage{wasysym}
 \usetikzlibrary{backgrounds, positioning, fit}
 \usetikzlibrary{shapes.geometric}
@@ -47,24 +48,23 @@ z   n   pFA pFB
 
 \begin{document}
 
-\title{\method: Privacy, Accuracy and Efficiency in Embedded Deep Neural Networks}
+\title{\method: Reconciling Privacy, Accuracy and Efficiency in Embedded Deep Learning}
 
-\author{Vasisht Duddu$^1$, Virat Shejwalkar$^2$, $^1$}
-\affiliation{\institution{$^1$ \large inst\\ $^2$ \large University of Massachusetts Amherst}}
-\email{vduddu@tutamail.com, vshejwalkar@cs.umass.edu, ...}
+\author{Vasisht Duddu$^1$, Virat Shejwalkar$^2$, Antoine Boutet$^1$}
+\affiliation{\institution{$^1$ \large Univ Lyon, INSA Lyon, Inria, CITI \\ $^2$ \large University of Massachusetts Amherst}}
+\email{vduddu@tutamail.com, vshejwalkar@cs.umass.edu, antoine.boutet@insa-lyon.fr}
 
 
 \begin{abstract}
 Embedded systems demand on-device processing of data using Neural Networks while conforming to the memory, power and computation constraints.
 In order to bring the high performing Neural Networks to edge devices, several state of the art optimizations such as model compression through \textit{pruning}, \textit{quantization}, and careful \textit{design of efficient architectures} have been extensively adopted.
 These algorithms when deployed to real world sensitive applications, such as healthcare monitoring wearables, requires to resist inference attacks to protect privacy of user's training data.
-We quantify this privacy leakage using membership inference attacks where the adversary aims to infer whether a given data point was a member of the training data or not.
-In this work, we address the three-dimensional \textit{privacy-accuracy-efficiency} tradeoff in neural networks for embedded systems and propose \method\hspace{0.02in} training methodology where we explicitly add efficiency of membership private inference as a design objective of neural networks.
-We use the inference-time memory, computation and power constraints of embedded devices as a criterion for designing neural network architecture while ensuring privacy-preserving computation.
-Given the flexibility of modifying a model during training, we choose quantization as our design choice resulting in highly efficient and private models.
-This choice is driven by the observation that compressed models leaks more information compared to baseline models while off-the-shelf efficient architecture designs depict poor efficiency and privacy trade-off.
+We quantify this privacy leakage using membership inference attacks where the adversary aims to infer whether a given data point was a member of the model's training data or not.
+In this work, we address the three-dimensional \textit{privacy-accuracy-efficiency} tradeoff in Neural Networks for embedded systems and propose \method\hspace{0.02in} training methodology where we explicitly add efficiency of private inference as a design objective of Neural Networks.
+We use the inference-time memory, computation and power constraints of embedded devices as a criterion for designing Neural Network architecture while preserving membership privacy.
+Given the flexibility of modifying a model during training, we choose quantization as our design choice for highly efficient and private models.
+This choice is driven by the observation that compressed models leaks more information compared to baseline models while off-the-shelf efficient architecture designs indicate poor efficiency and privacy trade-off.
 We show that models trained using \method\hspace{0.02in} methodology are comparable to prior state of the art defences against blackbox membership inference attacks in terms of test accuracy and privacy while additionally providing efficiency.
-Further, this work extends the understanding of membership inference attacks beyond overfitting and indicates the influence of model capacity and parameter distribution for privacy leakage.
 \end{abstract}
 \keywords{Membership Privacy, Inference Attacks, Efficient Deep Learning, Embedded Computing.}
 
@@ -72,7 +72,7 @@ Further, this work extends the understanding of membership inference attacks bey
 
 
 \input{introduction}
-\input{attack}
+\input{setting}
 \input{motivation}
 \input{design}
 \input{evaluation}

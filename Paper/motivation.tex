@@ -1,198 +1,159 @@
-\section{Selecting the primitive for Efficient Architecture}
+\section{\method: Design Motivation}\label{motivate}
+
+In this section, we describe the requirements to be satisfied while designing NNs for embedded systems within the \method\hspace{0.02in} methodology.
+We motivate the NN design by comparing different efficiency optimization algorithms based on the privacy and efficiency requirements of embedded devices.
+In this work, we specifically select the three state of the art design techniques for efficient model computation:
+\begin{itemize}
+\item Model Compression via pruning redundant parameters and nodes
+\item Quantization to lower the precision of model parameters and activations
+\item Efficient off-the-shelf architectures
+\end{itemize}
+
+
+\subsection{Overall Design Requirements}
 
 In designing our training methodology, \method, we aim to satisfy the following main requirements in the purview of embedded systems:
 
-\begin{itemize}
+\begin{itemize}[leftmargin=*]
+
 \item {\em Privacy-}
 The model should preserve the privacy of an individual's data record in the training set of the model against inference attacks.
 
-\item {\em Accuracy-}
-The drop in accuracy of the private model should be minimum as compared to the original accuracy.
-
 \item {\em Efficiency-}
-The private model should demonstrate high efficiency, i.e, energy, memory and computation efficiency.
+The private model should demonstrate high energy, memory and computation efficiency.
+
+\item {\em Accuracy-}
+The drop in accuracy of the private model should be minimum as compared to the non-private and non-efficient model accuracy.
 \end{itemize}
 
-To this end, we present \method --- a technique to construct deep neural network algorithms that are optimized for efficiency and accuracy while ensuring privacy of the input data.
-With \method, we present a novel approach of building NN models that with efficiency as a key property.
-We argue that fixing a neural network architecture and then modifying the training algorithm to ensure privacy does not provide optimal balance between efficiency and accuracy.
-On the contrary, our approach advocates building neural network architecture considering the strengths and drawbacks of the underlying algorithms to design efficient neural networks.
-We assert that this is a practical solution as deep learning algorithms are flexible with respect to their architectures i.e., different neural network models can be trained to achieve the same accuracy for a given dataset.
+To this end, we present \method --- a technique to construct NNs that are optimized for efficiency and accuracy while ensuring privacy of the input data.
+With \method, we present a novel approach of building NNs with efficiency as a key property.
+We argue that fixing a NN architecture and then modifying the training algorithm to ensure privacy (e.g. adversarial regularization[] and differential privacy[]) does not provide optimal balance between efficiency and accuracy.
+On the contrary, our approach advocates building NN architecture considering the strengths and drawbacks of the underlying algorithms to design efficient NNs.
+We assert that this is a practical solution as deep learning algorithms are flexible with respect to their architectures, i.e., different NNs can be trained to achieve the same accuracy for a given dataset.
 
 
-
-\subsection{Efficiency Optimization Algorithms}
+\subsection{Efficiency Requirements}
 
 In designing \method, we make several design choices with the goal of achieving efficiency over existing solutions.
-The most important among them is the selection of the underlying algorithm to design Neural Networks with high efficiency.
-Several state of the algorithms are currently adopted such as, however, these algorithm do not provide the required efficiency guarantees equally and the different algorithms enhances different aspects of efficiency.
-These differences makes it difficult to decide which primitive is the best fit for designing a privacy-preserving system for a particular application.
-Therefore, we first outline the desirable properties specifically for private neural network inference and then compare these algorithms with respect to these properties (as shown in Table~\ref{tbl:comparison}).
-We select an efficient design scheme for neural networks that satisfies all our requirements.
+The most important among them is the selection of the underlying algorithm to design NNs with high efficiency.
+Several state of the algorithms are currently adopted such as, however, these algorithm do not provide the same efficiency guarantees.
+These differences make it difficult to decide which primitive is the best fit for designing a privacy-preserving system for a particular application.
+Therefore, we first outline the desirable properties specifically for private NN inference:
 
-We specifically select the three state of the art techniques:
-\begin{itemize}
-\item Model Compression through pruning redundant parameters and nodes
-\item Quantization to lower the precision of model parameters and activations
-\item Off-the-shelf neural network architectures specifically designed for efficiency
+\begin{itemize}[leftmargin=*]
+\item {\em Energy Efficiency-} Energy consumption is a vital constraint for low powered embedded or IoT devices which operate for long duration while maximising their battery lifetime.
+While executing NNs, every MAC requires memory access for reading weights, inputs and intermediate output from previous layer and one write to store the computed outputl which is significantly higher than actually performing the MAC operation in the CPU[].
+Energy efficiency is achieved by reducing the memory access by (a) optimizing hardware to exploit sparsity in MACs and (b) reducing the precision to increase the throughput of data.
+
+\item {\em Computation Efficiency-} The total multiply accumulate (MAC) operations between the parameter matrix and input activation function quantifies the requirement of computation efficiency.
+The processing rate of MAC operations is constrained by the CPU on embedded device which is reduced by reducing the total number of parameters.
+Additionally, replacing MACs with cheaper binary arithmetic significantly lowers the computational overhead.
+
+\item {\em Memory Efficiency-} The total size of the model measured in terms of the memory storage for model parameters and additional runtime storage for intermediate outputs should be within the memory constraints of the embedded device.
+This is achieved in two ways: (a) reducing the precision of the parameters and intermediate outputs and (b) pruning the parameters by increasing sparsity.
 \end{itemize}
 
-\noindent\textbf{Model Compression (Pruning).}
+\subsection{Optimization for Efficiency}
 
-Network Pruning: Neural Networks are generally overparameterised. Hence, a large amount of weights are redundant adn can be removed (set to zero) referred to as pruning.
-Aggressive pruning, however, requires to finetune the model to ensure no loss in the accuracy. Typically, this is done by removing the least significant nodes in the network by computing a threshold using the senstitivity hyperparameter which is used to estimate the percentile of values.
-
-\[
-    f(W)=
-\begin{cases}
-    0, & \text{if } w\geq T\\
-    0, & \text{if } w\leq -T\\
-    w,  & \text{otherwise}
-\end{cases}
-\]
-
-The original pruning requires the model to be retrained after pruning to restore accruacy while ensuring lower network size.
-Further, computation on these sparse parameter matrices using specialized accelerators enable to avoid computation on 0's lower the computation complexity significantly and increasing the overall inference speed.
-Prior work has indicated that over 80\% of the parameters can be pruned and the accuracy can be restored after retraining.
-
-Sparsity: Sparsity reduces some of the values in the network close to zero replaces them as zero. This results in the distribution with two modes instead of a single gaussian distribution for the parameters.
-The sparsity constraint ensures that the parameters in the middle are zeroed out while the parameter values near the tail end are updated.
-
-Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth[].
-The decision on whether the computation is done is based on the parameter value which requires additional logic, i.e, replace output as zero without computation if parameter value is zero else perform the computation.
-This also benefits in usage with SIMD or data parallel architectures and improves compression and reduces overall storage cost by using indices of weights with a zero values instead of actually storing zero values in the memory for each occurance.
+Here, in the view of the above efficiency requirements, we compare the three baseline algorithms.
+We then select an efficient design scheme for NNs that satisfies all our requirements.
 
 
-\noindent\textbf{Quantization.} Quantization reduces the precision of the operands while techniques such as pruning, sparsity reduce the number of model operation and model size.
-Quantization maps parameters/activtions to a smaller set of quantization levels [qunaitized neural networks].
-The ultimate goal is to minimize the error between the reconstructed data from hte quantized levels and the original data.
-The number of quantized levels reflects the precision and ultimately the nuber of bits required to represent the data (log2(number of levels))
-Reducing precision results in lower number of bits to represent the data which results in a lower storage cost (parameters) and/or computation cost (activation). less are and less energy [M Horowitz]
-For instance, using kbits instead of 32 bits or 64 bits weights reduces the storage cost by 32/k or 64/k and hence, requires lower number of parameters to be read form the memory which further improves the energy efficiency by 32/kx or 64/kx.
+\noindent\textbf{Memory Efficiency.} Off the shelf models are designed to specifically reduce the memory footprint.
+For instance, the memory footprint of Squeezenet and MobileNet is 5MB and 14Mb compared to 250Mb of Alexnet and >500Mb of VGG architectures.
+Additionally, lowering the model precision from 64 or 32 bit floating point to binary precision results in a direct reduction of 64x or 32x in the overall memory footprint of the model.
+However, in case of model compression the model parameters which are pruned are simply replaced by a value of "0".
+Hence, storing even the "0" parameter takes up memory and does not necessarily decrease the overall memory footprint unless the hardware is optimized to skip the storage of all the zero values in the memory.
+This requires additional logic to check for zero valued parameters in a dictionary.
 
-The precision can be reduced aggresively to a single bit to get binary nets. Here, the weights  and activation are binarized during inference to take values \{-1,+1\} [binaryconnect, binarynet]. This allows to reduce the MAC operation to an XNOR however, with a singificant accuracy loss[xnor-net].
-Several optimisaition have been considered to reduce the loss such as multiplying the outputs with a scaling factor to recover the dynamic range( weights become -w and w), keeping the first and last layer as 32 bit floating point precision and performing normatlisation before convolution to reduce the dynamic range of activations.
-Further, hybrid and varying bit precision of weights and activations have been used in Dorefanet, HWGQnet and QNNs to reduce the qunatization loss.
-Further, there are benefits for allowing weights to be zero (-w, 0, w) although this requires an additional bit per weight compared to binary weights, the sparsity can be used to reduce computation and storage cost [Ternary weight networks, trained ternary quantization].
-Here, we consider two cases: uniform quanrization
-Weight sharing forces several weight values to share a single value which reduces the number of unique weights in the model.
-The weights are grouped using hashing function or k means algorithm and one value is assigned to each group.
-A codebook is then built to map each grou of weights to its shared value. accordingly, the index to the corresponging group in the codebook is strored for each position n the filter rather than a eright value. This leads to a two step process to fetch the weights:
-(a) read the group index from the weight memory and (b) using the griup index read the value of weight from the codebook or dictionary.
+\input{fig_prune}
+\input{fig_pruneRetrain}
+\input{fig_wtsharing}
 
-In this work, we specifcally consider the case of aggreesive quantization where the parameters and activations are binarized.
-
-YODANN
-
-\noindent\textbf{Off-the-Shelf Efficient Architectures.}
-
-Morphnet, Mobilenet squeezenet, netadapt
-
-MobileNet~\cite{conf/cvpr/SandlerHZZC18}
-SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}
-morphnet~\cite{46505}
-netadapt~\cite{eccv_2018_yang_netadapt} automatically adapts a pre-trained deep neural netwo incorporates direct metrics into its adaptation algorithm
-Compact Network Architectures: The number of parameters and complexity of etwork can be optimized by careful design of the network architecture itself.
-Here, instead of replacing larger filters with a set of smaller filters which have fewer weights in total when the filters are applied sequentially they have same overall receptive field.
-For instance, one 5x5 filter can be replace with 2 3x3 filters. 1x1 convolutional layers can be used to reduce the number of channels in output feature map and hence the overall computation.
-Forexample,32 ltersof1x1x64can transform an input with 64 channels to an output of 32 channels and reduce the number of  lter channels in the next layer to 32. SqueezeNet uses many 1 x 1  lters to aggressively reduce the number of weights [157]. It proposes a  re module that  rst “squeezes” the net- work with 1 x 1 convolution  lters and then expands it with multiple 1 x 1 and 3 x 3 convolution  lters.
-It achieves an overall 50x reduction in the number of weights compared to AlexNet, while maintaining the same accuracy
-Replace 3x3 filters with 1x1 filters.Given a budget of a certain number of convolutionfilters,  we will choose to ma
-ecrease the number of input channels to 3x3 filters.Consider a convolution layerthat is comprised entirely of 3x3 filters. , to maintain a small total number of parametersin a CNN, it is important not only to decrease the number of 3x3 filters (see Strategy 1 above), butalso to decrease the number ofinput channelsto the 3x3 filters.  We decrease the number of inputchannels to 3x3 filters usingsqueeze layers, which we describe in the next section.
-Downsample late in the network so that convolution layers have large activationmaps.In a convolutional network, each convolution layer produces an output activation map witha spatial resolution that is at least 1x1 and often much larger than 1x1.
-
-
-\subsection{Comparing Efficiency and Privacy}
-
-\begin{table}[!htb]
-\begin{center}
-\renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
-\begin{tabular}{|l|l|l|l|}
-\hline
- & Compression & Quantization & Architecture  \\
-\hline
-Computation & $\smark$  & $\cmark$   & $\xmark$ \\
-\hline
-Memory &  $\smark$ & $\cmark$   & $\cmark$ \\
-\hline
-Energy &  $\cmark$   & $\cmark$   & $\xmark$ \\
-\hline
-Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
-\hline
-\end{tabular}
-\end{center}
-\caption{$\checkmark$$\times$ indicates additional hardware optimization required in order to achieve efficiency.Comparison of different algorithms for efficient Deep learning.}
-\label{tbl:comparison}
-\end{table}
-
-
-In comparing the three algorithms on the basis of efficiency, we define three aspects of efficiency, namely, computation efficiency, memory efficiency and energy efficiency.
-
-\noindent\textbf{Computation Efficiency.} In order to measure the number of operations performed in a cycle, we first define the aspect of computation efficiency.
-A model with computation efficiency has lower number of operations compared to the non-efficient counter part for the same architecture.
-This number of operations, referred to as FLOPS, is directly correlated to the Mulitply-Accumulate (MAC) operations in the forward pass which includes the matrix-vector multiplications between the parameters of a layer and input activations from pervious layer.
-Design of efficient Neural Network architectures replaces the complex matrix-vector multiplications by multiple matrix-vector multiplications with smaller dimensions.
-This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations or FLOPS [ANANALYSIS  OFDEEPNEURALNETWORKMODELSFORPRACTICALAPPLICATIONS].
-For models with binarized parameters and activations the MAC operations can be replaced by binary operations such as XNOR and the maxpool operations can be replaced by OR operation, while the activations can be replaced by checking the parity bit (denotes the sign) operation and hence reducing the FLOPS drastically[XONN].
+\noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications by multiple matrix-vector multiplications with smaller dimensions.
+This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations or FLOPS~\cite{article}.
 In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the the multiplications with "0"pruned values, the hardware optimization enable the user to skip the computation and replace the output by a "0" directly.
-run faster with smaller bit width and higher throughput
+For quantized models with binarized parameters and activations the MAC operations can be replaced by binary operations such as XNOR and the maxpool operations can be replaced by OR operation, while the activations can be replaced by checking the parity bit (denotes the sign) operation and hence reducing the FLOPS drastically[XONN].
+This results in high computational efficiency and hence, faster inference.
 
-energy benfit by reducing the memory access to the Hardware
 
-\noindent\textbf{Memory Efficiency.} The total memory required by the model which includes the number of parameters $\times$ precision of each parameter gives the estimate of the static memory storage required.
-However, the memory intitialization during inference computation requires additional memory storage to store the intermediate computation which have been found to be correlated to the size of the static memory storage of the model [ANANALYSIS  OFDEEPNEURALNETWORKMODELSFORPRACTICALAPPLICATIONS].
-Off the shelf models are designed to specifically reduce the memory footprint. For examples, the memory footprint of Squeezenet and MobileNet is 5MB and 14Mb compared to 250Mb of Alexnet and >500Mb of VGG architectures.
-Lowering the precision of the model from 64/32 bit  floating point to binary precision results in a direct reduction of 64x or 32x in the overall memory footprint of the model.
-However, in case of model compression the model parameters which are pruned are simply replaced by a "0" value. Hence, storing even the "0" parameter takes up memory and does not necessarily decrease the overall memory footprint.
-The benefits of model compression can be exploited to reduce the memory only when the hardware optimizations are employed by storing all the zero parameters and exploit the sparsity to only have an additional codebook to indicate the indices with zeroed parameters.
+\noindent\textbf{Energy Efficiency.} Energy efficiency has been shown to not vary much in case of reduction with number of parameters and data type, number of memory accesses play vital role[CVPR 2017 yang et al][].
+Specifically, for the case of off-the-shelf architectures the while the computation efficiency has been shown to improve, the energy efficiency has been shown to be close to large scale state of the art models like AlexNet[suqeezenet][].
+Alternatively, for the case of model compression, energy efficiency can be achieved by additionally providing hardware optimization and shows small improvement in the energy consumption[].
+For quantization, however, the energy efficiency has been shown to be high [][] where the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
+Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption[][][].
+While some improvement is seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization[].
+The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the authors to [][][] for more details.
 
-exploit sparsity by skipping memory access an computation; requires additional hardware to check for "0" pruned values.
-pruning optimal brain damage: requires retraining
+In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefit for different efficiency requirements over the other alternatives.
 
-\noindent\textbf{Energy Efficiency.} We measure the energy consumpotion in terms of Inference/J or Inference/S/W Cost inference/s/\$.
-This is particularly important as it relates to the cost incurred for running the embedded device for longer duration where each kJ is mapped to cost in money.
-As noted in [][], desining efficient Neural Networks does not necessarily result in lowering the energy consumption.
-Hence, efficient architectures do not lower the overall energy consumption.
-On the other hand, quantization drastically reduces the energy consumption compared to full precision models.
-Particularly, a model with 64bit or 32 bit floating point precision when quantized to binary precision, the resultant reduction in energy concumption decreases drastically.
-Within a fixed number of cycles, low precision models can move larger number of parameters fetched compared to full precision model.
-The total energy consumption of off the shelf architecture are close to the other state of the art architectures and lowering the memory footprint by a careful choice of Hyperparameters does not necessarily result in higher energy efficiency.
 
-number of weights is not a good metrics for energy. important to take in account the data types, memory access .. and not easy to find energy consumption.
-Energy evaluation methodology per layer and per memory hierarchy CVPR 2017 yang et al.
-Squeezenet does not necessarily consume less energy than alexnet ..Pruning does reduce the energy but smaller improvement.
+\subsection{Evaluating Privacy Leakage}
 
-For every MAC, we have t access three information memory read: filter weight, image pixel and partial sum from previous layer and one write to store the computed output.
-The access to the memory is around 2x higher energy consumption compared to the actual MAC operation and hence, memory access is the bottleneck.
-additional hardware optimization optimized the dataflow processing with reuse of weights, outputs as part of spatial architecture to improve performance.
+In this section, we evaluate the information leakage through membership inference attacks for the three baseline algorithms considered.
+This is the main contribution of our work where we evaluate the privacy leakage for different optimization and design algorithms for NNs.
 
-throughput and energy gains requires hardware optimization. reduce size of operands for storage and compute
-reduce the number of operations by designing compact models, pruning and exploiting sparsity (special hardware required).
+\subsubsection{Model Compression}
 
-Comparison of efficiency have been widely studied for all the three cases and we refer to [][][] for more details about the computation, energy and memroy efficiency of such optimization techniques.
+We evaluate the privacy leakage on compressing a model by pruning the connections in the model.
+Here, pruning is achieved by replacing some of the parameters with "0" value.
+As described in the original paper~\cite{}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
 
-\noindent\textbf{Privacy Leakage.}
+We evaluate and validate the impact on membership privacy on compressing the model trained on three datasets: FashionMNIST, Location and Purchase100.
+On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}).
+This is expected as the parameters are responsible for memorizing the training data information and pruning the parameters lowers the adversary's attack success~\cite{rezawhite}.
 
-However, so far the privacy implication of optimization of deep neural networks have bot been studied.
-To this extent, we address this gap and compare different optimizations based on the privacy leakage.
+However, interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
+This indicates that model compression in turn increases the overall privacy leakage.
+This can be attributed to the lower number of parameters forced to learn the same amount of information stored previously in the unpruned model with larger number of parameters.
+In other words, the same amount of information is now captured by less number of parameters resulting in higher memorization of information per parameter.
+To analyze the information stored per parameter, we first compute the model capacity as the mutual information of a trained network between the true label $Y$ and the predicted label $Y_{\theta}$ for a random input $X$ as derived in~\cite{45932,cap}.
+Here, model's information $I(Y;Y_{\theta}|X) = $
+\begin{equation}
+N_{train}\left(1 - (r_{train}log_2(\frac{1}{r_{train}}) + (1-r_{train})log_2(\frac{1}{1-r_{train}}))\right)
+\end{equation}
+where $r_{train}$ is the classification train accuracy for all the $N_{train}$ samples in the training data.
+For $r_{train} = 1$, the model completely memorizes all random samples as the information stored equals the number of samples $N_{train}$, while for $r_{train}=0.5$, the training accuracy 0.
+We divide the above equation by the model's total number of parameters $N_{param}$ to get the per parameter information stored as
+\begin{equation}
+I_p(Y;Y_{\theta}|X) = \frac{I(Y;Y_{\theta}|X)}{N_{param}}
+\end{equation}
+As the model is compressed (pruned), the number of parameters $N_{param}$ decreases which results in increase in $I_p(Y;Y_{\theta}|X)$. However, on aggressive pruning, the train accuracy $r_{train}$ also decreases resulting in a decrease in the information per parameter, which is empirically indicated by a decrease in membership inference accuracy at the end in Figure~\ref{fig:retrain}.
+
+
+\textbf{Mitigating the Privacy Risks in Pruned Models.} We describe on potential approach to mitigate the privacy risk of the compressed models without requiring to modify the model's training.
+The post-hoc apporach utilizes the weight sharing for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
+As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST, 62.08\% to 53.38\% for Location and 81.82\% to 61.95\% for Purchase100 dataset.
+This decrease in inference attack accuracy is closely followed by a decrease in generalization error which is indicative of decrease in prediction accuracy of the model.
+We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
+For the experiments, we use the compressed model indicating highest privacy leakage to evaluate the effectiveness of weight sharing on the worst case condition.
+This pipelined approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk.
+
+
+
+
+
+
+\subsubsection{Off-the-Shelf Efficient Architectures}
+
 
 \begin{table}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
 \fontsize{6.7pt}{6.7pt}\selectfont
-\begin{tabular}{|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Architecture} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  & \textbf{Parameters} & \textbf{Memory} \\
- & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy} & & \textbf{Footprint} \\
+\textbf{Architecture} & \textbf{Memory} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}   \\
+ & \textbf{Footprint} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
 \hline
-SqueezeNet & 88.21\% & 81.92\% & \cellcolor{green!25}53.07\% & 1.2M & 5 MB\\
-MobileNetV2 & 97.50\% & 87.24\% & \cellcolor{green!25}55.57\% & 3.5M & 14 MB\\
+SqueezeNet & 5 MB & 88.21\% & 81.92\% & \cellcolor{green!25}53.07\% \\
+MobileNetV2 & 14 MB & 97.50\% & 87.24\% & \cellcolor{green!25}55.57\% \\
 \hline
-AlexNet & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% & 61M & 240 MB\\
-VGG11 & 99.13\% & 86.43\% & \cellcolor{red!25}58.04\% & 132M & 507 MB\\
-VGG16 & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\% & 138M &  528 MB\\
-VGG19 & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% & 143M & 549 MB\\
+AlexNet & 240 MB & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% \\
+VGG11 & 507 MB & 99.13\% & 86.43\% & \cellcolor{red!25}58.04\% \\
+VGG16 & 528 MB & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\%  \\
+VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -200,61 +161,84 @@ VGG19 & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% & 143M & 549 MB\\
 \label{stdarch}
 \end{table}
 
+In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
+As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
+
 \input{fig_efficientArch}
 
+Further, the inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
+Increasing the temperature parameter reduces the granularity of the model's output and is given by $F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$ where $z(x)$ computes output of the model before the softmax layer.
+For the case of SqueezeNet, we are able to reduce the inference accuracy to 50.93\% from 53.07\% while for MobileNet we can reduce the inference accuracy to 52.62\% from 55.57\% as seen in Figure~\ref{softmax}.
+This reduction in inference accuracy is without any cost of the prediction test accuracy of the model.
 
 
 
 
-WHy pruning/ model compression is not the best choice.. leaks more information
+\subsubsection{Quantization}
 
-\input{fig_prune}
-\input{fig_pruneRetrain}
+In this section, we evaluate the technique of reducing the precision of both model's parameters and intermediate activations.
+Further, we consider the extreme case of binarizing the parameters and activations allowing to evaluate on the most optimized case.
+We evaluate on FashionMNIST dataset for two architectures with convolutional and fully connected layers.
 
-\cite{45932}\cite{cap}
-The capacity is measured using the mutual information, defined as a measure of the amount of information that one random variable contains about another random variable. The mutual information of a trained network with N input samples is calculated as follows:
-\begin{equation}
-I ( Y ; Y_{\theta}' | X ) = H ( Y | X ) - H ( Y | Y_{\theta}' , X )
-\end{equation}
-\begin{equation}
-=N (1-(plog2 p+(1-p)log2 (1-p)) )
-\end{equation}
-where p is the mean classification accuracy for all samples under trained parameter theta. If the training accuracy is 1, the model memorizes all random samples and the I (Y ; Y' |X ) becomes the number
-of samples N . If the training accuracy is 0.5, I (Y ; Y' |X ) goes to theta.
-The accuracy, p, may vary depending on the training method of the model. We find N and p that maximize the mutual information of the networks by iteratively training the models.
-X = \{$X_1,...,X_N$\},Xi $\in$ $(0,1)^{|N|}$
-Y = $\{Y_1,...,Y_N\}$,$Y_i$ $\in$ (0,1),
-Y' = $\{Y_1', ..., Y_N'\}, Y_i$' = f($\theta, X_i$),
-where $f(\theta,X_i)$ is the predict of a network when the input is $X_i$. Under our experimental setting, both X and Y have uniform random distribution. Note that X and Y are independent as well as $Y_i$ and $Y_j$ when i not= j. Therefore
-$P (Y_i|X_i) = P (Y_i) = 1/2$, and $H(Y) = H(Y_1, ..., Y_N ) = N H(Y_1) = N$.
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{\textbf{FashionMNIST}}\\
+\hline
+\textbf{Architecture} & \textbf{Memory} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+ & \textbf{Accuracy} &  \textbf{Footprint} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+\multicolumn{5}{|c|}{Architecture 1}\\
+Full & 38.39 MB & 100\% & 92.35\% & \cellcolor{red!25}57.46\%\\
+BinaryNet & 1.62 MB & 88.68\% & 86.9\% & \cellcolor{green!25}55.45\%\\
+XNOR-Net & 1.62 MB & 87.19\% & 85.68\% & \cellcolor{green!25}51.05\%\\ %1,626,824 parameters
+\hline
+\multicolumn{5}{|c|}{Architecture 2}\\
+Full & 29.83 MB & 99.34\% & 89.88\% & \cellcolor{red!25}54.86\% \\
+BinaryNet & 0.93 MB & 97.61\% & 89.60\% & \cellcolor{green!25}54.30\%\\
+XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000parameters
+\hline
+\end{tabular}
+\end{center}
+\caption{Reducing the model precision lowers the inference attack accuracy but at the cost of test accuracy.}
+\label{fmnist_quantize}
+\end{table}
 
-And we use the network’s average accuracy p as a probability of Yi = Y'i, so that
+In both the architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
+However, on replacing the MAC operations with XNOR operations, we observe that the inference risk decreases close to random guess, however, at the cost of prediction test accuracy.
 
-\[
-    P(Yi|Y'i)=
-\begin{cases}
-    p, & \text{if } Yi =Y'i\\
-    (1 - p),  & \text{otherwise}
-\end{cases}
-\]
+In summary, we observe that quantization, specifically binarization of parameters and activation along with XNOR computation, provides strong resistance against inference attacks compared to model compression and off-the-shelf architectures.
 
-Finally, the equation is derived as:
-\begin{equation}
-I(Y;Y'|X)= H ( Y | X ) - H ( Y | Y' , X )
-\end{equation}
-\begin{equation}
-= H ( Y ) - H ( Y | Y' ) = N -   H ( Y i | Y' i )
-\end{equation}
-\begin{equation}
-= N -   H ( Y i | Y' i )
-\end{equation}
-\begin{equation}
-=N-N plog2 p+(1-p)log2 (1-p)
-\end{equation}
-This captures
-the amount of information stored in the parameters about the mapping between X and Y. To get an estimate of bits per parameter, we divide by the number of parameters,
+\subsection{Summary of Comparison}
 
+We summarize the properties satisfied by each of the technique in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
+Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
 
-\input{fig_wtsharing}
-We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
-We use the same model after pruning with Sensitivity since, it leaks the most information and evaluate the effective of quantization and whehter it can enable a good balance between test accuracy and inference accuracy.
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.7pt}{6.7pt}\selectfont
+\begin{tabular}{|l||l|l|l|}
+\hline
+Requirements & Compression & Quantization & Off-the-shelf  \\
+\hline
+Computation Efficiency & $\smark$  & $\cmark$   & $\xmark$ \\
+\hline
+Memory Efficiency &  $\smark$ & $\cmark$   & $\cmark$ \\
+\hline
+Energy Efficiency &  $\smark$   & $\cmark$   & $\xmark$ \\
+\hline
+Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
+\label{tbl:comparison}
+\end{table}
+
+For our requirement, quantization of NNs is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
+Specifically, in this work we only consider the aggressive quantization of binarizing the parameters and activations to \{-1,+1\} values while additionally replacing the MAC operations with cheap and efficient binary arithmetic (XNOR operations).
+Hence, we choose this particular design for NNs to provide a good three dimensional trade-off between privacy-efficiency-accuracy.

@@ -1,5 +1,8 @@
 \section{Related Work}\label{related}
 
+
+\noindent\textbf{Machine Learning Privacy.}
+
 \noindent\textbf{Inference Attacks.} Privacy attacks against machine learning models are broadly categorized as tracing (membership inference) or reconstruction attacks~\cite{1190751}.
 In tracing attacks, the adversary aims to trace a given data record to the model's training dataset to infer whether the data point was used as part of the training data.
 Membership inference attacks have been well studied in genomic data~\cite{10.1145/2976749.2978355} and location databases~\cite{DBLP:conf/ndss/PyrgelisTC18}.
@@ -24,6 +27,10 @@ Differential Privacy provides provable bounds on leakage of training data but fa
 The differential privacy noise is either added to the gradients during training using SGD~\cite{Abadi:2016:DLD:2976749.2978318} or within a teacher-student framework to transfer knowledge~\cite{papernot2016semi}.
 AttriGuard~\cite{217523} and Memguard~\cite{10.1145/3319535.3363201} exploits the idea that the attacker models are vulnerable to adversarial examples and adds carefully crafted noise to the output predictions of the model so that they are misclassified by the attacker.
 However, none of the works consider the design of neural networks with efficiency as a design objective.
+
+
+\noindent\textbf{Efficient Deep Learning.}
+
 
 \noindent\textbf{Hardware-Software Co-Design for Efficient Deep Learning.} Deep Neural Networks require heavy computational and memory overhead which result in poor energy consumption.
 The majority of energy consumption is from accessing the data from the main memory and is typically higher than the actual computation performed~\cite{6757323}.

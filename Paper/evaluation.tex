@@ -1,6 +1,14 @@
-\section{Evaluation}\label{evaluation}
+\section{Evaluation}\label{compare}
 
-Difficult to train binarized model~\cite{AAAI1714619}
+In this section, we evaluate the performance of NNs designed in Phase I and Phase II of \method\hspace{0.02in} design methodology.
+The evaluation is done on state of the art standard architectures: Network in Network, AlexNet and VGGNet, on CIFAR10 dataset.
+
+\subsection{Phase I}
+
+In Phase I, we quantize the model and replace the MACs with cheap XNOR operations.
+We observe that the inference attack accuracy decreases significantly for all the three architecture close to random guess ($\sim$50\%).
+Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 60.40\% to 51.40\% for AlexNet and 58.70\% to 52.65\% for VGGNet.
+
 
 \begin{table}[!htb]
 \begin{center}
@@ -19,18 +27,34 @@ Difficult to train binarized model~\cite{AAAI1714619}
 \multirow{2}{*}{AlexNet} & Full Precision & 97.86\% & 80.34\% & \cellcolor{red!25}60.40\% \\
 & Binary Precision & 68.62\% & 66.8\% & \cellcolor{green!25}51.40\% \\
 \hline
-\multirow{2}{*}{VGG16} & Full Precision & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\%\\
+\multirow{2}{*}{VGG13} & Full Precision & 99.58\% & 88.95\% & \cellcolor{red!25}58.70\%\\
 & Binary Precision & 79.67\% & 74.64\% & \cellcolor{green!25}52.65\%\\
 \hline
 \end{tabular}
 \end{center}
 \caption{Reducing the precision of models lowers the membership privacy leakage through membership inference attacks but at the cost of accuracy}
-\label{fmnist_quantize}
+\label{cifar10quant}
 \end{table}
 
 
-\input{plot_defence}
+However, since Phase I only optimizes the network for privacy and efficiency, the resultant model shows poor utility (accuracy).
+We observe a significant loss in test accuracy for all the three models: around 8\% accuracy drop from 86.16\% to 78.74\% for NiN; 14\% accuracy drop from 80.34\% to 66.8\% for AlexNet;
+In order to restore the accuracy, we use knowledge distillation as described in Phase II of the \method\hspace{0.02in} framework.
 
+The privacy provided by quantized NN is due to the decrease in overfitting, empirically measured using the difference between the train and test accuracy.
+The leakage in inference accuracy is attributed to the higher overfitting in models as well as memorization of the training data information in the form of the parameters, which are specifically tuned to achieve high performance on the train data~\cite{Song2020Overlearning,10.1145/3133956.3134077,236216,DBLP:journals/corr/abs-1812-00910}.
+This is attributed to the reduction in learning capacity of the model on quantizing the parameters which lowers the sensitive training data information memorized by the parameters on lowering the precision.
+At the same time, this optimization provides high degree of efficiency to be executed on low powered embedded devices.
+
+\subsection{Phase II}
+
+The objective of Phase II of \method\hspace{0.02in} is to enhance the accuracy of the quantized model with XNOR computations which depicts high inference attack resistance and efficiency.
+In Phase II, we use the teacher-student model (described in Section~\ref{design}) to train the quantized student model being guided using the output predictions of the full precision teacher model.
+
+Here, Phase II is heterogeneous, i.e, we are flexible to choose any full precision teacher model which can provide high accuracy on the considered dataset (Table~\ref{kd}).
+Here, we consider pre-trained state of the art architectures\footnote{https://github.com/huyvnphan/PyTorch\_CIFAR10}: DenseNet169 and ResNet50, along with the full precision versions of NiN, Alexnet and VGGNet.
+The standalone test accuracy of the DenseNet169 and ResNet50 architectures are 92.84\% and 92.12\% respectively while the full precision accuracies for NiN, AlexNet and VGGNet are given in Table~\ref{cifar10quant}.
+\input{plot_defence}
 
 \begin{table}[!htb]
 \begin{center}
@@ -41,54 +65,87 @@ Difficult to train binarized model~\cite{AAAI1714619}
 \textbf{Teacher} & \textbf{Student} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
 &  & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
 \hline
+\multicolumn{5}{|c|}{Standalone Models}\\
+\hline
 Binary NiN & None & 81.93\% & 78.74\% & 51.76\% \\
 Binary AlexNet & None & 68.62\% & 66.8\% & 51.40\% \\
-Binary VGG16 & None & 79.67\% & 74.64\% & 52.65\%\\
+Binary VGG13 & None & 79.67\% & 74.64\% & 52.65\%\\
+\hline
+\multicolumn{5}{|c|}{Homogeneous Architecture Distillation}\\
 \hline
 NiN & Binary NiN & 90.49\% & 83.52\% & 53.90\% \\
 AlexNet & Binary AlexNet & 76.79\% & 73.5\% & 51.85\% \\
-VGG16 & Binary VGG16 & 89.45\% & 81.58\% & 54.98\%\\
+VGG13 & Binary VGG13 & 89.45\% & 81.58\% & 54.98\%\\
+\hline
+\multicolumn{5}{|c|}{Heterogeneous Architecture Distillation}\\
 \hline
 DenseNet169 & NiN & 92.84\% & 83.71\% & 54.95\%\\
 DenseNet169 & AlexNet & 81.87\% & 76.23\% & 53.51\%\\
-DenseNet169 & VGG16 & 93.45\% & 85.8\% & 54.17\%\\
+DenseNet169 & VGG13 & 93.45\% & 85.8\% & 54.17\%\\
 \hline
 ResNet50 & NiN & 91.74\% & 83.77\% & 54.53\% \\
 ResNet50 & AlexNet & 80.12\% & 74.92\% & 53.12\%\\
-ResNet50 & VGG16 & 94.23\% & 86.52\% & 54.46\%\\
+ResNet50 & VGG13 & 94.23\% & 86.52\% & 54.46\%\\
 \hline
 \end{tabular}
 \end{center}
-\caption{CIFAR10 Cross Architecture. Heterogeneous}
+\caption{Phase II of \method\hspace{0.02in} improves the accuracy of the private-efficient model from Phase I. Phase II is heterogeneous, i.e, the knowledge transfer is independent of the architecture and any teacher model can be used to improve the test accuracy.}
 \label{kd}
 \end{table}
 
 
-\subsection{Comparison with prior Defenses}
+The first set of experiments combine the same full precision model architectures with the quantized model versions, i.e, full precision NiN with Binarized NiN (homogeneous knowledge distillation).
+Here, we see that there is 5\% increase in test accuracy (from 78.74\% to 83.52\%) for NiN with an increase of 2\% in inference attack.
+Similarly, there is an increase of 7\% test accuracy for AlexNet with a very minimal privacy leakage increase of 0.45\%; and increase of 7\% test accuracy at the cost of 2\% inference attack accuracy for VGGNet.
+
+For heterogeneous knowledge distillation, i.e, combining other architectures (DenseNet169 and ResNet50) with the quantized models from Phase I, we see that the increase in test accuracy is only minimally higher than the homogeneous models for NiN and AlexNet but a significantly higher increase in the inference attack accuracy.
+However, in case of VGGNet, we observe an increase of 4\% additional test accuracy compared to homogeneous knowledge distillation with a minimal decrease in the inference test accuracy.
+In Phase II, increase in test accuracy is accompanied with a small but acceptable increase in the inference attack accuracy indicating a privacy-utility trade-off.
+Hence, the choice of using homogeneous or heterogeneous knowledge distillation is specific to the architecture and the privacy-utility requirements of the application.
+Compared to the full precision counterparts, we observe that the distilled models show an accuracy degradation of only 3\% for NiN(86.66\% to 83.77\%), 4\% for AlexNet (80.34\% to 76.23\%) and 2\% for VGGNet (88.95\% to 86.52\%).
+
+The \method\hspace{0.02in} framework results in models which make the output confidence of the train and test data records similar reducing the inference attack accuracy (Figure~\ref{fig:loss}).
+Further, the knowledge distillation enables to lower the loss of the model compared to the model trained in Phase I resulting in higher test accuracy as seen in Figure~\ref{fig:loss} (c).
+However, the loss trajectory is still higher than the full precision version indicating the test accuracy degradation of the proposed framework and a privacy-utility trade-off.
+
+\subsection{Comparison with Prior Defenses}
+
+The defences proposed in literature can be categorized into (a) regularization based train-time defences and (b) post-training inference time defence.
+Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
+Our proposed training framework exploits is part of category (a) where we modify the training of the machine learning model in order to provide acceptable levels of privacy and accuracy.
 
 \subsubsection{Baselines}
 
-Several works have explored approaches to defend against membership inference attacks.
-These defences have mainly focuessed on improving the model's generalization and reduce overfitting which has been considered as the main cause for leakage through membership inference attacks.
+In this work, we consider two state of the art baselines: Adversarial Regularization and Differential Privacy.
+These defences have mainly focussed on improving the model's generalization and reduce overfitting which has been considered as the main cause for leakage through membership inference attacks.
+
+\noindent\textbf{Adversarial Regularization (AdvReg)~\cite{DBLP:conf/ccs/NasrSH18}.} Here, the problem of defending against membership inference attack is modelled as a minimax game between two NNs: classifier network and attacker network.
+The two networks are trained alternatively with contradictory objectives: first, the attacker network is trained to distinguish between the training data members and non-members followed by training the classifier network to minimize the loss as well as fool the attacker network.
+Formally, the target classifier outputs a single probability $I(F(x),y) \in [0,1]$ which indicates the likelihood of $x$ being part of the training data.
+The classifier minimizes the loss along with the output of the attacker classifier balanced with a privacy risk hyperparameter $\lambda$ : $min_{\theta} l(F(x),y) + \lambda log(I(F(x),y))$.
+
+\noindent\textbf{Differential Privacy (DP)~\cite{Abadi:2016:DLD:2976749.2978318}.} In this work, we specifically consider DPSGD which adds carefully crafted noise to the gradients during backpropagation in SGD algorithm.
+The noise is sampled from a laplacian or gaussian distribution proportional to the model's Sensitivity which is then added to the gradients during backpropagation.
+This provides provable bound on the information leaked about an individual data record in the dataset and ensures that the presence or absence of a data record does not change the model's output, hence defending against membership inference attacks.
 
 
-\noindent\textbf{Adversarial Regularization (AdvReg).}~\cite{DBLP:conf/ccs/NasrSH18}
-
-
-\noindent\textbf{Differential Privacy (DP).}~\cite{Abadi:2016:DLD:2976749.2978318}
+\subsubsection{Results}
 
 \input{fig_comparedef}
+\textbf{add plot for generalization error cdf}
 
-%plot gen error cdf
-
+The comparison of models trained using \method\hspace{0.02in} is shown in Figure~\ref{fig:compare}.
+Models trained using \method\hspace{0.02in} are comparable in test accuracy and resisting membership inference leakage to Adversarial Regularization and Differential Privacy.
+The inference accuracy for NiN is 52.90\% (\method) compared to 54.09\% (DP) and 51.92\% (AdvReg) and test accuracy of 83.52\% (\method) compared to 85.11\% (DP) and 83.66\% (AdvReg).
+For AlexNet, the inference accuracy is 51.85\% (\method) compared to 52.81\% (DP) and 51.83\% (AdvReg) and test accuracy of 73.5\% (\method) compared to 79.27\% (DP) and 71.02\% (AdvReg).
+For VGGNet, the inference accuracy is 53.17\% (\method) compared to 52.90\% (DP) and 53.33\% (AdvReg) and test accuracy of 85.8\% (\method) compared to 84.91\% (DP) and 85.19\% (AdvReg).
+In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for low power embedded systems.
+Training a quantized NN model within the DP and Adversarial Regularization framework is challenging since it is hard to train quantized model training as it requires careful tuning of hyperparameters otherwise the training does not converge.
 
 \subsubsection{Comparison with MemGuard}
 
-The defences proposed so far can be categorized into (a) regularization based train-time defences and (b) post-training inference time defence.
-Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
-Our proposed training framework exploits is part of category (a) where we modify the training of the machine learning model in order to provide acceptable levels of privacy and accuracy.
-MemGuard~\cite{10.1145/3319535.3363201}, on the other hand, is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
+MemGuard~\cite{10.1145/3319535.3363201} is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
 The defence is based on the idea that the adversary's attack model is a machine learning classifier which is vulnerable to change in output with a carefully added noise to input (referred to as adversarial examples).
-However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework.
-Further, the attack that we use does not rely on an attack classification network but rather relies on output posterior to perform the attack.
-Hence, within the threat model considered, the defence is not valid and we only compare our work with the state of the art defences that modify the training algorithm namely, Adversarial Regularization and Differential Privacy.
+However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework assuming the adversary uses shadow model attack (stronger threat model than that considered in the paper).
+Our attacker does not rely on a "shadow" machine learning model but rather relies on output posterior to perform the attack.
+Hence, within the threat model considered, the defence is not valid for comparison.

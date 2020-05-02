@@ -1,9 +1,11 @@
 \section{\method: Design Overview}\label{design}
 
+Based on the efficiency and privacy analysis described in the previous section, we describe the detailed \method\hspace{0.02in} framework for designing efficient, private and accurate NNs in this section.
+In Phase I, the objective is to enhance the model's efficiency and privacy, however, at the cost of accuracy.
+In Phase II, we optimize for accuracy and train the resultant model from Phase I.
 
 
-
-
+\subsection{Phase I}
 
 Computation Efficiency:
 Instead of using multiplication and addition circuits, we perform XNOR operations on the inputs followed by a bitcount operation. This reduces the overall number of non-XOR gates used to compute the operation. The equation can be represented as follows.
@@ -50,3 +52,17 @@ Huffman Coding is used for representation while storing in the hardware and in o
 
 
 In this paper, we provide directions to design neural networks for secure inference and low private computation overhead. We show that our optimized neural network architectures execute faster than Gazelle, the most efficient existing solution on privacy-preserving deep learning inference.
+
+Specific optimization for XNORNet to avoid a loss in accuracy....
+
+
+Difficult to train binarized model~\cite{AAAI1714619}
+
+
+
+
+\subsection{Phase II}
+
+
+Describe model distillation
+\input{kd_fig}
