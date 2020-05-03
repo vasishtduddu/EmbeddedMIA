@@ -1,51 +1,19 @@
 \section{Related Work}\label{related}
 
 
-\noindent\textbf{Machine Learning Privacy.}
-
-\noindent\textbf{Inference Attacks.} Privacy attacks against machine learning models are broadly categorized as tracing (membership inference) or reconstruction attacks~\cite{1190751}.
-In tracing attacks, the adversary aims to trace a given data record to the model's training dataset to infer whether the data point was used as part of the training data.
-Membership inference attacks have been well studied in genomic data~\cite{10.1145/2976749.2978355} and location databases~\cite{DBLP:conf/ndss/PyrgelisTC18}.
-However, particular to machine learning models, Shokri et al~\cite{shokri2017membership} identified overfitting as a major cause for the model's privacy leakage.
-In particular, the model's difference in output behaviour on seen training samples and unseen test samples enables an adversary to identify the membership of a given data record~\cite{salem2018ml,8429311}.
-Such membership inference attacks have also been explored in the context of generative models~\cite{LOGANMembershipInferenceAttacksAgainstGenerativeModels} and collaborative learning systems~\cite{DBLP:journals/corr/abs-1812-00910,melis2019exploiting}.
-Further, the model tends to memorize training data information which invariably leaks information in predictive text models~\cite{236216,10.1145/3133956.3134077} and this overlearning can be exploited to further leak sensitive attributes of the training data~\cite{Song2020Overlearning}.
-While these attacks are mostly studied in blackbox settings, an adversary with a whitebox access to the model, i.e, intermediate layer computations has also been shown to leak significant information about the training data points~\cite{leino2019stolen,DBLP:journals/corr/abs-1812-00910}.
-In this setting, the training data is memorized within model's parameters which leaks information.
-Further, the gradients of the model leak information about the data and this can be mitigated by quantizing the gradients~\cite{DBLP:journals/corr/abs-1906-08935}.
-Machine learning models also leak data property information~\cite{Ganju:2018:PIA:3243734.3243834} and the sensitive attributes of the inputs referred to as attribute inference attacks~\cite{Fredrikson:2015:MIA:2810103.2813677,Hitaj:2017:DMU:3133956.3134012,Ateniese:2015:HSM:2829869.2829870}.
-A stronger attack model extracts sensitive training data samples which is referred to as reconstruction attacks~\cite{salem2019updates,shokri2019privacy}.
-While inference attacks leak the training data information, other privacy attacks aim to extract the model's architecture and steal the functionality.
-Such reverse-engineering attacks leverage side channel information leakage such as power, timing and cache side channels to infer the target model architecture~\cite{236204,hong2019security,duddu2018stealing,10.1145/3274694.3274696,DBLP:journals/corr/abs-1808-04761}.
-Once the architecture is known, the adversary can then leverage the output predictions of target model to steal the target model's functionality to a substitute model~\cite{10.5555/3241094.3241142,jacson2018ijcnn}.
+\noindent\textbf{Machine Learning Privacy.} Data privacy in Machine Learning addresses different inference attacks such as membership inference~\cite{salem2018ml,shokri2017membership,10.1145/2976749.2978355,8429311}, attribute inference~\cite{Ateniese:2015:HSM:2829869.2829870}, property inference~\cite{Ganju:2018:PIA:3243734.3243834} and reconstruction attacks~\cite{1190751}.
+While these works have been evaluated in a blackbox setting, privacy leakage through inference attacks have been studied in the context of whitebox setting~\cite{DBLP:journals/corr/abs-1812-00910}.
+Further, generative model have been shown to be vulnerable to membership inference attacks~\cite{LOGANMembershipInferenceAttacksAgainstGenerativeModels} and distributed setting such as in federated learning have also been exploited~\cite{melis2019exploiting,DBLP:journals/corr/abs-1812-00910}.
+While inference attacks leak the training data information, other privacy attacks aim to extract the model's architecture and steal the functionality~\cite{10.5555/3241094.3241142}.
+Given the architecture, the adversary can further compute the input through model inversion attacks~\cite{Fredrikson:2015:MIA:2810103.2813677}.
+These privacy leakage in machine learning models have been mainly attributed to the memorization of training data by the models~\cite{236216,10.1145/3133956.3134077,Song2020Overlearning}.
+In order to mitigate against inference attacks several defences have been explored such as Differential Privacy~\cite{Abadi:2016:DLD:2976749.2978318}, simple and adversarial regularization~\cite{DBLP:conf/ccs/NasrSH18,salem2018ml} which aim to generalize the model and alternatively, adding noise to the predictions to increase error~\cite{217523,10.1145/3319535.3363201}.
+Alternatively, confidential computing aims to privately and efficiently compute machine learning models using homomorphic encryption, secure multiparty computation and trusted hardware~\cite{235489,Bourse2017FastHE,217515}.
 
 
-\noindent\textbf{Mitigating Privacy Attacks.} A basic defence against inference attacks use regularization functions such as L2, Dropout and ensemble approaches to improve generalization and minimize overfitting~\cite{salem2018ml,shokri2017membership}.
-For prediction entropy based attacks, increasing the temperature of the softmax function reduces the inference accuracy~\cite{shokri2017membership}.
-Adversarial regularization uses a minimax optimization to regularize the model and reduce the overfitting~\cite{DBLP:conf/ccs/NasrSH18}.
-Differential Privacy provides provable bounds on leakage of training data but faces acute privacy-accuracy leakage~\cite{236254}.
-The differential privacy noise is either added to the gradients during training using SGD~\cite{Abadi:2016:DLD:2976749.2978318} or within a teacher-student framework to transfer knowledge~\cite{papernot2016semi}.
-AttriGuard~\cite{217523} and Memguard~\cite{10.1145/3319535.3363201} exploits the idea that the attacker models are vulnerable to adversarial examples and adds carefully crafted noise to the output predictions of the model so that they are misclassified by the attacker.
-However, none of the works consider the design of neural networks with efficiency as a design objective.
-
-
-\noindent\textbf{Efficient Deep Learning.}
-
-
-\noindent\textbf{Hardware-Software Co-Design for Efficient Deep Learning.} Deep Neural Networks require heavy computational and memory overhead which result in poor energy consumption.
-The majority of energy consumption is from accessing the data from the main memory and is typically higher than the actual computation performed~\cite{6757323}.
-The design of energy efficient Neural Networks has mainly followed two directions: (a) reducing the precision of operands and (b) reducing the total number of computations.
-Lowering the precision has been explored by reducing the precision of activation and weights of the model to binary~\cite{NIPS2015_5647, NIPS2016_6573} and ternary precision~\cite{Li2016TernaryWN,DBLP:journals/corr/ZhuHMD16}.
-While the models can be quantized to arbitrary precision~\cite{Hubara:2017:QNN:3122009.3242044}, binarized models enable to replace complex MAC operations with simple binary operations~\cite{rastegari2016xnornet,DBLP:journals/corr/ZhouNZWWZ16}.
-Such optimization reduces the energy consumption by reducing the number of memory access by increasing the throughput while fetching the parameters.
-Further, hardware optimizations for low precision Neural Networks have been explored that aim to increase the efficiency of quantized models~\cite{AndCav2016YodaNN,Umuroglu2017FINNAF}.
-The second optimization aims to reduce the total number of computations by pruning redundant parameters~\cite{Han:2015:LBW:2969239.2969366} or replacing complex convolutions with multiple smaller convolutions (designing efficient architectures)~\cite{conf/cvpr/SandlerHZZC18,46505,eccv_2018_yang_netadapt,DBLP:journals/corr/IandolaMAHDK16}.
-These require specialized hardware optimizations to benefit in terms of efficiency.
-Hardware accelerators which reuse weights and intermediate computation by exploiting spatial architecture with local scratchpad memory enabling to store locally and reducing memory access from the main memory~\cite{7551407,10.1109/ISCA.2016.30}.
-
-
-\noindent\textbf{Privacy and Security of Low Precision Models.} Binarized Neural networks have been shown to be vulnerable to adversarial attacks~\cite{galloway2018attacking,khalil2018combinatorial}.
-However, low precision models are more robust compared to full precision model~\cite{lin2018defensive}.
-An alternate line of research that uses low precision neural networks to enhance efficiency is confidential computing where the goal is to train the model while preserving the privacy of model parameters and user input during computation.
-Such privacy preserving computing rely on Homomorphic Encryption and Secure Multiparty Computation which perform the computation on encrypted data and hence incur high computation and communication overhead specially when combined with neural networks.
-Low precision neural networks have been explored with Homomorphic Encryption~\cite{Bourse2017FastHE} and for Garbled Circuits\cite{235489} for improving the efficiency along with alternate optimizations such as Fourier transform based convolutions~\cite{Li2018FALCONAF}.
+\noindent\textbf{Efficient Deep Learning.} Hardware-Software Co-Design is crucial to accelerate the performance of NNs on hardware.
+Hardware accelerators reuse weights and intermediate computation enable significant performance improvement~\cite{7551407,10.1109/ISCA.2016.30}.
+Algorithmic optimizations have explored model compression through pruning~\cite{Han:2015:LBW:2969239.2969366} and reducing the precision of the model parameters and activations to binary~\cite{NIPS2015_5647, NIPS2016_6573}, ternary~\cite{Li2016TernaryWN,DBLP:journals/corr/ZhuHMD16} and generic quantization~\cite{Hubara:2017:QNN:3122009.3242044}.
+Binarization enables to replace multiplication with simple boolean logic improving the overall performance~\cite{rastegari2016xnornet,DBLP:journals/corr/ZhouNZWWZ16}.
+Alternatively, hardware optimizations have enabled to design NN accelerators for low precision NNs for further efficiency~\cite{AndCav2016YodaNN,Umuroglu2017FINNAF}.
+Further, specialized architectures designed for low memory footprint have also been extensively used for low powered devices such as mobile phones and micro-controllers~\cite{DBLP:journals/corr/IandolaMAHDK16,conf/cvpr/SandlerHZZC18}. 

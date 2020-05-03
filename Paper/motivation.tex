@@ -128,7 +128,7 @@ As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 
 This decrease in inference attack accuracy is closely followed by a decrease in generalization error which is indicative of decrease in prediction accuracy of the model.
 We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
 For the experiments, we use the compressed model indicating highest privacy leakage to evaluate the effectiveness of weight sharing on the worst case condition.
-This pipelined approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk.
+This pipelined approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
 
 
 
