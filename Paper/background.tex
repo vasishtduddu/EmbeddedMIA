@@ -1,0 +1,71 @@
+\section{Background on Embedded Deep Learning}
+\label{background}
+
+On-device processing is an attractive alternative compared to centralized processing of data from sensors, IoT and embedded edge devices.
+Such on-device processing reduces the overhead of communicating data from the devices to the servers, lowers the privacy and security risk associated with storing sensitive data on untrusted central server and lowers the latency for obtaining results from processing [].
+However, in order to execute trained NN models on low powered edge devices, additional optimization is required for the design of the NN architectures.
+Model designers use three state of the art approaches for designing efficient NN models for embedded systems: (a) Model Compression via Pruning, (b) quantization of model parameters and activations and (c) designing standard architectures (off the shelf efficient architectures).
+In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
+
+\subsection{Model Compression (Pruning)} 
+NNs are overparameterized, i.e, have large number of redundant weights.
+Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
+The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
+Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth[].
+Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
+For a threshold $T$, the parameters close to zero are replaced by zero which is given as:
+\[
+    f(W)=
+\begin{cases}
+    0, & \text{if } -T \geq w \leq T\\
+    w,  & \text{otherwise}
+\end{cases}
+\]
+
+\subsection{Off-the-Shelf Efficient Architectures} 
+NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
+One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
+For instance, one 5x5 filter can be replaced by two 3x3 filters.
+Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
+For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
+Such optimizations enable to design compact network architecture with layers having lower parameters compared to the original model.
+These have been extensively adopted to design standard architectures such as MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
+
+
+\subsection{Quantization}
+Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
+Quantization maps parameters and activations values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
+The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
+Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing througput.
+Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy[Xnor][].
+For instance, Binarized NNs quantize the operands to \{-1,+1\} values[][] while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training[].
+The additional sparsity in ternary NNs reduce computation and storage cost. These are examples of uniform quantization.
+Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters.
+This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
+
+
+
+\subsection{Efficiency Requirements}
+
+%In designing \method, we make several design choices with the goal of achieving efficiency over existing solutions.
+The most important among them is the selection of the underlying algorithm to design NNs with high efficiency.
+Several state of the algorithms are currently adopted such as, however, these algorithm do not provide the same efficiency guarantees.
+These differences make it difficult to decide which primitive is the best fit for designing a privacy-preserving system for a particular application.
+Therefore, we first outline the desirable properties specifically for private NN inference:
+
+\begin{itemize}[leftmargin=*]
+\item {\em Energy Efficiency-} Energy consumption is a vital constraint for low powered embedded or IoT devices which operate for long duration while maximising their battery lifetime.
+While executing NNs, every MAC requires memory access for reading weights, inputs and intermediate output from previous layer and one write to store the computed outputl which is significantly higher than actually performing the MAC operation in the CPU[].
+Energy efficiency is achieved by reducing the memory access by (a) optimizing hardware to exploit sparsity in MACs and (b) reducing the precision to increase the throughput of data.
+
+\item {\em Computation Efficiency-} The total multiply accumulate (MAC) operations between the parameter matrix and input activation function quantifies the requirement of computation efficiency.
+The processing rate of MAC operations is constrained by the CPU on embedded device which is reduced by reducing the total number of parameters.
+Additionally, replacing MACs with cheaper binary arithmetic significantly lowers the computational overhead.
+
+\item {\em Memory Efficiency-} The total size of the model measured in terms of the memory storage for model parameters and additional runtime storage for intermediate outputs should be within the memory constraints of the embedded device.
+This is achieved in two ways: (a) reducing the precision of the parameters and intermediate outputs and (b) pruning the parameters by increasing sparsity.
+\end{itemize}
+
+
+
+
