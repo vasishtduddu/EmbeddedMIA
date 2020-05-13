@@ -2,13 +2,16 @@
 
 In this section, we describe the requirements to be satisfied while designing NNs for embedded systems within the \method\hspace{0.02in} methodology.
 We motivate the NN design by comparing different efficiency optimization algorithms based on the privacy and efficiency requirements of embedded devices.
-In this work, we specifically select the three state of the art design techniques for efficient model computation:
+In this work, we specifically select the three state of the art design techniques for efficient model computation:\virat{didnt u mention this above? if yes, just refer to them don't rewrite}
 \begin{itemize}
 \item Model Compression via pruning redundant parameters and nodes
 \item Quantization to lower the precision of model parameters and activations
 \item Efficient off-the-shelf architectures
 \end{itemize}
 
+\virat{I don't understand the flow of this section: You state 3 requirements, but why only one is detailed? Why 3.4 is evaluation? I think you should state the overall design requirements at first, then explain each requirement in detail (why only 'efficiency' is detailed?)}
+
+\virat{I think u need to move 3.4 up that shows the leakage, then discuss the requirements, then introduce gecko and show how it addresses the shortcomings you found in 3.4 and also the other requirements u discuss}
 
 \subsection{Overall Design Requirements}
 
@@ -56,9 +59,9 @@ This is achieved in two ways: (a) reducing the precision of the parameters and i
 
 \subsection{Optimization for Efficiency}
 
-Here, in the view of the above efficiency requirements, we compare the three baseline algorithms.
-We then select an efficient design scheme for NNs that satisfies all our requirements.
-
+\red{Here, in the view of the above efficiency requirements, we compare the three baseline algorithms.
+We then select an efficient design scheme for NNs that satisfies all our requirements.}
+\virat{why is the choice of design scheme in motivation?}
 
 \noindent\textbf{Memory Efficiency.} Off the shelf models are designed to specifically reduce the memory footprint.
 For instance, the memory footprint of Squeezenet and MobileNet is 5MB and 14Mb compared to 250Mb of Alexnet and >500Mb of VGG architectures.

@@ -1,36 +1,58 @@
 \section{\method: Framework Setting}\label{background}
+\virat{i think this section should be called background}
 
+\subsection{Machine Learning}
 Machine Learning algorithms learn a function $f:X \rightarrow Y$ mapping from the input space $X$ to the space of corresponding class labels $Y$.
 This is modelled as an optimization where the objective is to find the parameters $\theta$ by minimizing the model's loss, $min_{\theta} L(f(x),y;\theta)$, computed when model incorrectly predicts a given data input $x$.
+\virat{define loss?}
 The dataset sampled from the data distribution $P(X,Y)$ is aggregated from user's sensitive and personal information such as location history, purchase preferences, medical records and financial data.
-
+\virat{here, keep everything technical; don't say where does the data come from.}
 
 \subsection{Membership Inference Attacks}
 
+% On querying a trained model $f(x;\theta)$, the adversary learns aggregate information about the entire data population which the model generalizes from the train dataset to an unseen test data.
+% This is desirable and quantified using the accuracy of the model.
+% On the other hand, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
+% In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
+% This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
+% Alternatively, an adversary can learn sensitive attributes about the user's data record which can be used to reconstruct the sensitive training dataset.
+% In this work, we specifically use membership inference attacks to quantify information leakage in machine learning models.
 
-On querying a trained model $f(x;\theta)$, the adversary learns aggregate information about the entire data population which the model generalizes from the train dataset to an unseen test data.
-This is desirable and quantified using the accuracy of the model.
-On the other hand, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
-In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
-This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
-Alternatively, an adversary can learn sensitive attributes about the user's data record which can be used to reconstruct the sensitive training dataset.
-In this work, we specifically use membership inference attacks to quantify information leakage in machine learning models.
+Machine learning (ML) models are generally trained for a specific task.
+However, it is well known that ML models, especially the deep neural networks, tend to learn unintended information from their training data \cite{}.
+If such training data is of sensitive nature, e.g., location traces or medical records, corresponding ML model may leak unintended information through their predictions.
+Previous literature has demonstrated multiple attacks that leak privacy of training data~\cite{}.
+Specifically in this work, we focus on \emph{Membership Inference Attack} (MIA).
+Given a target data sample and target ML model, MIA aims to infer whether the target sample was a part of the training data of the target ML model.
+\virat{give intuition in one to two short sentences}
 
-Machine learning models are more confident while predicting the class of already seen train data record compared to an unseen test data record.
-Membership inference attacks exploits this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
-This is a binary decisional problem where the adversary classifies the membership of a given input $x$ using the model's output prediction $f(x;\theta)$.
-We describe the threat model and attack details below.
 
-\noindent\textbf{Adversary Knowledge.} We assume a blackbox setting where the adversary is assumed to have no knowledge about the target model.
+
+\subsubsection{Threat model}\label{mia_threat_model}
+We detail the threat model of MIA that we consider in this work.
+% Machine learning models are more confident while predicting the class of already seen train data record compared to an unseen test data record.
+% Membership inference attacks exploits this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
+% This is a binary decisional problem where the adversary classifies the membership of a given input $x$ using the model's output prediction $f(x;\theta)$.
+% We describe the threat model and attack details below.
+
+
+\noindent\textbf{Adversary goal.} \virat{make a pass and write the goal formally and concisely}
+% The goal of adversary in membership inference attack is to infer whether a given data record was used in the model's training data or not.
+Formally, given a user's data record $x$ $\sim$ $P(X,Y)$, where $P(X,Y)$ is the data distribution from which the training data $D_{train}$ was sampled, the adversary estimates $P(x \in D_{train})$ using the model's prediction $f(x;W)$.
+\virat{no need of how adv attacks, just tell the goal}Empirically, the adversary identifies a threshold to estimate whether $x \in D_{train}$ which can also be learnt using a binary classifier.
+
+\noindent\textbf{Adversary's capabilities.}
+\virat{explain what can adv do: e.g., no tampering the training alg, training data, or received prediction}
+
+\noindent\textbf{Adversary knowledge.} We assume a blackbox setting where the adversary is assumed to have no knowledge about the target model.
 Formally, given a target model $f()$ which maps an input data record $x$ to its correct label $y$, the adversary only sees the final model prediction $f(x;\theta)$.
 The adversary does not know the architecture of $f()$ and the model parameters $\theta$.
 This is a practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output predictions.
 
-\noindent\textbf{Adversary Goal.} The goal of adversary in membership inference attack is to infer whether a given data record was used in the model's training data or not.
-Formally, given a user's data record $x$ $\sim$ $P(X,Y)$, where $P(X,Y)$ is the data distribution from which the training data $D_{train}$ was sampled, the adversary estimates $P(x \in D_{train})$ using the model's prediction $f(x;W)$.
-Empirically, the adversary identifies a threshold to estimate whether $x \in D_{train}$ which can also be learnt using a binary classifier.
 
-\noindent\textbf{Attack Methodology.} In this work, we use the confidence score attack where the adversary leverages the prediction entropy of the target model $f(x;W)$ to perform the membership inference attack [][].
+\subsubsection{Attack Methodology}
+\virat{detail this section a bit more as you use this throughout! Explain why is this enough, e.g. refer to papers that show whitebox attacks or shadow model attacks give accuracy close to thresholding if done properly}
+In this work, we use the confidence score attack where the adversary leverages the prediction entropy of the target model $f(x;W)$ to perform the membership inference attack [][].
 In particular, the adversary obtains $f(x;W)$ and finds the maximum posterior and infers $x \in D_{train}$ if the maximum is greater than a threshold.
 The attack is based on the observation that the maximal posterior of a member data record is higher (more confident) than a non-member data record of the training dataset.
 
@@ -38,17 +60,17 @@ The attack is based on the observation that the maximal posterior of a member da
 
 \subsection{Algorithms for Embedded Deep Learning}
 
-On-device processing is an attractive alternative compared to centralized processing of data from sensors, IoT and embedded edge devices.
-Such on-device processing reduces the overhead of communicating data from the devices to the servers, lowers the privacy and security risk associated with storing sensitive data on untrusted central server and lowers the latency for obtaining results from processing [].
-However, in order to execute trained NN models on low powered edge devices, additional optimization is required for the design of the NN architectures.
-Model designers use three state of the art approaches for designing efficient NN models for embedded systems: (a) Model Compression via Pruning, (b) quantization of model parameters and activations and (c) designing standard architectures (off the shelf efficient architectures).
-In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
+On-device processing is an attractive alternative compared to centralized processing of data from sensors, IoT, and embedded edge devices.
+Such on-device processing reduces the overhead of communicating data from the devices to the servers, lowers the privacy and security risk associated with storing sensitive data on untrusted central server and lowers the latency for obtaining results from processing~\cite{}.
+However, in order to execute trained NN\virat{define NN if u haven't} models on low powered edge devices, additional optimization of the architectures of ML models is required.
+Three state-of-the-art approaches to design efficient NN models for embedded systems are: (1) model compression via pruning, (2) quantization of model parameters and activations and (3) designing standard architectures (off the shelf efficient architectures).
+In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.\virat{i don't get this sentence; what do u mean?}
 
-\noindent\textbf{Model Compression (Pruning).} NNs are overparameterized, i.e, have large number of redundant weights.
-Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
-The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
-Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth[].
-Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
+\noindent\textbf{Model Compression (Pruning).} NNs have large number of redundant weights~\cite{}.
+Pruning removes redundant weights, i.e., sets them to zero, without degradation of model accuracy.
+A pruned model has sparse parameters and a hardware can be designed to skip the multiplication\virat{why skip multiplications? are they dim-wise?} and memory storage, and improve the efficiency.
+Sparse weights\virat{use weights or parameters, but be consistent} can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{}.
+Aggressive pruning compresses the model significantly, but requires re-training to restore the model's original accuracy.
 For a threshold $T$, the parameters close to zero are replaced by zero which is given as:
 \[
     f(W)=
@@ -58,28 +80,30 @@ For a threshold $T$, the parameters close to zero are replaced by zero which is 
 \end{cases}
 \]
 
-\noindent\textbf{Off-the-Shelf Efficient Architectures.} NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
-One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
+\noindent\textbf{Off-the-Shelf Efficient Architectures.} NNs can be redesigned by changing the hyperparameters, e.g., filter sizes, number of layers, etc., to reduce the number of parameters and hence, the memory footprint\virat{what is memory footprint? define or don't use jargon}.
+For instance, large convolution filters can be replaced with multiple smaller filters with less number of parameters, while covering the same receptive field.
 For instance, one 5x5 filter can be replaced by two 3x3 filters.
-Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
-For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
-Such optimizations enable to design compact network architecture with layers having lower parameters compared to the original model.
-These have been extensively adopted to design standard architectures such as MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
+Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, which lowers the computation and the number of parameters.
+% For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
+Such optimizations lead to compact NN architectures with smaller number of parameters compared to the architecture.
+These have been extensively adopted to design standard architectures\virat{what's a standard architecture?} such as MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
 
 
-\noindent\textbf{Quantization.} Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
-Quantization maps parameters and activations values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
+\noindent\textbf{Quantization.}
+% Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
+Quantization reduces precision of model parameters and activations and maps their values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
 The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
-Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing througput.
+Reducing the precision of the (a) parameters lowers memory requirement of model, (b) activations lowers the computation overhead by replacing MACs\virat{what's MACs?} with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing throughput.\virat{something wrong with (c)'s starting}
 Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy[Xnor][].
-For instance, Binarized NNs quantize the operands to \{-1,+1\} values[][] while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training[].
+For instance, binarized\virat{binary?} NNs quantize the operands to \{-1,+1\} values[][]\virat{do u use [] to show empty cites? use the cmd cite{}} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training[].
 The additional sparsity in ternary NNs reduce computation and storage cost. These are examples of uniform quantization.
-Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters.
+Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters~\cite{}.
 This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
 
 
 
 \subsection{Datasets and Architectures}
+\virat{this section should be in exp set up.}
 
 
 For evaluating and comparing different efficiency algorithms, we use three simple datasets: FashionMNIST, Purchase100 and Location.
@@ -110,7 +134,7 @@ For Location and Purchase datasets, we train the model for 50 epochs while for F
 We train all the model until convergence and do not specifically overfit the models.
 
 
-\subsection{Metrics}
+\subsection{Metrics}\virat{this section should be in exp set up.}
 
 We use the inference attack accuracy to estimate the success of membership inference attack.
 An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
