@@ -9,15 +9,15 @@
 
 \begin{tikzpicture}
 \begin{axis}[title={(a)},
-title style={at={(0.5,0)},anchor=north,yshift=-25},
+title style={at={(0.5,0)},anchor=north,yshift=-35},
 ylabel=Confidence Score,
-legend style={font=\tiny},
+xlabel=Classes,
+legend style={font=\large},
 legend pos =  north east,
 ybar=5pt,% configures ‘bar shift’
 bar width=6pt,
-xmax=9.5,
-ymin=0,
-xmin=0
+xtick={0,1,2,3,4,5,6,7,8,9},
+ymin=0
 ]
 
 \addplot
@@ -33,15 +33,15 @@ coordinates {(0,0.0010145490523427725) (1,0.00030558116850443184) (2,0.000815462
 %
 \begin{tikzpicture}
 \begin{axis}[title={(b)},
-title style={at={(0.5,0)},anchor=north,yshift=-25},
+title style={at={(0.5,0)},anchor=north,yshift=-35},
 ylabel=Confidence Score,
-legend style={font=\tiny},
+xlabel=Classes,
+xtick={0,1,2,3,4,5,6,7,8,9},
+legend style={font=\large},
 legend pos =  north east,
 ybar=5pt,% configures ‘bar shift’
 bar width=6pt,
-xmax=9.5,
-ymin=0,
-xmin=0
+ymin=0
 ]
 
 \addplot
@@ -60,7 +60,7 @@ coordinates {(0,0.12253900617361069) (1,0.0015809950418770313) (2,0.276426166296
 %
 \begin{tikzpicture}
 \begin{axis}[title={(c)},
-title style={at={(0.5,0)},anchor=north,yshift=-25},
+title style={at={(0.5,0)},anchor=north,yshift=-35},
 line width=1.0pt,
 legend style={font=\tiny},
 legend pos =  north east,

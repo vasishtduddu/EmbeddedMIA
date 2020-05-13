@@ -17,7 +17,12 @@ ylabel={Generalization Error},
 axis y line*=left,
 xlabel={Precision},
 xtick={0,1,2,3,4},
-xticklabels={32b, 8b, 4b, 3b, 2b}
+xlabel style={font=\LARGE},
+ylabel style = {font=\LARGE},
+xticklabel style = {font=\large},
+yticklabel style = {font=\large},
+xticklabels={32b, 8b, 4b, 3b, 2b},
+legend style={at={(0.02,0.1)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -29,6 +34,8 @@ xticklabels={32b, 8b, 4b, 3b, 2b}
     coordinates {
     (0,11.42)(1,11.55)(2,11.03)(3,8.28)(4,5.05)
       };
+      \addlegendimage{color=black,solid,mark=*, mark options={solid}}
+      \addlegendentry{Generalization Error}
 \end{axis}
 
 \begin{axis}[
@@ -38,8 +45,10 @@ mark size=2.0pt,
 xmin=0,xmax=4,
 ylabel near ticks, yticklabel pos=right,
 ylabel={Inference Accuracy},
-ylabel style = {rotate=180},
-axis x line=none
+ylabel style = {rotate=180, font=\LARGE},
+yticklabel style = {font=\large},
+axis x line=none,
+legend style={at={(0.02,0)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -51,6 +60,8 @@ axis x line=none
     coordinates {
     (0,56.57)(1,56.54)(2,55.67)(3,54.24)(4,52.64)
         };
+        \addlegendimage{color=black,dashed,mark=*,mark options={solid}}
+        \addlegendentry{Inference Accuracy}
 \end{axis}
 \end{tikzpicture} &
 
@@ -68,7 +79,12 @@ ylabel={Generalization Error},
 axis y line*=left,
 xlabel={Precision},
 xtick={0,1,2,3,4},
-xticklabels={32b, 8b, 4b, 3b, 2b}
+xlabel style={font=\LARGE},
+ylabel style = {font=\LARGE},
+xticklabel style = {font=\large},
+yticklabel style = {font=\large},
+xticklabels={32b, 8b, 4b, 3b, 2b},
+legend style={at={(0.02,0.1)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -80,6 +96,8 @@ xticklabels={32b, 8b, 4b, 3b, 2b}
     coordinates {
     (0,20.26)(1,20.31)(2,18.57)(3,14.43)(4,6.45)
       };
+      \addlegendimage{color=black,solid,mark=*, mark options={solid}}
+      \addlegendentry{Generalization Error}
 \end{axis}
 
 \begin{axis}[
@@ -89,8 +107,10 @@ mark size=2.0pt,
 xmin=0,xmax=4,
 ylabel near ticks, yticklabel pos=right,
 ylabel={Inference Accuracy},
-ylabel style = {rotate=180},
-axis x line=none
+ylabel style = {rotate=180,font=\LARGE},
+yticklabel style = {font=\large},
+axis x line=none,
+legend style={at={(0.02,0)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -102,6 +122,8 @@ axis x line=none
     coordinates {
     (0,62.08)(1,62.05)(2,59.86)(3,57.27)(4,53.38)
         };
+        \addlegendimage{color=black,dashed,mark=*,mark options={solid}}
+        \addlegendentry{Inference Accuracy}
 \end{axis}
 \end{tikzpicture} &
 
@@ -123,7 +145,12 @@ ylabel={Generalization Error},
 axis y line*=left,
 xlabel={Precision},
 xtick={0,1,2,3,4},
-xticklabels={32b, 8b, 4b, 3b, 2b}
+xlabel style={font=\LARGE},
+ylabel style = {font=\LARGE},
+xticklabel style = {font=\large},
+yticklabel style = {font=\large},
+xticklabels={32b, 8b, 4b, 3b, 2b},
+legend style={at={(0.02,0.1)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -135,6 +162,8 @@ xticklabels={32b, 8b, 4b, 3b, 2b}
     coordinates {
     (0,37.48)(1,37.57)(2,38.28)(3,37.70)(4,19.93)
       };
+      \addlegendimage{color=black,solid,mark=*, mark options={solid}}
+      \addlegendentry{Generalization Error}
 \end{axis}
 
 \begin{axis}[
@@ -144,8 +173,10 @@ mark size=2.0pt,
 xmin=0,xmax=4,
 ylabel near ticks, yticklabel pos=right,
 ylabel={Inference Accuracy},
-ylabel style = {rotate=180},
-axis x line=none
+ylabel style = {rotate=180,font=\LARGE},
+yticklabel style = {font=\large},
+axis x line=none,
+legend style={at={(0.02,0)},anchor=south west, font=\small}
 ]
 \addplot[
     color=black,
@@ -157,13 +188,15 @@ axis x line=none
     coordinates {
     (0,81.82)(1,81.77)(2,76.07)(3,71.61)(4,61.95)
         };
+        \addlegendimage{color=black,dashed,mark=*,mark options={solid}}
+        \addlegendentry{Inference Accuracy}
 \end{axis}
 \end{tikzpicture}
 
 
 \end{tabular}
 }
-\caption{\underline{Pruning followed by Weight Sharing (Quantization).} While the retraining after pruning is necessary to restore the predictive accuracy, clustering the weights to reduce the precision lowers the inference accuracy (dashed line) risk while reducing the generalization error (solid line) for FashionMNIST(left), Purchase100(Center) and Location(Right) dataset.}
+\caption{\underline{Pruning followed by Weight Sharing (Quantization).} While the retraining after pruning is necessary to restore the predictive accuracy, clustering the weights to reduce the precision lowers the inference accuracy risk while reducing the generalization error for FashionMNIST(left), Purchase100(Center) and Location(Right) dataset.}
 \label{fig:wtsharing}
 \end{center}
 \end{figure*}

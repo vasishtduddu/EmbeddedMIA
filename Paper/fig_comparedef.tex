@@ -28,8 +28,14 @@
         % because of the category labels, shift the `xlabel' a bit down
         xlabel style={
             yshift=-4ex,
+            font=\huge,
         },
-        legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1},
+        ylabel style={
+            font=\huge,
+        },
+        xticklabel style = {font=\large},
+        yticklabel style = {font=\large},
+        legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1,  font=\huge},
         % adjust `bar width' so it fits your needs ...
         bar width=8pt,
         % ... and with that you also have to adjust the x limits

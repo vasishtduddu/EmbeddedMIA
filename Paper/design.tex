@@ -85,6 +85,6 @@ The loss function in knowledge distillation $Loss_{KD} (f_{student}, f_{teacher}
 \begin{equation}
 \sum _{k=1}^m f_{student}(x_k)log(f_{teacher}(x_k)) + f_{teacher}(x_k)log(f_{student}(x_k))
 \end{equation}
-\input{kd_fig}
+%\input{kd_fig}
 This ensures that the student model learns to map the prediction boundary of the teacher model and imitates the prediction behaviour for different inputs.
 This results in an increase in the accuracy of the student model compared to the original baseline of standalone training without the teacher model.
