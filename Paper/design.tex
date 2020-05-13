@@ -83,7 +83,7 @@ During training of the quantized model (student), we do not compute the loss bet
 We instead estimate the loss between the predicted label $f_{student}(x)$ and the predicted label for the full precision teacher model $f_{teacher}(x)$.
 The loss function in knowledge distillation $Loss_{KD} (f_{student}, f_{teacher})$ is given as
 \begin{equation}
-\sum _{k=1}^m f_{student}(x_k)log(f_{teacher}(x_k)) + f_{teacher}(x_k)log(f_{student}(x_k))
+\sum_{k=1}^m f_{student}(x_k)log(f_{teacher}(x_k)) + f_{teacher}(x_k)log(f_{student}(x_k))
 \end{equation}
 %\input{kd_fig}
 This ensures that the student model learns to map the prediction boundary of the teacher model and imitates the prediction behaviour for different inputs.

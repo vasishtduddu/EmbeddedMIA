@@ -28,57 +28,9 @@ For Purchase100 dataset, we use a fully connected architecture with the nodes in
 We use the pre-processed dataset from the authors of~\cite{} where each record has 446 binary features which is mapped to one of 30 classes each representing a different geosocial location type (e.g., Restaurant, fast food joint, etc.). We use 1,600 data records to train the model.
 For Location dataset we use a fully connected architecture with hyperparameters as [512,256,128,30].
 
-However, the actual \method\hspace{0.02in} NN design methodology is evaluated on more sophisticated datasets such as CIFAR10.
-Further, the dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences[][][].
-The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers (detailed description in Section~\ref{}) which are used for Purchase100 and Location datasets.
-It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
-
-\noindent\textbf{CIFAR10.} The CIFAR10 dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
-For CIFAR10 dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet.
-
-For Location and Purchase datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs; for CIFAR10 we train the models using standard hyperparameter setting for 100-150 epochs.
-We train all the model until convergence and do not specifically overfit the models.
+For Location and Purchase datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs. 
 
 
-
-\subsection{Membership Inference Attacks}
-
-
-On querying a trained model $f(x;\theta)$, the adversary learns aggregate information about the entire data population which the model generalizes from the train dataset to an unseen test data.
-This is desirable and quantified using the accuracy of the model.
-On the other hand, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
-In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
-This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
-Alternatively, an adversary can learn sensitive attributes about the user's data record which can be used to reconstruct the sensitive training dataset.
-In this work, we specifically use membership inference attacks to quantify information leakage in machine learning models.
-
-Machine learning models are more confident while predicting the class of already seen train data record compared to an unseen test data record.
-Membership inference attacks exploits this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
-This is a binary decisional problem where the adversary classifies the membership of a given input $x$ using the model's output prediction $f(x;\theta)$.
-We describe the threat model and attack details below.
-
-\noindent\textbf{Adversary Knowledge.} We assume a blackbox setting where the adversary is assumed to have no knowledge about the target model.
-Formally, given a target model $f()$ which maps an input data record $x$ to its correct label $y$, the adversary only sees the final model prediction $f(x;\theta)$.
-The adversary does not know the architecture of $f()$ and the model parameters $\theta$.
-This is a practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output predictions.
-
-\noindent\textbf{Adversary Goal.} The goal of adversary in membership inference attack is to infer whether a given data record was used in the model's training data or not.
-Formally, given a user's data record $x$ $\sim$ $P(X,Y)$, where $P(X,Y)$ is the data distribution from which the training data $D_{train}$ was sampled, the adversary estimates $P(x \in D_{train})$ using the model's prediction $f(x;W)$.
-Empirically, the adversary identifies a threshold to estimate whether $x \in D_{train}$ which can also be learnt using a binary classifier.
-
-\noindent\textbf{Attack Methodology.} In this work, we use the confidence score attack where the adversary leverages the prediction entropy of the target model $f(x;W)$ to perform the membership inference attack [][].
-In particular, the adversary obtains $f(x;W)$ and finds the maximum posterior and infers $x \in D_{train}$ if the maximum is greater than a threshold.
-The attack is based on the observation that the maximal posterior of a member data record is higher (more confident) than a non-member data record of the training dataset.
-
-
-
-\subsection{Metrics}
-
-We use the inference attack accuracy to estimate the success of membership inference attack.
-An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
-This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
-The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy.
-Additionally, the accuracy of the model is computed using the model's performance on unseen test data.
 
 
 %\subsection{Optimization for Efficiency}

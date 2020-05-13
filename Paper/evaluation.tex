@@ -1,7 +1,22 @@
-\section{Evaluation}\label{compare}
+\section{Evaluation of \method}\label{compare}
 
 In this section, we evaluate the performance of NNs designed in Phase I and Phase II of \method\hspace{0.02in} design methodology.
-The evaluation is done on state of the art standard architectures: Network in Network, AlexNet and VGGNet, on CIFAR10 dataset.
+
+
+
+\subsection{Dataset and Architecture}
+
+
+The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: CIFAR10. The dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences[][][].
+The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers (detailed description in Section~\ref{}) which are used for Purchase100 and Location datasets.
+It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
+
+\noindent\textbf{CIFAR10.} The CIFAR10 dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
+For CIFAR10 dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet.
+
+For CIFAR10 we train the models using standard hyperparameter setting for 100-150 epochs.
+
+
 
 \subsection{Phase I}
 
