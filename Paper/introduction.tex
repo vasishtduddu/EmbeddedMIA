@@ -27,7 +27,7 @@ In this paper, we address this challenge by proposing \method\hspace{0.02in} —
 %We show that model compression leaks more information compared to the baseline (uncompressed) models and poses higher privacy risks to the user's data.\virat{add some numbers here}
 %\red{Off-the-shelf architectures (e.g., MobileNet and SqueezeNet) do not meet all the efficiency requirements but can provide more limited privacy leakage.}\virat{clarify using numbers}
 %These observations motivate our design choice of quantizing NNs as part of \method\hspace{0.02in} training algorithm.
-%It is worth noting that, previous works have explored the the efficiency-accuracy~\cite{rastegari2016xnornet} and privacy-accuracy~\cite{shokri2017membership} trade-offs, however separately. To address the above shortcoming, our work provides the first systematic evaluation efficiency-accuracy-privacy trade-offs and leverages the lesson learned from the evaluation to design a novel training methodology.
+%It is worth noting that, previous works have explored the the efficiency-accuracy~\cite{rastegari2016xnornet} and privacy-accuracy~\cite{shokri2017membership} trade-offs, however separately. To address the above shortcoming, 
 
 % \noindent\textbf{Our contributions:} In this paper, we address this challenge by proposing %provide directions to design NNs for efficiency private inference.
 % %We present 
@@ -49,19 +49,19 @@ In Phase-II, we restore this accuracy
 %to acceptable standard compared to the original (full precision model) accuracy
 by transferring knowledge from larger full precision models to the quantized models~\cite{shejwalkar2019reconciling}.
 Here, the quantized XNOR model uses the output predictions of the full precision state of the art models as labels instead of using the true labels during training.
-This results in significantly increase in the prediction accuracy of the model while limiting privacy leakage.
+This results in significantly increase in the prediction accuracy of the model while limiting privacy leakage. 
 %with a small but acceptable increase in privacy leakage.
 
 %In summary, \method\hspace{0.02in} training algorithm comprises of Phase I of \textit{Quantizing} to reduce the precision of model with binary values with XNOR computations which provides efficiency and privacy.
 %This is followed by Phase II of \textit{Distillation} to restore the accuracy degradation by transferring the knowledge learnt from the full precision to the efficient quantized model.
 
 Finally, we compare the models trained using \method\hspace{0.02in} with prior state-of-the-art defences against membership inference attacks, namely, Adversarial Regularization~\cite{DBLP:conf/ccs/NasrSH18} and Differential Privacy~\cite{Abadi:2016:DLD:2976749.2978318}.
-We show that our proposed models improve the trade-offs between the efficiency,  accuracy, and privacy compared to the baselines approaches. The code is made publicly available\footnote{Anonymized for Submission}.
+We show that our proposed models improve the trade-offs between the efficiency,  accuracy, and privacy compared to the baselines approaches. Our work provides the first systematic evaluation efficiency-accuracy-privacy trade-offs to design a novel training methodology. The code is made publicly available\footnote{Anonymized for Submission}.
 %, and show that our proposed models performance is comparable to the state of the art.
 %However, our models provide an additional guarantee of higher efficiency which models trained with prior defences fail to provide.
 
 The paper is outlined as follows: Section~\ref{background} presents background in embedded Deep Learning while Section~\ref{analysis} reports a comparative analysis of state of the art baselines.
-We describe \method\hspace{0.02in} in Section~\ref{design} and evaluate it Section~\ref{compare}. Related work are then presented Section~\ref{related} before to conclude Section ~\ref{conclusions}.
+We describe \method\hspace{0.02in} in Section~\ref{design} and evaluate it Section~\ref{compare}. Related work are then presented Section~\ref{related} before concluding in Section ~\ref{conclusions}.
 
 %The paper is outlined as follows: We describe the threat model and describe the state of the art algorithms for embedded Deep Learning in Section~\ref{background} followed by identifying the best optimization technique to satisfy privacy and efficiency in Section~\ref{motivate}. Based on the observations, we describe the Phase I and Phase II design of \method\hspace{0.02in} training algorithm in Section~\ref{design}.
 %Finally, we show that the proposed optimization for NNs is comparable to prior state of the art privacy preserving defences (Section~\ref{compare}) while additionally providing efficiency guarantees.

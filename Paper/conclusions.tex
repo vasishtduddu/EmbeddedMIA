@@ -1,10 +1,10 @@
 \section{Conclusions}\label{conclusions}
 
-On device processing of sensitive data using Neural Networks on embedded systems requires a careful analysis of privacy, efficiency and accuracy of the algorithms which is currently lacking in literature.
+On device processing of sensitive data using NNs on embedded systems requires a careful analysis of privacy, efficiency and accuracy of the algorithms which is currently lacking in literature.
 In this work, we propose a two phase \method\hspace{0.02in} framework to design private, efficient and accurate NNs for execution on low powered embedded devices.
 We quantify the privacy leakage using membership inference attacks where the adversary aims to infer whether a given data record was used in the model's training data.
 We first provide a comprehensive privacy and efficiency analysis of state of the art algorithms for improving efficiency: model compression (pruning), quantization and efficient off-the-shelf architectures.
-We show that model compression results in leaking more information compared to the original model while efficient off the shelf architectures do not provide the best efficiency guarantees.
-Based on these observations, in Phase I of \method, we use quantization (specifically binarization) as a design choice which shows high resistance against inference attacks while satisfying all the efficiency requirements.
-While Phase I optimizes for privacy and efficiency, in Phase II, we improve the accuracy of the resultant model using knowledge transfer from full precision (teacher) models to Phase I quantized model to improve the accuracy.
-Our extensive evaluations on state of the art architectures on CIFAR10 dataset indicates that models trained using the proposed framework provides high resistance against membership inference attacks (comparable to other state of the art defences) with high efficiency against inference attacks.
+We show that model compression results in leaking more information compared to the original model while efficient off-the-shelf architectures do not provide the best efficiency guarantees.
+Based on these observations, we use quantization as a design choice which shows high resistance against inference attacks while satisfying all the efficiency requirements.
+While Phase I of \method\hspace{0.02in} optimizes for privacy and efficiency, in Phase II, we improve the accuracy of the resultant model using knowledge transfer from full precision models.
+Our extensive evaluations of state of the art architectures on CIFAR10 dataset indicates that models trained using the proposed framework provides high resistance against membership inference attacks (comparable to other state of the art defences) with high efficiency.

@@ -146,8 +146,6 @@ This provides provable bound on the information leaked about an individual data 
 
 \subsubsection{Results}
 
-\input{fig_comparedef}
-
 The comparison of models trained using \method\hspace{0.02in} is shown in Figure~\ref{fig:compare}.
 Models trained using \method\hspace{0.02in} are comparable in test accuracy and resisting membership inference leakage to Adversarial Regularization and Differential Privacy.
 The inference accuracy for NiN is 52.90\% (\method) compared to 54.09\% (DP) and 51.92\% (AdvReg) and test accuracy of 83.52\% (\method) compared to 85.11\% (DP) and 83.66\% (AdvReg).
@@ -155,11 +153,12 @@ For AlexNet, the inference accuracy is 51.85\% (\method) compared to 52.81\% (DP
 For VGGNet, the inference accuracy is 53.17\% (\method) compared to 52.90\% (DP) and 53.33\% (AdvReg) and test accuracy of 85.8\% (\method) compared to 84.91\% (DP) and 85.19\% (AdvReg).
 In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for low power embedded systems.
 
+\input{fig_comparedef}
 
 \subsubsection{Comparison with MemGuard}
 
 MemGuard~\cite{10.1145/3319535.3363201} is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
-The defence is based on the idea that the adversary's attack model is a machine learning classifier which is vulnerable to change in output with a carefully added noise to input (referred to as adversarial examples).
+The defence assumes the adversary's attack model is an ML classifier vulnerable to adversarial examples.
 However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework assuming the adversary uses shadow model attack.
 Our attack does not rely on a "shadow" models but rather relies on output posterior to perform the attack.
 Hence, within the threat model considered, the defence is not valid for comparison.
