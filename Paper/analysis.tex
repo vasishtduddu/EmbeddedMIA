@@ -1,41 +1,52 @@
 \section{Comparative analysis}
 \label{analysis}
 
-we compare the three baseline algorithms....
-In this work, we specifically select the three state of the art design techniques for efficient model computation:
-\begin{itemize}
-\item Model Compression via pruning redundant parameters and nodes
-\item Quantization to lower the precision of model parameters and activations
-\item Efficient off-the-shelf architectures
-\end{itemize}
+We carried out an extensive evaluation of the three state of the art design techniques for efficient model computation.
+%: a) Model Compression via pruning redundant parameters and nodes, b) Quantization to lower the precision of model parameters and activations, and c) Efficient off-the-shelf architectures.
+%
+%We show that ... In addition, we show that ... 
+We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered metrics in Section~\ref{metrics}. Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
+
 
 \subsection{Datasets and Architectures}
-
+\label{datasets}
 
 For evaluating and comparing different efficiency algorithms, we use three simple datasets: FashionMNIST, Purchase100 and Location.
-These provide us with the necessary direction to choose the optimal efficiency algorithm which satisfies all the efficiency and privacy requirement as describes in Section~\ref{motivate}.
+For Location and Purchase100 datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs. 
+%These provide us with the necessary direction to choose the optimal efficiency algorithm which satisfies all the efficiency and privacy requirement as describes in Section~\ref{motivate}.
 
-\noindent\textbf{FashionMNIST.} The FashionMNIST dataset consists of 60,000 training examples and a test set of 10,000 examples.
+\noindent\textbf{FashionMNIST.} This dataset consists of 60,000 training examples and a test set of 10,000 examples.
 Each data record is a 28$\times$28 grayscale image which is mapped to one of 10 classes consisting of fashion products such as coat, sneaker, shirt, shoes.
-For FashionMNIST dataset, we use a modified LeNet architecture with two convolution layers followed by maxpool and dense layers: [Conv 32 (3,3), Conv 64 (3,3), Maxpool (2,2), Dense 128, Dense 10].
+For this dataset, we use a modified LeNet architecture with two convolution layers followed by maxpool and dense layers: [Conv 32 (3,3), Conv 64 (3,3), Maxpool (2,2), Dense 128, Dense 10] (Architecture 1). Additionally, we use a fully connected model [512,512,512] (Architecture 2).
 
-\noindent\textbf{Purchase100.} The  Purchase100  dataset  is a privacy sensitive dataset capturing the purchase preferences of online customers.
-The pre-processed dataset is taken from the authors of~\cite{} which has been taken from the Kaggle's "acquired valued shopper" challenge\footnote{https://kaggle.com/c/acquire-valued-shoppers-challenge/data}.
+\noindent\textbf{Purchase100.} This dataset is a privacy sensitive dataset capturing the purchase preferences of online customers taken from the authors of~\cite{shokri2017membership}.
 The data records have 600 binary features and each record is classified into one of 100 classes identifying each user's purchase.
-For Purchase100 dataset, we use a fully connected architecture with the nodes in each layers as [1024,512,256,128,100].
+For this dataset, we use a fully connected architecture with the nodes in each layers as [1024,512,256,128,100].
 
-\noindent\textbf{Location.} The Location dataset is a privacy sensitive dataset capturing user's location "check-ins" in Bangkok collected from the Foursquare social network\footnote{https://sites.google.com/site/yangdingqi/home/foursquare-dataset} from April 2012 to September 2013.
-We use the pre-processed dataset from the authors of~\cite{} where each record has 446 binary features which is mapped to one of 30 classes each representing a different geosocial location type (e.g., Restaurant, fast food joint, etc.). We use 1,600 data records to train the model.
-For Location dataset we use a fully connected architecture with hyperparameters as [512,256,128,30].
+\noindent\textbf{Location.} This dataset is a privacy sensitive dataset capturing user's location "check-ins" taken from the authors of~\cite{shokri2017membership} where each record has 446 binary features which is mapped to one of 30 classes each representing a location. For this dataset we use a fully connected architecture with hyperparameters as [512,256,128,30].
 
-For Location and Purchase datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs. 
+
+
+
+\subsection{Metrics}
+\label{metrics}
+
+\paragraph{Efficiency} We evaluate efficiency of the three baseline algorithms based on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically, we provide a qualitative comparison for the baseline algorithms.
+
+\paragraph{Privacy}
+We use the inference attack accuracy to estimate the success of membership inference attack.
+An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
+This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
+The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy (generalization error). Higher generalization error (overfitting) results in higher distinguishability between the test and train resulting in higher membership inference accuracy~\cite{shokri2017membership}.
+Additionally, the accuracy of the model is computed using the model's performance on unseen test data.
+
 
 
 
 
 %\subsection{Optimization for Efficiency}
 \subsection{Evaluating Efficiency}
-
+\label{eval-efficiency}
 
 Here, in the view of the above efficiency requirements, we compare the three baseline algorithms.
 We then select an efficient design scheme for NNs that satisfies all our requirements.
@@ -50,22 +61,22 @@ This requires additional logic to check for zero valued parameters in a dictiona
 
 \input{fig_prune}
 \input{fig_pruneRetrain}
-\input{fig_wtsharing}
+
 
 \noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications by multiple matrix-vector multiplications with smaller dimensions.
 This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations or FLOPS~\cite{article}.
 In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the the multiplications with "0"pruned values, the hardware optimization enable the user to skip the computation and replace the output by a "0" directly.
-For quantized models with binarized parameters and activations the MAC operations can be replaced by binary operations such as XNOR and the maxpool operations can be replaced by OR operation, while the activations can be replaced by checking the parity bit (denotes the sign) operation and hence reducing the FLOPS drastically[XONN].
+For quantized models with binarized parameters and activations the MAC operations can be replaced by binary operations such as XNOR and the maxpool operations can be replaced by OR operation, while the activations can be replaced by checking the parity bit (denotes the sign) operation and hence reducing the FLOPS drastically~\cite{235489}.
 This results in high computational efficiency and hence, faster inference.
 
 
-\noindent\textbf{Energy Efficiency.} Energy efficiency has been shown to not vary much in case of reduction with number of parameters and data type, number of memory accesses play vital role[CVPR 2017 yang et al][].
-Specifically, for the case of off-the-shelf architectures the while the computation efficiency has been shown to improve, the energy efficiency has been shown to be close to large scale state of the art models like AlexNet[suqeezenet][].
-Alternatively, for the case of model compression, energy efficiency can be achieved by additionally providing hardware optimization and shows small improvement in the energy consumption[].
-For quantization, however, the energy efficiency has been shown to be high [][] where the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
-Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption[][][].
-While some improvement is seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization[].
-The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the authors to [][][] for more details.
+\noindent\textbf{Energy Efficiency.} Energy efficiency has been shown to not vary much in case of reduction with number of parameters and data type, number of memory accesses play vital role~\cite{6757323}.
+Specifically, for the case of off-the-shelf architectures the while the computation efficiency has been shown to improve, the energy efficiency has been shown to be close to large scale state of the art models like AlexNet~\cite{DBLP:journals/corr/IandolaMAHDK16,8114708}.
+Alternatively, for the case of model compression, energy efficiency can be achieved by additionally providing hardware optimization and shows small improvement in the energy consumption~\cite{journals/corr/YangCS16a,DBLP:journals/corr/HanMD15}.
+For quantization, however, the energy efficiency has been shown to be high where the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
+Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption~\cite{NIPS2016_6573,rastegari2016xnornet}.
+While some improvement is seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
+The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the authors to~\cite{8114708} for more details.
 
 In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefit for different efficiency requirements over the other alternatives.
 
@@ -73,6 +84,7 @@ In summary, compared to different optimization techniques for NNs, the quantized
 
 
 \subsection{Evaluating Privacy Leakage}
+\label{eval-leakage}
 
 In this section, we evaluate the information leakage through membership inference attacks for the three baseline algorithms considered.
 This is the main contribution of our work where we evaluate the privacy leakage for different optimization and design algorithms for NNs.
@@ -81,38 +93,41 @@ This is the main contribution of our work where we evaluate the privacy leakage 
 
 We evaluate the privacy leakage on compressing a model by pruning the connections in the model.
 Here, pruning is achieved by replacing some of the parameters with "0" value.
-As described in the original paper~\cite{}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
+As described in the original paper~\cite{Han:2015:LBW:2969239.2969366,DBLP:journals/corr/HanPNMTECTD16}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
 
 We evaluate and validate the impact on membership privacy on compressing the model trained on three datasets: FashionMNIST, Location and Purchase100.
 On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}).
-This is expected as the parameters are responsible for memorizing the training data information and pruning the parameters lowers the adversary's attack success~\cite{rezawhite}.
+This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
+
+\input{fig_wtsharing}
 
 However, interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
 This indicates that model compression in turn increases the overall privacy leakage.
 This can be attributed to the lower number of parameters forced to learn the same amount of information stored previously in the unpruned model with larger number of parameters.
 In other words, the same amount of information is now captured by less number of parameters resulting in higher memorization of information per parameter.
-To analyze the information stored per parameter, we first compute the model capacity as the mutual information of a trained network between the true label $Y$ and the predicted label $Y_{\theta}$ for a random input $X$ as derived in~\cite{45932,cap}.
-Here, model's information $I(Y;Y_{\theta}|X) = $
-\begin{equation}
-\footnotesize
-N_{train}\left(1 - (r_{train}log_2(\frac{1}{r_{train}}) + (1-r_{train})log_2(\frac{1}{1-r_{train}}))\right)
-\end{equation}
-where $r_{train}$ is the classification train accuracy for all the $N_{train}$ samples in the training data.
-For $r_{train} = 1$, the model completely memorizes all random samples as the information stored equals the number of samples $N_{train}$, while for $r_{train}=0.5$, the training accuracy 0.
-We divide the above equation by the model's total number of parameters $N_{param}$ to get the per parameter information stored as
-\begin{equation}
-I_p(Y;Y_{\theta}|X) = \frac{I(Y;Y_{\theta}|X)}{N_{param}}
-\end{equation}
-As the model is compressed (pruned), the number of parameters $N_{param}$ decreases which results in increase in $I_p(Y;Y_{\theta}|X)$. However, on aggressive pruning, the train accuracy $r_{train}$ also decreases resulting in a decrease in the information per parameter, which is empirically indicated by a decrease in membership inference accuracy at the end in Figure~\ref{fig:retrain}.
+As the model is compressed (pruned), the number of parameters decreases which results in increase in information per parameter. However, on aggressive pruning, the train accuracy also decreases resulting in a decrease in the information per parameter, which is empirically indicated by a decrease in membership inference accuracy at the end in (Figure~\ref{fig:retrain}).
+%To analyze the information stored per parameter, we first compute the model capacity as the mutual information of a trained network between the true label $Y$ and the predicted label $Y_{\theta}$ for a random input $X$ as derived in~\cite{45932,cap}.
+%Here, model's information $I(Y;Y_{\theta}|X) = $
+%\begin{equation}
+%\footnotesize
+%N_{train}\left(1 - (r_{train}log_2(\frac{1}{r_{train}}) + (1-r_{train})log_2(\frac{1}{1-r_{train}}))\right)
+%\end{equation}
+%where $r_{train}$ is the classification train accuracy for all the $N_{train}$ samples in the training data.
+%For $r_{train} = 1$, the model completely memorizes all random samples as the information stored equals the number of samples $N_{train}$, while for $r_{train}=0.5$, the training accuracy 0.
+%We divide the above equation by the model's total number of parameters $N_{param}$ to get the per parameter information stored as
+%\begin{equation}
+%I_p(Y;Y_{\theta}|X) = \frac{I(Y;Y_{\theta}|X)}{N_{param}}
+%\end{equation}
+
 
 
 \textbf{Mitigating the Privacy Risks in Pruned Models.} We describe on potential approach to mitigate the privacy risk of the compressed models without requiring to modify the model's training.
-The post-hoc apporach utilizes the weight sharing for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
-As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST, 62.08\% to 53.38\% for Location and 81.82\% to 61.95\% for Purchase100 dataset.
+The post-hoc approach utilizes the weight sharing for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
+As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST, 62.08\% to 53.38\% for Purchase100 and 81.82\% to 61.95\% for Location dataset.
 This decrease in inference attack accuracy is closely followed by a decrease in generalization error which is indicative of decrease in prediction accuracy of the model.
 We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
 For the experiments, we use the compressed model indicating highest privacy leakage to evaluate the effectiveness of weight sharing on the worst case condition.
-This pipelined approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
+This pipeline approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
 
 
 
@@ -141,7 +156,7 @@ VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 \hline
 \end{tabular}
 \end{center}
-\caption{Model complexity influences the membership inference leakage. Model specifically designed for efficiency leak less information.}
+\caption{Model complexity influences the membership inference leakage.}
 \label{stdarch}
 \end{table}
 
@@ -151,7 +166,10 @@ As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower 
 \input{fig_efficientArch}
 
 Further, the inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
-Increasing the temperature parameter reduces the granularity of the model's output and is given by $F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$ where $z(x)$ computes output of the model before the softmax layer.
+Increasing the temperature parameter reduces the granularity of the model's output and is given by
+$F_i(x) = e^{\frac{z_i(x)}{T}}$ / $ \sum_{j}e^{\frac{z_j(x)}{T}}$
+%$F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$ 
+where $z(x)$ computes output of the model before the softmax layer.
 For the case of SqueezeNet, we are able to reduce the inference accuracy to 50.93\% from 53.07\% while for MobileNet we can reduce the inference accuracy to 52.62\% from 55.57\% as seen in Figure~\ref{softmax}.
 This reduction in inference accuracy is without any cost of the prediction test accuracy of the model.
 
@@ -219,13 +237,14 @@ Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
 \hline
 \end{tabular}
 \end{center}
-\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
+\caption{Only quantization satisfies all the requirements.}
+%\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
 \label{tbl:comparison}
 \end{table}
 
-For our requirement, quantization of NNs is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
-Specifically, in this work we only consider the aggressive quantization of binarizing the parameters and activations to \{-1,+1\} values while additionally replacing the MAC operations with cheap and efficient binary arithmetic (XNOR operations).
-Hence, we choose this particular design for NNs to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
+In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
+On the other hand, model compression leaks more training records membership details making it vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency. Off-the-shelf architectures, while provide decent privacy, does not provide satisfy all aspects of efficiency.
+Hence, we choose quantization as a design for NNs to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
 
 
 

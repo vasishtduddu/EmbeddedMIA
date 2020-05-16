@@ -1,39 +1,67 @@
 \section{Introduction}\label{introduction}
 
-The tremendous performance of Deep Learning has resulted in their deployment to low-powered edge devices and embedded systems.
-Specifically, applications such as devices used in Internet of Things and wearable devices extensively prefer on-device processing to reduce communication latency and overhead as well as preserving the privacy of data against an untrusted data aggregator~\cite{8110880}.
-The design of efficient Neural Networks (NNs) requires algorithm-hardware co-design such as model compression, quantization and designing special architectures with higher efficiency, extensively used for industry applications~\cite{8114708}.
-Such model optimizations require to conform within efficiency constraints, namely, memory, energy and computation, for embedded devices which often result in \textit{efficiency-accuracy} tradeoff.
+The tremendous performance of Machine Learning, especially Deep Learning, models has resulted in their deployment to low-powered edge devices and embedded systems.
+Specifically, Internet of Things (IoT) devices extensively prefer on-device processing to reduce communication latency and overhead, while also preserving the privacy of data from an untrusted data curator~\cite{8110880}.
+The design of efficient Neural Networks (NNs) requires algorithm-hardware co-design such as model compression, quantization, and designing special architectures with higher efficiency~\cite{8114708}.
+% that are extensively used for industry applications
+Such NN architecture design optimizations should conform to efficiency constraints on memory, energy, and computation overhead on embedded devices, and also maintain high prediction accuracy.
+However, such designs often result in \textit{efficiency-accuracy} trade-off~\cite{rastegari2016xnornet}.
 
-Additionally, privacy of user's sensitive data (e.g medical records, location traces and purchase preferences) is an important requirement for embedded processing which is governed by laws (e.g. HIPAA\footnote{https://www.hhs.gov/hipaa/index.html} and GDPR\footnote{https://gdpr.eu/}).
-For instance, through membership inference attacks~\cite{shokri2017membership} the adversary determines whether a \textit{particular} data record was part of the model's training by analyzing the model's output predictions.
-Consider wearable devices for monitoring the user's health relying on NNs for predicting the health risk is trained on data collected from large number of users.
-In such cases, it crucial to design model with resistance against inference attacks, where the adversary infers unobservable sensitive information (e.g user's health status) from the observable information (e.g. model predictions).
+Additionally, privacy laws, such as HIPAA and GDPR, require on-device processing to maintain the privacy of user's sensitive data (e.g, medical records, location traces, and purchase preferences).
+In this work we focus on Membership Inference Attack~\cite{shokri2017membership}, where given a target model and a target record, the adversary determines if the target data record was part of the target model's training data by analyzing the target model's output predictions.
+For instance, wearable devices, which monitor its user's health, commonly rely on NNs for various health related predicts. Such devices are continuously trained on the private data of a large number of users, and therefore, by mounting membership inference attacks on target device, an adversary can determine if the data of a target user was used to train NNs on the target device.
+In such cases, it is crucial to design NNs resistant to inference attacks, where the adversary infers unobservable, sensitive information (e.g, user's health status) from the observable information (e.g., model predictions).
 We refer to computations that achieve privacy through inference-resistance as {\em privacy-preserving computation}.
-Such privacy preserving computation mechanisms, however, affects the model's predictive accuracy resulting in \textit{privacy-accuracy} tradeoff.
+%Multiple works propose privacy preserving mechanisms to address the issue of privacy leakage
+Such privacy preserving computation mechanisms affect the model's predictive accuracy resulting in \textit{privacy-accuracy} trade-off~\cite{Abadi:2016:DLD:2976749.2978318,DBLP:conf/ccs/NasrSH18,shejwalkar2019reconciling}.
 
-In order to design NNs for embedded devices, the model designer has three objectives: (a) high performance measured using test accuracy, (b) high efficiency to conform the computation to memory and power constraints and (c) preserving privacy of the user's data.
-However, designing a model to preserve privacy while satisfying efficiency requirements without a significant cost of the model's predictive accuracy is challenging.
-In this work, we address the research question: \textit{How can we redesign NNs to reconcile privacy and efficiency in Deep NNs without a significant loss in accuracy?}
+Considering the trade-offs described above, the three objectives to consider while designing NNs for embedded devices are: (a) high prediction accuracy, (b) efficiency constraints on memory, energy, and computation overhead, and (c) preserving privacy of on-device data.
+However, designing a model to preserve privacy while satisfying efficiency requirements without a significant cost of the model’s predictive accuracy is challenging.
+%Designing NNs that meet all of the above objectives is a significantly challenging task due to the aforementioned trade-offs.
+%In this work, we address the research question: \textit{How can we redesign NNs to reconcile privacy and efficiency in Deep NNs without a significant loss in accuracy?}
 
-In this paper, we provide directions to design NNs for efficiency private inference.
-We present \method --- a two phase training methodology for designing NNs optimized specifically for performance, accuracy and privacy.
-We evaluate the privacy leakage of three state of the art hardware software co-design techniques, namely, model compression, quantization and efficient off-the shelf architectures.
-We show that model compression leaks more information compared to baseline (uncompressed) models indicating a higher privacy risk to the user's data while off-the-shelf architectures (MobileNet and SqueezeNet) do not meet all the efficiency requirements but can provide acceptable privacy leakage.
-These observations motivate our design choice of quantizing NNs as part of \method\hspace{0.02in} training algorithm.
+In this paper, we address this challenge by proposing \method\hspace{0.02in} — a two phase training methodology for designing NNs optimized specifically for performance, accuracy and privacy. We evaluate the privacy leakage of three state of the art hardware software co-design techniques, namely, model compression, quantization and efficient off-the shelf architectures. We show that model compression leaks more information compared to baseline (uncompressed) models indicating a higher privacy risk to the user’s data while off-the-shelf architectures (MobileNet and SqueezeNet) do not meet all the efficiency requirements but can provide limited privacy leakage. These observations motivate our design choice of quantizing NNs as part of \method\hspace{0.02in} training algorithm.
 
-As part of Phase I of \method, the model parameters and activations are binarized, i.e, constrained to \{-1,+1\} to reduce the memory, energy consumption and computation overhead.
-To ensure computation efficiency, we replace the expensive multiply accumulate operations between parameter matrices and activation vectors from previous layers to simple and cheap XNOR operations.
-As our main contribution, we show that aggressively quantized NN algorithms obtained in Phase I ensures efficient privacy-preserving computation with higher resistance to membership inference attacks.
-Phase I of \method\hspace{0.02in} optimizes for efficiency \textit{and} privacy but at the cost of a significant drop in accuracy.
-In Phase II, we restore the accuracy to acceptable standard compared to the original (full precision model) accuracy by transferring knowledge from larger full precision models to the quantized models.
+%In this paper, we first highlight the three-way trade-off between accuracy, efficiency, and privacy due to NNs designed for embedded devices.
+%More specifically, we evaluate membership privacy leakage due to the three state-of-the-art hardware-software co-design techniques: model compression, quantization, and efficient off-the shelf architectures.
+%We show that model compression leaks more information compared to the baseline (uncompressed) models and poses higher privacy risks to the user's data.\virat{add some numbers here}
+%\red{Off-the-shelf architectures (e.g., MobileNet and SqueezeNet) do not meet all the efficiency requirements but can provide more limited privacy leakage.}\virat{clarify using numbers}
+%These observations motivate our design choice of quantizing NNs as part of \method\hspace{0.02in} training algorithm.
+%It is worth noting that, previous works have explored the the efficiency-accuracy~\cite{rastegari2016xnornet} and privacy-accuracy~\cite{shokri2017membership} trade-offs, however separately. To address the above shortcoming, our work provides the first systematic evaluation efficiency-accuracy-privacy trade-offs and leverages the lesson learned from the evaluation to design a novel training methodology.
+
+% \noindent\textbf{Our contributions:} In this paper, we address this challenge by proposing %provide directions to design NNs for efficiency private inference.
+% %We present 
+% \method~ --- a two phase training methodology to design NNs optimized specifically for accuracy, efficiency, and privacy.
+% We evaluate the privacy leakage of three state of the art hardware software co-design techniques, namely, model compression, quantization and efficient off-the shelf architectures.
+% We show that model compression leaks more information compared to baseline (uncompressed) models indicating a higher privacy risk to the user's data while off-the-shelf architectures (MobileNet and SqueezeNet) do not meet all the efficiency requirements but can provide more limited privacy leakage.
+% %acceptable 
+% % this term should be avoided (what is acceptable?)
+% These observations motivate our design choice of quantizing NNs as part of \method\hspace{0.02in} training algorithm.
+
+%we propose \method\textemdash a two phased training methodology to design NNs optimized specifically for accuracy, efficiency, and privacy. 
+In Phase-I of \method, the model parameters and activations are binarized, i.e., constrained to \{-1,+1\} to reduce the memory, energy consumption, and computation overhead.
+To ensure computation efficiency, we replace the expensive multiply accumulate operations between parameter matrices and activation vectors 
+% from previous layers 
+to simple and cheaper XNOR operations.
+As our main contribution, we show that aggressively quantized NN architectures obtained in Phase-I ensure efficient privacy-preserving computation with higher resistance to membership inference attacks.%\red{why is it better?}
+Phase-I of \method\hspace{0.02in} optimizes for efficiency \textit{and} privacy but at the cost of a significant drop in accuracy.
+In Phase-II, we restore this accuracy 
+%to acceptable standard compared to the original (full precision model) accuracy
+by transferring knowledge from larger full precision models to the quantized models~\cite{shejwalkar2019reconciling}.
 Here, the quantized XNOR model uses the output predictions of the full precision state of the art models as labels instead of using the true labels during training.
-This results in significantly increasing the predictive power of the model with a small but acceptable increase in privacy leakage.
+This results in significantly increase in the prediction accuracy of the model while limiting privacy leakage.
+%with a small but acceptable increase in privacy leakage.
 
-In summary, \method\hspace{0.02in} training algorithm comprises of Phase I of \textit{Quantizing} to reduce the precision of model with binary values with XNOR computations which provides efficiency and privacy.
-This is followed by Phase II of \textit{Distillation} to restore the accuracy degradation by transferring the knowledge learnt from the full precision to the efficient quantized model.
-Finally, we compare the models trained using \method\hspace{0.02in} with prior state of the art defences: Adversarial Regularization and Differential Privacy, and show that our proposed models performance is comparable to the state of the art.
-However, our models provide an additional guarantee of higher efficiency which models trained with prior defences fail to provide.
+%In summary, \method\hspace{0.02in} training algorithm comprises of Phase I of \textit{Quantizing} to reduce the precision of model with binary values with XNOR computations which provides efficiency and privacy.
+%This is followed by Phase II of \textit{Distillation} to restore the accuracy degradation by transferring the knowledge learnt from the full precision to the efficient quantized model.
 
-The paper is outlined as follows: We describe the threat model and describe the state of the art algorithms for embedded Deep Learning in Section~\ref{background} followed by identifying the best optimization technique to satisfy privacy and efficiency in Section~\ref{motivate}. Based on the observations, we describe the Phase I and Phase II design of \method\hspace{0.02in} training algorithm in Section~\ref{design}.
-Finally, we show that the proposed optimization for NNs is comparable to prior state of the art privacy preserving defences (Section~\ref{compare}) while additionally providing efficiency guarantees.
+Finally, we compare the models trained using \method\hspace{0.02in} with prior state-of-the-art defences against membership inference attacks, namely, Adversarial Regularization~\cite{DBLP:conf/ccs/NasrSH18} and Differential Privacy~\cite{Abadi:2016:DLD:2976749.2978318}.
+We show that our proposed models improve the trade-offs between the efficiency,  accuracy, and privacy compared to the baselines approaches. The code is made publicly available\footnote{Anonymized for Submission}.
+%, and show that our proposed models performance is comparable to the state of the art.
+%However, our models provide an additional guarantee of higher efficiency which models trained with prior defences fail to provide.
+
+The paper is outlined as follows: Section~\ref{background} presents background in embedded Deep Learning while Section~\ref{analysis} reports a comparative analysis of state of the art baselines.
+We describe \method\hspace{0.02in} in Section~\ref{design} and evaluate it Section~\ref{compare}. Related work are then presented Section~\ref{related} before to conclude Section ~\ref{conclusions}.
+
+%The paper is outlined as follows: We describe the threat model and describe the state of the art algorithms for embedded Deep Learning in Section~\ref{background} followed by identifying the best optimization technique to satisfy privacy and efficiency in Section~\ref{motivate}. Based on the observations, we describe the Phase I and Phase II design of \method\hspace{0.02in} training algorithm in Section~\ref{design}.
+%Finally, we show that the proposed optimization for NNs is comparable to prior state of the art privacy preserving defences (Section~\ref{compare}) while additionally providing efficiency guarantees.

@@ -1,24 +1,23 @@
 \section{Evaluation of \method}\label{compare}
 
-In this section, we evaluate the performance of NNs designed in Phase I and Phase II of \method\hspace{0.02in} design methodology.
+%In this section, we evaluate the performance of NNs designed in Phase I and Phase II of \method\hspace{0.02in} design methodology.
 
 
 
 \subsection{Dataset and Architecture}
 
 
-The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: CIFAR10. The dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences[][][].
-The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers (detailed description in Section~\ref{}) which are used for Purchase100 and Location datasets.
+The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: \textbf{CIFAR10}. This dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences~\cite{Abadi:2016:DLD:2976749.2978318,10.1145/3319535.3363201,DBLP:conf/ccs/NasrSH18}.
+The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{}) 
+which are used for Purchase100 and Location datasets.
 It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
 
-\noindent\textbf{CIFAR10.} The CIFAR10 dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
-For CIFAR10 dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet.
-
-For CIFAR10 we train the models using standard hyperparameter setting for 100-150 epochs.
+The CIFAR10 dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
+For this dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet. In addition, we train the models using standard hyperparameter setting for 100-150 epochs.
 
 
 
-\subsection{Phase I}
+\subsection{Evaluating Phase I}
 
 In Phase I, we quantize the model and replace the MACs with cheap XNOR operations.
 We observe that the inference attack accuracy decreases significantly for all the three architecture close to random guess ($\sim$50\%).
@@ -47,7 +46,8 @@ Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 
 \hline
 \end{tabular}
 \end{center}
-\caption{Reducing the precision of models lowers the membership privacy leakage through membership inference attacks but at the cost of accuracy}
+\caption{Reducing the precision of models lowers the membership privacy leakage but at the cost of accuracy.}
+%through membership inference attacks
 \label{cifar10quant}
 \end{table}
 
@@ -57,11 +57,11 @@ We observe a significant loss in test accuracy for all the three models: around 
 In order to restore the accuracy, we use knowledge distillation as described in Phase II of the \method\hspace{0.02in} framework.
 
 The privacy provided by quantized NN is due to the decrease in overfitting, empirically measured using the difference between the train and test accuracy.
-The leakage in inference accuracy is attributed to the higher overfitting in models as well as memorization of the training data information in the form of the parameters, which are specifically tuned to achieve high performance on the train data~\cite{Song2020Overlearning,10.1145/3133956.3134077,236216,DBLP:journals/corr/abs-1812-00910}.
+The leakage in inference accuracy is attributed to the higher overfitting in models as well as memorization of the training data information in the form of the parameters, which are specifically tuned to achieve high performance on the train data~\cite{10.1145/3133956.3134077,236216,DBLP:journals/corr/abs-1812-00910}.
 This is attributed to the reduction in learning capacity of the model on quantizing the parameters which lowers the sensitive training data information memorized by the parameters on lowering the precision.
 At the same time, this optimization provides high degree of efficiency to be executed on low powered embedded devices.
 
-\subsection{Phase II}
+\subsection{Evaluating Phase II}
 
 The objective of Phase II of \method\hspace{0.02in} is to enhance the accuracy of the quantized model with XNOR computations which depicts high inference attack resistance and efficiency.
 In Phase II, we use the teacher-student model (described in Section~\ref{design}) to train the quantized student model being guided using the output predictions of the full precision teacher model.
@@ -104,7 +104,7 @@ ResNet50 & VGG13 & 94.23\% & 86.52\% & 54.46\%\\
 \hline
 \end{tabular}
 \end{center}
-\caption{Phase II of \method\hspace{0.02in} improves the accuracy of the private-efficient model from Phase I. Phase II is heterogeneous, i.e, the knowledge transfer is independent of the architecture and any teacher model can be used to improve the test accuracy.}
+\caption{Phase II of \method\hspace{0.02in} improves the accuracy of the private-efficient model from Phase I.}
 \label{kd}
 \end{table}
 
@@ -139,8 +139,8 @@ The two networks are trained alternatively with contradictory objectives: first,
 Formally, the target classifier outputs a single probability $I(F(x),y) \in [0,1]$ which indicates the likelihood of $x$ being part of the training data.
 The classifier minimizes the loss along with the output of the attacker classifier balanced with a privacy risk hyperparameter $\lambda$ : $min_{\theta} l(F(x),y) + \lambda log(I(F(x),y))$.
 
-\noindent\textbf{Differential Privacy (DP)~\cite{Abadi:2016:DLD:2976749.2978318}.} In this work, we specifically consider DPSGD which adds carefully crafted noise to the gradients during backpropagation in SGD algorithm.
-The noise is sampled from a laplacian or gaussian distribution proportional to the model's Sensitivity which is then added to the gradients during backpropagation.
+\noindent\textbf{Differential Privacy (DP)~\cite{Abadi:2016:DLD:2976749.2978318}.} In this work, we specifically consider DP-SGD which adds carefully crafted noise to the gradients during backpropagation in SGD algorithm.
+The noise is sampled from a Laplacian or Gaussian distribution proportional to the model's Sensitivity which is then added to the gradients during backpropagation.
 This provides provable bound on the information leaked about an individual data record in the dataset and ensures that the presence or absence of a data record does not change the model's output, hence defending against membership inference attacks.
 
 
@@ -154,12 +154,12 @@ The inference accuracy for NiN is 52.90\% (\method) compared to 54.09\% (DP) and
 For AlexNet, the inference accuracy is 51.85\% (\method) compared to 52.81\% (DP) and 51.83\% (AdvReg) and test accuracy of 73.5\% (\method) compared to 79.27\% (DP) and 71.02\% (AdvReg).
 For VGGNet, the inference accuracy is 53.17\% (\method) compared to 52.90\% (DP) and 53.33\% (AdvReg) and test accuracy of 85.8\% (\method) compared to 84.91\% (DP) and 85.19\% (AdvReg).
 In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for low power embedded systems.
-Training a quantized NN model within the DP and Adversarial Regularization framework is challenging since it is hard to train quantized model training as it requires careful tuning of hyperparameters otherwise the training does not converge.
+
 
 \subsubsection{Comparison with MemGuard}
 
 MemGuard~\cite{10.1145/3319535.3363201} is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
 The defence is based on the idea that the adversary's attack model is a machine learning classifier which is vulnerable to change in output with a carefully added noise to input (referred to as adversarial examples).
-However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework assuming the adversary uses shadow model attack (stronger threat model than that considered in the paper).
-Our attacker does not rely on a "shadow" machine learning model but rather relies on output posterior to perform the attack.
+However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework assuming the adversary uses shadow model attack.
+Our attack does not rely on a "shadow" models but rather relies on output posterior to perform the attack.
 Hence, within the threat model considered, the defence is not valid for comparison.

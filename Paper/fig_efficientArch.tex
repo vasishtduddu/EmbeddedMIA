@@ -1,8 +1,8 @@
 \begin{figure}[hb!]
-\resizebox{0.8\columnwidth}{!}{%
+\resizebox{0.6\columnwidth}{!}{%
 \begin{tikzpicture}
 \begin{axis}[
-legend style={font=\tiny},
+legend style={font=\small},
 legend pos =  north east,
 line width=1.0pt,
 mark size=1.0pt,
@@ -10,6 +10,8 @@ ymin=50,
 legend entries={MobileNetV2, SqueezeNet},
 ylabel={Inference Accuracy},
 xlabel={Temperature Parameter},
+xlabel style={font=\large},
+ylabel style={font=\large},
 % extra x ticks={1,10,...,400},
 % extra y ticks={0,0.5,...,10},
 % extra y tick labels={},
@@ -41,6 +43,6 @@ grid=major
 \end{axis}
 \end{tikzpicture}
 }
-\caption{The privacy leakage of models designed for efficiency (SqueezeNet and MobileNet) can be reduced by increasing the softmax temperature. }
+\caption{The privacy leakage of off-the-shelf models is reduced by increasing the softmax temperature.}
 \label{softmax}
 \end{figure}
