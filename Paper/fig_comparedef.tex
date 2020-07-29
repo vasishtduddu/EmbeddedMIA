@@ -37,7 +37,7 @@
         yticklabel style = {font=\Large},
         legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1,  font=\Huge},
         % adjust `bar width' so it fits your needs ...
-        bar width=8pt,
+        bar width=10pt,
         % ... and with that you also have to adjust the x limits
         enlarge x limits={abs=1},
         % set `clip mode' to `individual' so the category labels aren't clipped away
@@ -46,10 +46,12 @@
 
     % plot the "red" ybars
         \addplot [
-            ybar,
-            draw=red,
-            pattern color=red,
-            pattern=dots,
+        ybar,
+        draw=red,
+        fill=red,
+        opacity=0.3,
+        %pattern color=red,
+        %pattern=dots,
         ] table [
             % use just the `coordindex' as x coordinate,
             % the correct labeling is done with `xticklabels from table'
@@ -59,10 +61,12 @@
 
     % plot the "blue" ybars
         \addplot [
-            ybar,
-            draw=blue,
-            pattern color=blue,
-            pattern=north east lines,
+        ybar,
+        draw=gray,
+        fill=gray,
+        opacity=0.6,
+        %pattern color=blue,
+        %pattern=north east lines,
         ] table [
             x expr=\coordindex,
             y=pFB,

@@ -4,7 +4,7 @@
 We carried out an extensive evaluation of \method. %the three state of the art design techniques for efficient model computation.
 %: a) Model Compression via pruning redundant parameters and nodes, b) Quantization to lower the precision of model parameters and activations, and c) Efficient off-the-shelf architectures.
 %
-%We show that ... In addition, we show that ... 
+%We show that ... In addition, we show that ...
 We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered comparative baselines and metrics in Section~\ref{baselines} and Section~\ref{metrics}, respectively. %Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
 
 
@@ -12,7 +12,7 @@ We first describe the datasets and architectures used in this analysis in Sectio
 \label{datasets}
 
 For evaluating and comparing different efficiency algorithms, we use four datasets: FashionMNIST, Purchase100, Location, and CIFAR10.
-For Location and Purchase100 datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs. 
+For Location and Purchase100 datasets, we train the model for 50 epochs while for FashionMNIST dataset we train the model for 75 epochs.
 For CIFAR10, we train the models for 100-150 epochs.
 %These provide us with the necessary direction to choose the optimal efficiency algorithm which satisfies all the efficiency and privacy requirement as describes in Section~\ref{motivate}.
 
@@ -20,22 +20,15 @@ For CIFAR10, we train the models for 100-150 epochs.
 Each data record is a 28$\times$28 grayscale image which is mapped to one of 10 classes consisting of fashion products such as coat, sneaker, shirt, shoes.
 For this dataset, we use a modified LeNet architecture with two convolution layers followed by maxpool and dense layers: [Conv 32 (3,3), Conv 64 (3,3), Maxpool (2,2), Dense 128, Dense 10] (Architecture 1). Additionally, we use a fully connected model [512,512,512] (Architecture 2).
 
-\noindent\textbf{Purchase100.} This dataset is a privacy sensitive dataset capturing the purchase preferences of online customers taken from the authors of~\cite{shokri2017membership}.
-The data records have 600 binary features and each record is classified into one of 100 classes identifying each user's purchase.
-For this dataset, we use a fully connected architecture with the nodes in each layers as [1024,512,256,128,100].
 
-\noindent\textbf{Location.} This dataset is a privacy sensitive dataset capturing user's location "check-ins" taken from the authors of~\cite{shokri2017membership} where each record has 446 binary features which is mapped to one of 30 classes each representing a location. For this dataset we use a fully connected architecture with hyperparameters as [512,256,128,30].
-
-
-
-%The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: 
-\noindent\textbf{CIFAR10}. 
+%The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset:
+\noindent\textbf{CIFAR10}.
 %This dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences~\cite{Abadi:2016:DLD:2976749.2978318,10.1145/3319535.3363201,DBLP:conf/ccs/NasrSH18}.
-%The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{}) 
+%The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{})
 %which are used for Purchase100 and Location datasets.
 %It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
 This dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
-For this dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet. 
+For this dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet.
 %In addition, we train the models using standard hyperparameter setting for 100-150 epochs.
 
 
@@ -49,7 +42,7 @@ Model designers use three state of the art approaches for designing efficient NN
 %In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
 
 \begin{itemize}[leftmargin=*]
-\item {\em Model Compression (Pruning).} 
+\item {\em Model Compression (Pruning).}
 NNs are overparameterized, i.e, have large number of redundant weights.
 Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
 The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
@@ -65,7 +58,7 @@ For a threshold $T$, the parameters close to zero are replaced by zero which is 
 \end{cases}
 \]
 
-\item {\em Off-the-Shelf Efficient Architectures.} 
+\item {\em Off-the-Shelf Efficient Architectures.}
 NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
 One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
 For instance, one 5x5 filter can be replaced by two 3x3 filters.
@@ -89,7 +82,7 @@ This mapping is done using K-Means clustering or a hashing function and the corr
 \subsubsection{Privacy defences}
 
 
-%In this work, 
+%In this work,
 We consider two state of the art baselines: Adversarial Regularization and Differential Privacy.
 These defences have mainly focussed on improving the model's generalization and reduce overfitting which has been considered as the main cause for leakage through membership inference attacks.
 
@@ -115,6 +108,3 @@ An accuracy above random guess $50\%$ indicates a training data leakage through 
 This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
 The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy (generalization error). Higher generalization error (overfitting) results in higher distinguishability between the test and train resulting in higher membership inference accuracy~\cite{shokri2017membership}.
 Additionally, the accuracy of the model is computed using the model's performance on unseen test data.
-
-
-

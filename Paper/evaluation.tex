@@ -8,7 +8,7 @@
 
 
 %The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: \textbf{CIFAR10}. This dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences~\cite{Abadi:2016:DLD:2976749.2978318,10.1145/3319535.3363201,DBLP:conf/ccs/NasrSH18}.
-%The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{}) 
+%The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{})
 %which are used for Purchase100 and Location datasets.
 %It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
 
@@ -22,7 +22,7 @@
 We carried out an extensive evaluation of the three state of the art design techniques for efficient model computation.
 %: a) Model Compression via pruning redundant parameters and nodes, b) Quantization to lower the precision of model parameters and activations, and c) Efficient off-the-shelf architectures.
 %
-%We show that ... In addition, we show that ... 
+%We show that ... In addition, we show that ...
 We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered metrics in Section~\ref{metrics}. Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
 
 
@@ -43,8 +43,7 @@ However, in case of model compression the model parameters which are pruned are 
 Hence, storing even the "0" parameter takes up memory and does not necessarily decrease the overall memory footprint unless the hardware is optimized to skip the storage of all the zero values in the memory.
 This requires additional logic to check for zero valued parameters in a dictionary.
 
-\input{fig_prune}
-\input{fig_pruneRetrain}
+
 
 
 \noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications by multiple matrix-vector multiplications with smaller dimensions.
@@ -83,7 +82,26 @@ We evaluate and validate the impact on membership privacy on compressing the mod
 On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}).
 This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
 
-\input{fig_wtsharing}
+\begin{figure}
+  \includegraphics[width=0.7\columnwidth]{figures/fmnist_prune.pdf}
+  \caption{A boat.}
+  \label{fig:wtsharing}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
+  \caption{A boat.}
+  \label{fig:wtsharing}
+\end{figure}
+
+
+\begin{figure}
+  \includegraphics[width=0.7\columnwidth]{figures/fmnist_wtsharing.pdf}
+  \caption{A boat.}
+  \label{fig:wtsharing}
+\end{figure}
+
+
 
 However, interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
 This indicates that model compression in turn increases the overall privacy leakage.
@@ -147,12 +165,17 @@ VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
 As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
 
-\input{fig_efficientArch}
+
+\begin{figure}
+  \includegraphics[width=0.6\columnwidth]{figures/efficientArch.pdf}
+  \caption{A boat.}
+  \label{fig:wtsharing}
+\end{figure}
 
 Further, the inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
 Increasing the temperature parameter reduces the granularity of the model's output and is given by
 $F_i(x) = e^{\frac{z_i(x)}{T}}$ / $ \sum_{j}e^{\frac{z_j(x)}{T}}$
-%$F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$ 
+%$F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$
 where $z(x)$ computes output of the model before the softmax layer.
 For the case of SqueezeNet, we are able to reduce the inference accuracy to 50.93\% from 53.07\% while for MobileNet we can reduce the inference accuracy to 52.62\% from 55.57\% as seen in Figure~\ref{softmax}.
 This reduction in inference accuracy is without any cost of the prediction test accuracy of the model.
