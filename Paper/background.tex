@@ -12,7 +12,7 @@ The list below presents the most important efficiency requirements accounted by 
 
 \begin{itemize}[leftmargin=*]
 \item {\em Energy Efficiency.} Energy consumption is a vital constraint for low powered embedded or IoT devices which operate for long duration while maximising their battery lifetime.
-While executing NNs, every Multiply Accumulate (MAC, a common step that computes the product of two numbers and adds that product to a register in which intermediate results are stored) requires memory access for reading weights, inputs and intermediate output from previous layer and one write to store the computed output which is significantly higher than actually performing the MAC operation in the CPU.
+While executing NNs, every Multiply Accumulate (MAC, a common step that computes the product of two numbers and adds that product to a register in which intermediate results are stored) requires memory access for reading weights, inputs and intermediate output from previous layer and one write to store the computed output. These read-write operations consume significantly higher energy than actually performing the MAC operation in the CPU.
 Energy efficiency is achieved by reducing the memory access by (a) optimizing hardware to exploit sparsity in MACs and (b) reducing the precision to increase the throughput of data.
 
 \item {\em Computation Efficiency.} The total MAC operations between the parameter matrix and input activation function quantifies the requirement of computation efficiency.
@@ -24,54 +24,7 @@ This is achieved in two ways: (a) reducing the precision of the parameters and i
 \end{itemize}
 
 
-%In order to execute trained NN models on low powered edge devices, optimizations are required for the design of the NN architectures.
-%Model designers use three state of the art approaches for designing efficient NN models for embedded systems: (a) Model Compression via Pruning, (b) quantization of model parameters and activations and (c) designing standard architectures (off the shelf efficient architectures).
-%%In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
-
-%\begin{itemize}[leftmargin=*]
-%\item {\em Model Compression (Pruning).} 
-%NNs are overparameterized, i.e, have large number of redundant weights.
-%Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
-%The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
-%Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{DBLP:journals/corr/HanMD15,10.1109/ISCA.2016.30,Han:2015:LBW:2969239.2969366}.
-%Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
-%For a threshold $T$, the parameters close to zero are replaced by zero which is given as:
-%\[
-%\footnotesize
-%    f(W)=
-%\begin{cases}
-%    0, & \text{if } -T \leq w \leq T\\
-%    w,  & \text{otherwise}
-%\end{cases}
-%\]
-
-%\item {\em Off-the-Shelf Efficient Architectures.} 
-%NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
-%One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
-%For instance, one 5x5 filter can be replaced by two 3x3 filters.
-%Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
-%For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
-%Such optimizations enable to design compact network architecture with layers having lower parameters compared to the original model, extensively adopted in MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
-
-
-%\item {\em Quantization.}
-%Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
-%Quantization maps parameters and activations values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
-%The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
-%Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing throughput.
-%Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy~\cite{rastegari2016xnornet}.
-%For instance, Binarized NNs quantize the operands to \{-1,+1\} values~\cite{NIPS2016_6573} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training~\cite{Li2016TernaryWN}. These are examples of uniform quantization.
-%Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters.
-%This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
-%\end{itemize}
-
-
-
-
-%\section{Threat Model}\label{threatmodel}
-
 \subsection{Privacy Threat: Membership Attacks}
-%Inference
 \label{threatmodel}
 
 % section to reduce
@@ -89,8 +42,8 @@ In this work, we specifically use membership inference attacks to quantify infor
 Machine Learning algorithms learn a function $f:X \rightarrow Y$ mapping from the input space $X$ to the space of corresponding class labels $Y$.
 This is modeled as an optimization where the objective is to find the parameters $\theta$ by minimizing the model's loss, $min_{\theta} L(f(x),y;\theta)$.
 Machine learning models are more confident while predicting the class of already seen train data record compared to an unseen test data record.
-Membership inference attacks exploits this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
-This is a binary decisional problem where the adversary classifies the membership of a given input $x$ using the model's output prediction  $f(x;\theta)$ to infer whether a given data record was used in the model's training data or not.
+Membership inference attacks exploit this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
+This is a binary decision problem where the adversary classifies the membership of a given input $x$ using the model's output prediction $f(x;\theta)$ to infer whether a given data record was used in the model's training data or not.
 Formally, given a user's data record $x$ $\sim$ $P(X,Y)$, where $P(X,Y)$ is the data distribution from which the training data $D_{train}$ was sampled, the adversary estimates $P(x \in D_{train})$ using the model's prediction $f(x;W)$.
 Empirically, the adversary identifies a threshold to estimate whether $x \in D_{train}$ which can also be learnt using a binary classifier.
 In this work, we use the confidence score attack where the adversary obtains $f(x;W)$ and finds the maximum posterior and infers $x \in D_{train}$ if the maximum is greater than a threshold~\cite{salem2018ml,8429311}.
@@ -101,42 +54,3 @@ In this threat model, we consider a blackbox setting where the adversary is assu
 Formally, given a target model $f()$, the adversary only sees the final model prediction $f(x;\theta)$.
 The adversary does not know the architecture of $f()$ and the model parameters $\theta$.
 This is a practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output.
-
-
-
-
-%Indeed, on querying a trained model $f(x;\theta)$, the adversary learns aggregate information about the entire data population which the model generalizes from the train dataset to an unseen test data.
-%This is desirable and quantified using the accuracy of the model.
-%On the other hand, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
-%In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
-%This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
-%Alternatively, an adversary can learn sensitive attributes about the user's data record which can be used to reconstruct the sensitive training dataset.
-%In this work, we specifically use membership inference attacks to quantify information leakage in machine learning models.
-
-%Machine learning models are more confident while predicting the class of already seen train data record compared to an unseen test data record.
-%Membership inference attacks exploits this difference in the model's confidence to classify a new data record as being a "Member" or "Non-Member" of the model's training data.
-%This is a binary decisional problem where the adversary classifies the membership of a given input $x$ using the model's output prediction $f(x;\theta)$.
-%We describe the threat model and attack details below.
-
-%\noindent\textbf{Adversary Knowledge.} We assume a blackbox setting where the adversary is assumed to have no knowledge about the target model.
-%Formally, given a target model $f()$ which maps an input data record $x$ to its correct label $y$, the adversary only sees the final model prediction $f(x;\theta)$.
-%The adversary does not know the architecture of $f()$ and the model parameters $\theta$.
-%This is a practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output predictions.
-
-%\noindent\textbf{Adversary Goal.} The goal of adversary in membership inference attack is to infer whether a given data record was used in the model's training data or not.
-%Formally, given a user's data record $x$ $\sim$ $P(X,Y)$, where $P(X,Y)$ is the data distribution from which the training data $D_{train}$ was sampled, the adversary estimates $P(x \in D_{train})$ using the model's prediction $f(x;W)$.
-%Empirically, the adversary identifies a threshold to estimate whether $x \in D_{train}$ which can also be learnt using a binary classifier.
-
-%\noindent\textbf{Attack Methodology.} In this work, we use the confidence score attack where the adversary leverages the prediction entropy of the target model $f(x;W)$ to perform the membership inference attack [][].
-%In particular, the adversary obtains $f(x;W)$ and finds the maximum posterior and infers $x \in D_{train}$ if the maximum is greater than a threshold.
-%The attack is based on the observation that the maximal posterior of a member data record is higher (more confident) than a non-member data record of the training dataset.
-
-
-
-%\subsection{Metrics}
-
-%We use the inference attack accuracy to estimate the success of membership inference attack.
-%An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
-%This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
-%The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy.
-%Additionally, the accuracy of the model is computed using the model's performance on unseen test data.

@@ -82,26 +82,35 @@ We evaluate and validate the impact on membership privacy on compressing the mod
 On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}).
 This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
 
-\begin{figure}
-  \includegraphics[width=0.7\columnwidth]{figures/fmnist_prune.pdf}
-  \caption{A boat.}
-  \label{fig:wtsharing}
+\begin{figure}[!htb]
+    \centering
+    \begin{minipage}[b]{1\linewidth}
+    \centering
+    \subfigure[Pubmed]{
+    \label{fig:mem_soft_label}
+    \includegraphics[width=0.7\linewidth]{figures/fmnist_prune.pdf}
+    }
+    \subfigure[Pubmed]{
+    \label{fig:mem_soft_label}
+    \includegraphics[width=0.7\linewidth]{figures/fmnist_wtsharing.pdf}
+    }
+    \subfigure[Pubmed]{
+    \label{fig:mem_soft_label}
+    \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
+    }
+
+    \end{minipage}
+    \caption{Model predictions are more confident for nodes in $G_{train}$ compared to test graph (left). The extent of overfitting can be detected by a non-overlapping region between the output prediction distributions across all data points (right).}
+    \label{fig:NIAcause}
 \end{figure}
 
-\begin{figure}
-  \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
-  \caption{A boat.}
-  \label{fig:wtsharing}
-\end{figure}
 
-
-\begin{figure}
-  \includegraphics[width=0.7\columnwidth]{figures/fmnist_wtsharing.pdf}
-  \caption{A boat.}
-  \label{fig:wtsharing}
-\end{figure}
-
-
+\begin{tcolorbox}[enhanced,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},
+  colback=gray!5!white,colframe=black!75!black,colbacktitle=gray!80!black,
+  title=Security Principle I,fonttitle=\bfseries,
+  boxed title style={size=small,colframe=black!50!black} ]
+Original inputs should not be revealed in the public cloud without proper protection.
+\end{tcolorbox}
 
 However, interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
 This indicates that model compression in turn increases the overall privacy leakage.
@@ -183,7 +192,7 @@ This reduction in inference accuracy is without any cost of the prediction test 
 
 
 
-\subsubsection{Quantization}
+\subsubsection{Quantization}\label{quant}
 
 In this section, we evaluate the technique of reducing the precision of both model's parameters and intermediate activations.
 Further, we consider the extreme case of binarizing the parameters and activations allowing to evaluate on the most optimized case.
@@ -258,7 +267,7 @@ Hence, we choose quantization as a design for NNs to provide a good three dimens
 
 
 
-\subsection{Evaluating Phase I}
+\subsection{Evaluating Phase I}\label{evalPh1}
 
 In Phase I, we quantize the model and replace the MACs with cheap XNOR operations.
 We observe that the inference attack accuracy decreases significantly for all the three architecture close to random guess ($\sim$50\%).

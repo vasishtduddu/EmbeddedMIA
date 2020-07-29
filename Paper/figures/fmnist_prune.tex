@@ -33,15 +33,15 @@ line width=2.0pt,
 mark size=2.0pt,
 xmin=0,xmax=8,
 ylabel={Generalization Error \%},
-xlabel style={font=\normalsize},
-ylabel style = {font=\LARGE},
 axis y line*=left,
 xlabel={Compression Rate},
+xlabel style={font=\LARGE},
+ylabel style = {font=\LARGE},
 xticklabel style = {font=\large},
 yticklabel style = {font=\large},
+legend style={at={(0.02,0.1)},anchor=south west, font=\large},
 xtick={0,1,2,3,4,5,6,7,8},
-xticklabels={1, 1.33, 1.82, 2.56, 3.67, 5.31, 7.74, 11.28, 16.28},
-legend style={at={(0.98,0.9)},anchor=north east, font=\small}
+xticklabels={1, 1.33, 1.82, 2.56, 3.67, 5.31, 7.74, 11.28, 16.28}
 ]
 \addplot[
     color=black,
@@ -66,7 +66,8 @@ ylabel near ticks, yticklabel pos=right,
 ylabel={Membership Accuracy \%},
 ylabel style = {rotate=180, font=\LARGE},
 yticklabel style = {font=\large},
-axis x line=none
+axis x line=none,
+legend style={at={(0.02,0)},anchor=south west, font=\large}
 ]
 \addplot[
     color=black,
