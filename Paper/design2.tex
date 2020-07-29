@@ -1,0 +1,103 @@
+\section{\method: Design Overview}\label{design}
+
+%Based on the comparative analysis described in the previous section
+In this section we detail \method\hspace{0.02in}.
+\method~ is a technique to construct NNs dedicated to embedded systems with efficiency, accuracy and privacy as main requirements as follow.
+
+\begin{itemize}[leftmargin=*]
+
+\item {\em Privacy.}
+The model should preserve the privacy of an individual's data record in the training set of the model against inference attacks.
+
+\item {\em Efficiency.}
+The private model should demonstrate high energy, memory and computation efficiency.
+
+\item {\em Accuracy.}
+The drop in accuracy of the private model should be minimum as compared to the non-private and non-efficient model accuracy.
+\end{itemize}
+
+
+%Based on the efficiency and privacy analysis described in the previous section, we describe the detailed \method\hspace{0.02in} framework for designing efficient, private and accurate NNs in this section.
+\method~ is composed of two phases.
+In Phase I, the objective is to enhance the model's efficiency and privacy, however, at the cost of accuracy (Section~\ref{p1}).
+In Phase II, we optimize for accuracy and train the resultant model from Phase I (Section~\ref{p2}).
+
+
+%\subsection{Overall Design Requirements}
+
+%In designing our training methodology, \method, we aim to satisfy the following main requirements in the purview of embedded systems:
+
+
+%To this end, we present \method --- a technique to construct NNs that are optimized for efficiency and accuracy while ensuring privacy of the input data.
+
+%With \method, we present a novel approach of building NNs with efficiency as a key property.
+%We argue that fixing a NN architecture and then modifying the training algorithm to ensure privacy (e.g. adversarial regularization[] and differential privacy[]) does not provide optimal balance between efficiency and accuracy.
+%On the contrary, our approach advocates building NN architecture considering the strengths and drawbacks of the underlying algorithms to design efficient NNs.
+%We assert that this is a practical solution as deep learning algorithms are flexible with respect to their architectures, i.e., different NNs can be trained to achieve the same accuracy for a given dataset.
+
+
+
+\subsection{Phase I}
+\label{p1}
+
+We first quantize the model's parameters and intermediate activations. We specifically binarize the values to restrict them to the values of \{+1,-1\}.
+This operation (as seen in Section~\ref{analysis}) results in high resistance to inference attacks as well as satisfies the different efficiency requirements.
+The model achieves computation efficiency by replacing the expensive matrix multiplications with simple boolean arithmetic operations, i.e, XNOR computations.
+Alternatively, instead of using multiplication and addition circuits in the hardware, we leverage XNOR logic on the inputs followed by a bitcount operation (counting the number of high bits "1" in a binary output sequence).
+The equation can be represented as follows:
+
+\begin{align}
+\footnotesize
+\mathbf{x} \cdot \mathbf{w} =
+N - 2\times\operatorname{bitcount}(\operatorname{xnor}(\mathbf{x}, \mathbf{w}))
+\end{align}
+
+In terms of memory efficiency, binarization results in a direct reduction of the model size as well as intermediate output memory requirements by 32x to 64x.
+Lowering the precision also reduces the number of memory access by 32x to 64x resulting in a significant decrease in the total energy consumption.
+
+
+The complete inference stage of the Binarized NN with XNOR computation is given in Algorithm~\ref{alg:inference}.
+The matrix multiplication between the previous layer activation $a_{k-1}$ and the current layer's weights with the bitcount of XNORoperation's output.
+The function Binarize() is a deterministic thresholding function which maps the input values to the set \{-1,+1\}.
+
+\begin{algorithm}
+\footnotesize
+\begin{algorithmic}
+    \FOR{$k=1$ to $L$}
+        \STATE $W_k^b \leftarrow {\rm Binarize}(W_k)$
+        \STATE $a_k \leftarrow N - 2\times\operatorname{bitcount}(\operatorname{xnor}(\mathbf{a_{k-1}^b}, \mathbf{W_k^b}))$
+        \IF{$k < L$}
+            \STATE $a_k^b \leftarrow {\rm Binarize}(a_k)$
+        \ENDIF
+    \ENDFOR
+\end{algorithmic}
+\caption{Inference Stage of Binary Neural Network with XNOR Operations where $W_k^b$ are the binarized weights($W_k$) and $a_k$ is the activation of the $k^{th}$ layer}
+\label{alg:inference}
+\end{algorithm}
+
+
+
+In addition to the above design, we use additional optimizations for XNOR-Net to avoid a significant loss in accuracy.
+It is well documented that it is difficult to converge a binarized model during training~\cite{AAAI1714619} in case of incompatible hyperparameter settings. To this extent, we use the first and last layer of the model as full precision.
+These additional optimization have been used previously for XNOR based networks~\cite{8114708,rastegari2016xnornet} and but provides higher accuracy and ensures the model's convergence at a small cost of memory and energy consumption overhead.
+
+
+
+\subsection{Phase II}
+\label{p2}
+
+In Phase I, we optimize for both privacy and efficiency but these are achieved at the significant degradation of accuracy.
+In order to restore the accuracy close to the original full precision accuracy, we propose to use knowledge distillation.
+Here, we consider a pre-trained teacher model $f_{teacher}()$ with state of the art accuracy on the classification task and use it to guide the training of the quantized classifier.
+During training of the quantized model (student), we do not compute the loss between the true $y$ and predicted label $f_{student}(x)$.
+We instead estimate the loss between the predicted label $f_{student}(x)$ and the predicted label for the full precision teacher model $f_{teacher}(x)$.
+The loss function in knowledge distillation $Loss_{KD} (f_{student}, f_{teacher})$ is given as
+
+\begin{equation}
+\footnotesize
+\sum_{k=1}^m f_{student}(x_k)log(f_{teacher}(x_k)) + f_{teacher}(x_k)log(f_{student}(x_k))
+\end{equation}
+
+%\input{kd_fig}
+This ensures that the student model learns to map the prediction boundary of the teacher model and imitates the prediction behaviour for different inputs.
+This results in an increase in the accuracy of the student model compared to the original baseline of standalone training without the teacher model.

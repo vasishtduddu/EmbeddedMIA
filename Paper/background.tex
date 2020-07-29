@@ -24,46 +24,46 @@ This is achieved in two ways: (a) reducing the precision of the parameters and i
 \end{itemize}
 
 
-In order to execute trained NN models on low powered edge devices, optimizations are required for the design of the NN architectures.
-Model designers use three state of the art approaches for designing efficient NN models for embedded systems: (a) Model Compression via Pruning, (b) quantization of model parameters and activations and (c) designing standard architectures (off the shelf efficient architectures).
-%In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
+%In order to execute trained NN models on low powered edge devices, optimizations are required for the design of the NN architectures.
+%Model designers use three state of the art approaches for designing efficient NN models for embedded systems: (a) Model Compression via Pruning, (b) quantization of model parameters and activations and (c) designing standard architectures (off the shelf efficient architectures).
+%%In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
 
-\begin{itemize}[leftmargin=*]
-\item {\em Model Compression (Pruning).} 
-NNs are overparameterized, i.e, have large number of redundant weights.
-Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
-The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
-Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{DBLP:journals/corr/HanMD15,10.1109/ISCA.2016.30,Han:2015:LBW:2969239.2969366}.
-Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
-For a threshold $T$, the parameters close to zero are replaced by zero which is given as:
-\[
-\footnotesize
-    f(W)=
-\begin{cases}
-    0, & \text{if } -T \leq w \leq T\\
-    w,  & \text{otherwise}
-\end{cases}
-\]
+%\begin{itemize}[leftmargin=*]
+%\item {\em Model Compression (Pruning).} 
+%NNs are overparameterized, i.e, have large number of redundant weights.
+%Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
+%The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
+%Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{DBLP:journals/corr/HanMD15,10.1109/ISCA.2016.30,Han:2015:LBW:2969239.2969366}.
+%Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
+%For a threshold $T$, the parameters close to zero are replaced by zero which is given as:
+%\[
+%\footnotesize
+%    f(W)=
+%\begin{cases}
+%    0, & \text{if } -T \leq w \leq T\\
+%    w,  & \text{otherwise}
+%\end{cases}
+%\]
 
-\item {\em Off-the-Shelf Efficient Architectures.} 
-NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
-One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
-For instance, one 5x5 filter can be replaced by two 3x3 filters.
-Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
-For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
-Such optimizations enable to design compact network architecture with layers having lower parameters compared to the original model, extensively adopted in MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
+%\item {\em Off-the-Shelf Efficient Architectures.} 
+%NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
+%One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
+%For instance, one 5x5 filter can be replaced by two 3x3 filters.
+%Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
+%For instance, for an input activation of dimension 1x1x64, 32 1x1 convolutional filters downsamples the activation maps to get an output of 32 channels.
+%Such optimizations enable to design compact network architecture with layers having lower parameters compared to the original model, extensively adopted in MobileNet~\cite{conf/cvpr/SandlerHZZC18} and SqueezeNet~\cite{DBLP:journals/corr/IandolaMAHDK16}.
 
 
-\item {\em Quantization.}
-Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
-Quantization maps parameters and activations values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
-The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
-Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing throughput.
-Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy~\cite{rastegari2016xnornet}.
-For instance, Binarized NNs quantize the operands to \{-1,+1\} values~\cite{NIPS2016_6573} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training~\cite{Li2016TernaryWN}. These are examples of uniform quantization.
-Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters.
-This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
-\end{itemize}
+%\item {\em Quantization.}
+%Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
+%Quantization maps parameters and activations values to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
+%The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
+%Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing throughput.
+%Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy~\cite{rastegari2016xnornet}.
+%For instance, Binarized NNs quantize the operands to \{-1,+1\} values~\cite{NIPS2016_6573} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training~\cite{Li2016TernaryWN}. These are examples of uniform quantization.
+%Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters.
+%This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
+%\end{itemize}
 
 
 
