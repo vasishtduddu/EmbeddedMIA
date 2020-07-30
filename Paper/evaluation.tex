@@ -1,34 +1,11 @@
 \section{Evaluation of \method}\label{compare}
 
-%In this section, we evaluate the performance of NNs designed in Phase I and Phase II of \method\hspace{0.02in} design methodology.
-
-
-
-%\subsection{Dataset and Architecture}
-
-
-%The \method\hspace{0.02in} NN design methodology is evaluated on sophisticated dataset: \textbf{CIFAR10}. This dataset has been commonly used for evaluating defences against membership inference attacks, it enables to accurately compare our work with prior state of the art defences~\cite{Abadi:2016:DLD:2976749.2978318,10.1145/3319535.3363201,DBLP:conf/ccs/NasrSH18}.
-%The optimization described as part of \method\hspace{0.02in} is for large convolutional NNs and does not cover the fully connected dense layers % (detailed description in Section~\ref{})
-%which are used for Purchase100 and Location datasets.
-%It is important to evaluate on standard architectures as different custom classifiers tend to underestimate the inference leakage due to hyperparameter settings.
-
-%The CIFAR10 dataset is a major image classification benchmarking dataset where the data records are composed of 32$\times$32 RGB images where each record is mapped to one of 10 classes of common objects such as airplane, bird, cat, dog.
-%For this dataset, we use standard state of the art architectures: Network in Network (NiN), AlexNet and VGGNet. In addition, we train the models using standard hyperparameter setting for 100-150 epochs.
-
-
-%\section{Comparative analysis}
-%\label{analysis}
-
 We carried out an extensive evaluation of the three state of the art design techniques for efficient model computation.
-%: a) Model Compression via pruning redundant parameters and nodes, b) Quantization to lower the precision of model parameters and activations, and c) Efficient off-the-shelf architectures.
-%
-%We show that ... In addition, we show that ...
-We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered metrics in Section~\ref{metrics}. Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
+We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered metrics in Section~\ref{metrics}.
+Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
 
 
 
-
-%\subsection{Optimization for Efficiency}
 \subsection{Evaluating Efficiency}
 \label{eval-efficiency}
 
@@ -37,29 +14,27 @@ We then select an efficient design scheme for NNs that satisfies all our require
 
 
 \noindent\textbf{Memory Efficiency.} Off the shelf models are designed to specifically reduce the memory footprint.
-For instance, the memory footprint of Squeezenet and MobileNet is 5MB and 14Mb compared to 250Mb of Alexnet and >500Mb of VGG architectures.
+For instance, the memory footprint of Squeezenet and MobileNet is 5MB and 14Mb compared to 250Mb of Alexnet and >500Mb of VGG architectures~\cite{DBLP:journals/corr/IandolaMAHDK16,conf/cvpr/SandlerHZZC18}.
 Additionally, lowering the model precision from 64 or 32 bit floating point to binary precision results in a direct reduction of 64x or 32x in the overall memory footprint of the model.
 However, in case of model compression the model parameters which are pruned are simply replaced by a value of "0".
 Hence, storing even the "0" parameter takes up memory and does not necessarily decrease the overall memory footprint unless the hardware is optimized to skip the storage of all the zero values in the memory.
 This requires additional logic to check for zero valued parameters in a dictionary.
 
 
-
-
-\noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications by multiple matrix-vector multiplications with smaller dimensions.
-This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations or FLOPS~\cite{article}.
-In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the the multiplications with "0"pruned values, the hardware optimization enable the user to skip the computation and replace the output by a "0" directly.
-For quantized models with binarized parameters and activations the MAC operations can be replaced by binary operations such as XNOR and the maxpool operations can be replaced by OR operation, while the activations can be replaced by checking the parity bit (denotes the sign) operation and hence reducing the FLOPS drastically~\cite{235489}.
+\noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications to smaller dimensions.
+This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations~\cite{article}.
+In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the the multiplications with "0" pruned values, the hardware optimization enables the user to skip the computation and replace the output by a "0" directly.
+For quantized models with binarized parameters and activations the MACs can be replaced by binary XNOR operations, maxpool replaced by OR operation, while the activations can be replaced by checking the sign bit and hence reducing the FLOPS drastically~\cite{235489}.
 This results in high computational efficiency and hence, faster inference.
 
 
-\noindent\textbf{Energy Efficiency.} Energy efficiency has been shown to not vary much in case of reduction with number of parameters and data type, number of memory accesses play vital role~\cite{6757323}.
-Specifically, for the case of off-the-shelf architectures the while the computation efficiency has been shown to improve, the energy efficiency has been shown to be close to large scale state of the art models like AlexNet~\cite{DBLP:journals/corr/IandolaMAHDK16,8114708}.
-Alternatively, for the case of model compression, energy efficiency can be achieved by additionally providing hardware optimization and shows small improvement in the energy consumption~\cite{journals/corr/YangCS16a,DBLP:journals/corr/HanMD15}.
-For quantization, however, the energy efficiency has been shown to be high where the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
+\noindent\textbf{Energy Efficiency.} Energy efficiency does not vary much with reduction of number of parameters and data type, but the number of memory accesses play vital role~\cite{6757323}.
+Specifically, for the case of off-the-shelf architectures, while computation efficiency improves, the energy efficiency is close to large scale state of the art models like AlexNet~\cite{DBLP:journals/corr/IandolaMAHDK16,8114708}.
+Alternatively, for the case of model compression, energy efficiency can be marginally improved by additionally providing hardware optimization~\cite{journals/corr/YangCS16a,DBLP:journals/corr/HanMD15}.
+For quantization, however, the energy efficiency is high as the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
 Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption~\cite{NIPS2016_6573,rastegari2016xnornet}.
 While some improvement is seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
-The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the authors to~\cite{8114708} for more details.
+The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the readers to~\cite{8114708} for more details.
 
 In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefit for different efficiency requirements over the other alternatives.
 
@@ -77,46 +52,41 @@ This is the main contribution of our work where we evaluate the privacy leakage 
 We evaluate the privacy leakage on compressing a model by pruning the connections in the model.
 Here, pruning is achieved by replacing some of the parameters with "0" value.
 As described in the original paper~\cite{Han:2015:LBW:2969239.2969366,DBLP:journals/corr/HanPNMTECTD16}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
+We evaluate and validate the impact on membership privacy on compressing the model trained on two datasets: FashionMNIST and CIFAR10.
 
-We evaluate and validate the impact on membership privacy on compressing the model trained on three datasets: FashionMNIST, Location and Purchase100.
-On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}).
+\textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (as seen for FashionMNIST in Figure~\ref{fig:prune}).
+As the compression rate increases, the generalization error decreases (owing to a decrease in both train and test accuracy) with a decrease in membership accuracy to close to random guess.
 This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
 
 \begin{figure}[!htb]
     \centering
     \begin{minipage}[b]{1\linewidth}
     \centering
-    \subfigure[Pubmed]{
-    \label{fig:mem_soft_label}
+    \subfigure[Impact of Model Pruning on Privacy]{
+    \label{fig:prune}
     \includegraphics[width=0.7\linewidth]{figures/fmnist_prune.pdf}
     }
-    \subfigure[Pubmed]{
-    \label{fig:mem_soft_label}
-    \includegraphics[width=0.7\linewidth]{figures/fmnist_wtsharing.pdf}
-    }
-    \subfigure[Pubmed]{
-    \label{fig:mem_soft_label}
+    \subfigure[Impact of Retraining on Privacy]{
+    \label{fig:retrain}
     \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
+    }
+    \subfigure[Mitigating Privacy Leakage via Weight Sharing]{
+    \label{fig:wtsharing}
+    \includegraphics[width=0.7\linewidth]{figures/fmnist_wtsharing.pdf}
     }
 
     \end{minipage}
-    \caption{Model predictions are more confident for nodes in $G_{train}$ compared to test graph (left). The extent of overfitting can be detected by a non-overlapping region between the output prediction distributions across all data points (right).}
+    \caption{Pruning the model lowers the membership inference leakage at the cost of accuracy. Retraining the pruned model to restore accuracy results in a higher membership privacy leakage compared to uncompressed baseline model. This additional leakage can be mitigated by weight sharing at the cost of accuracy.}
     \label{fig:NIAcause}
 \end{figure}
 
 
-\begin{tcolorbox}[enhanced,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},
-  colback=gray!5!white,colframe=black!75!black,colbacktitle=gray!80!black,
-  title=Security Principle I,fonttitle=\bfseries,
-  boxed title style={size=small,colframe=black!50!black} ]
-Original inputs should not be revealed in the public cloud without proper protection.
-\end{tcolorbox}
-
-However, interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
+\textbf{Impact of Retraining Pruned Model.} Interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
 This indicates that model compression in turn increases the overall privacy leakage.
 This can be attributed to the lower number of parameters forced to learn the same amount of information stored previously in the unpruned model with larger number of parameters.
 In other words, the same amount of information is now captured by less number of parameters resulting in higher memorization of information per parameter.
-As the model is compressed (pruned), the number of parameters decreases which results in increase in information per parameter. However, on aggressive pruning, the train accuracy also decreases resulting in a decrease in the information per parameter, which is empirically indicated by a decrease in membership inference accuracy at the end in (Figure~\ref{fig:retrain}).
+As the model is compressed (pruned), the number of parameters decreases which results in increase in information per parameter. However, on aggressive pruning, the train and test accuracy also decreases resulting in a decrease in the information per parameter, which is empirically indicated by a decrease in membership inference accuracy at the end in Figure~\ref{fig:retrain}.
+
 %To analyze the information stored per parameter, we first compute the model capacity as the mutual information of a trained network between the true label $Y$ and the predicted label $Y_{\theta}$ for a random input $X$ as derived in~\cite{45932,cap}.
 %Here, model's information $I(Y;Y_{\theta}|X) = $
 %\begin{equation}
@@ -130,14 +100,13 @@ As the model is compressed (pruned), the number of parameters decreases which re
 %I_p(Y;Y_{\theta}|X) = \frac{I(Y;Y_{\theta}|X)}{N_{param}}
 %\end{equation}
 
-
+In summary, model compression results in a higher membership privacy leakage compared to the baseline uncompressed model making it a poor candidate for applications with sensitive data.
 
 \textbf{Mitigating the Privacy Risks in Pruned Models.} We describe on potential approach to mitigate the privacy risk of the compressed models without requiring to modify the model's training.
-The post-hoc approach utilizes the weight sharing for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
-As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST, 62.08\% to 53.38\% for Purchase100 and 81.82\% to 61.95\% for Location dataset.
-This decrease in inference attack accuracy is closely followed by a decrease in generalization error which is indicative of decrease in prediction accuracy of the model.
-We evaluate the effectiveness of pruning followed by quantization which has been shown to have significant impact on reducing the model complexity through compression more significantly than either pruning or quantization alone.
-For the experiments, we use the compressed model indicating highest privacy leakage to evaluate the effectiveness of weight sharing on the worst case condition.
+The post-hoc approach utilizes the weight sharing (a class of quantization techniques) for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
+As seen in case of FashionMNIST in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST.
+This decrease in inference attack accuracy is caused by a decrease in generalization error due to decrease in prediction (both train and test) accuracy of the model.
+For the experiments, we use the compressed model with highest privacy leakage (by sweeping sensitivity threshold values) to evaluate the effectiveness of weight sharing on the worst case condition.
 This pipeline approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
 
 
@@ -172,22 +141,19 @@ VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 \end{table}
 
 In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
-As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
-
+The evaluation of these models is done only on CIFAR10 dataset as these state of the art architectures are not used for the simpler case of FashionMNIST.
+As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower membership inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
 
 \begin{figure}
-  \includegraphics[width=0.6\columnwidth]{figures/efficientArch.pdf}
-  \caption{A boat.}
+  \includegraphics[width=0.7\columnwidth]{figures/efficientArch.pdf}
+  \caption{The privacy leakage of off-the-shelf models is reduced by increasing the softmax temperature.}
   \label{fig:wtsharing}
 \end{figure}
 
-Further, the inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
-Increasing the temperature parameter reduces the granularity of the model's output and is given by
-$F_i(x) = e^{\frac{z_i(x)}{T}}$ / $ \sum_{j}e^{\frac{z_j(x)}{T}}$
-%$F_i(x) = \frac{e^{\frac{z_i(x)}{T}}}{\sum_{j}e^{\frac{z_j(x)}{T}}}$
-where $z(x)$ computes output of the model before the softmax layer.
+Further, the membership inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
+Increasing the temperature parameter reduces the granularity of the model's output and is given by $F_i(x) = e^{\frac{z_i(x)}{T}}$ / $ \sum_{j}e^{\frac{z_j(x)}{T}}$ where $z(x)$ computes output of the model before the softmax layer.
 For the case of SqueezeNet, we are able to reduce the inference accuracy to 50.93\% from 53.07\% while for MobileNet we can reduce the inference accuracy to 52.62\% from 55.57\% as seen in Figure~\ref{softmax}.
-This reduction in inference accuracy is without any cost of the prediction test accuracy of the model.
+This reduction in membership inference accuracy is without any cost of the prediction test accuracy of the model.
 
 
 
@@ -227,8 +193,18 @@ XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000p
 
 In both the architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
 However, on replacing the MAC operations with XNOR operations, we observe that the inference risk decreases close to random guess, however, at the cost of prediction test accuracy.
+The CIFAR10 results corresponding to the XNOR operations and it's privacy comparison with full precision counterpart is indicated in Table~\ref{cifar10quant}.
 
 In summary, we observe that quantization, specifically binarization of parameters and activation along with XNOR computation, provides strong resistance against inference attacks compared to model compression and off-the-shelf architectures.
+
+
+%\begin{tcolorbox}[enhanced,attach boxed title to top center={yshift=-3mm,yshifttext=-1mm},
+%  colback=gray!5!white,colframe=black!75!black,colbacktitle=gray!80!black,
+%  title=Security Principle I,fonttitle=\bfseries,
+%  boxed title style={size=small,colframe=black!50!black} ]
+%Original inputs should not be revealed in the public cloud without proper protection.
+%\end{tcolorbox}
+
 
 \subsection{Summary of Comparison}
 
@@ -259,17 +235,16 @@ Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
 \end{table}
 
 In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
-On the other hand, model compression leaks more training records membership details making it vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency. Off-the-shelf architectures, while provide decent privacy, does not provide satisfy all aspects of efficiency.
-Hence, we choose quantization as a design for NNs to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
+On the other hand, model compression without any weight sharing modifications, leaks more training data membership details making it significantly more vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency.
+Off-the-shelf architectures, while provide decent privacy, does not satisfy all aspects of efficiency.
+Hence, we choose quantization as a NN design for \method\hspace{0.01in} to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
 
 
-
-
-
+\input{plot_defence}
 
 \subsection{Evaluating Phase I}\label{evalPh1}
 
-In Phase I, we quantize the model and replace the MACs with cheap XNOR operations.
+In Phase I of \method, we quantize the model and replace the MACs with cheap XNOR operations.
 We observe that the inference attack accuracy decreases significantly for all the three architecture close to random guess ($\sim$50\%).
 Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 60.40\% to 51.40\% for AlexNet and 58.70\% to 52.65\% for VGGNet.
 
@@ -303,23 +278,23 @@ Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 
 
 
 However, since Phase I only optimizes the network for privacy and efficiency, the resultant model shows poor utility (accuracy).
-We observe a significant loss in test accuracy for all the three models: around 8\% accuracy drop from 86.16\% to 78.74\% for NiN; 14\% accuracy drop from 80.34\% to 66.8\% for AlexNet;
+We observe a significant loss in test accuracy for all the three models: around 8\% accuracy drop from 86.16\% to 78.74\% for NiN; 14\% accuracy drop from 80.34\% to 66.8\% for AlexNet; 14\% for VGG model from 88.95\% to 74.64\%.
 In order to restore the accuracy, we use knowledge distillation as described in Phase II of the \method\hspace{0.02in} framework.
 
 The privacy provided by quantized NN is due to the decrease in overfitting, empirically measured using the difference between the train and test accuracy.
 The leakage in inference accuracy is attributed to the higher overfitting in models as well as memorization of the training data information in the form of the parameters, which are specifically tuned to achieve high performance on the train data~\cite{10.1145/3133956.3134077,236216,DBLP:journals/corr/abs-1812-00910}.
 This is attributed to the reduction in learning capacity of the model on quantizing the parameters which lowers the sensitive training data information memorized by the parameters on lowering the precision.
+Further, the quantization acts as a noise to strongly regularize the model~\cite{NIPS2016_6573}.
 At the same time, this optimization provides high degree of efficiency to be executed on low powered embedded devices.
 
 \subsection{Evaluating Phase II}
 
 The objective of Phase II of \method\hspace{0.02in} is to enhance the accuracy of the quantized model with XNOR computations which depicts high inference attack resistance and efficiency.
 In Phase II, we use the teacher-student model (described in Section~\ref{design}) to train the quantized student model being guided using the output predictions of the full precision teacher model.
-
 Here, Phase II is heterogeneous, i.e, we are flexible to choose any full precision teacher model which can provide high accuracy on the considered dataset (Table~\ref{kd}).
 Here, we consider pre-trained state of the art architectures\footnote{https://github.com/huyvnphan/PyTorch\_CIFAR10}: DenseNet169 and ResNet50, along with the full precision versions of NiN, Alexnet and VGGNet.
-The standalone test accuracy of the DenseNet169 and ResNet50 architectures are 92.84\% and 92.12\% respectively while the full precision accuracies for NiN, AlexNet and VGGNet are given in Table~\ref{cifar10quant}.
-\input{plot_defence}
+The standalone test accuracy of the DenseNet169 and ResNet50 architectures are 92.84\% and 92.12\% respectively with inference accuracy around to 55\% while the full precision accuracies for NiN, AlexNet and VGGNet are given in Table~\ref{cifar10quant}.
+
 
 \begin{table}[!htb]
 \begin{center}
@@ -356,13 +331,13 @@ ResNet50 & VGG13 & 94.23\% & 86.52\% & 54.46\%\\
 \end{center}
 \caption{Phase II of \method\hspace{0.02in} improves the accuracy of the private-efficient model from Phase I.}
 \label{kd}
+\vspace{-0.3in}
 \end{table}
 
 
 The first set of experiments combine the same full precision model architectures with the quantized model versions, i.e, full precision NiN with Binarized NiN (homogeneous knowledge distillation).
 Here, we see that there is 5\% increase in test accuracy (from 78.74\% to 83.52\%) for NiN with an increase of 2\% in inference attack.
 Similarly, there is an increase of 7\% test accuracy for AlexNet with a very minimal privacy leakage increase of 0.45\%; and increase of 7\% test accuracy at the cost of 2\% inference attack accuracy for VGGNet.
-
 For heterogeneous knowledge distillation, i.e, combining other architectures (DenseNet169 and ResNet50) with the quantized models from Phase I, we see that the increase in test accuracy is only minimally higher than the homogeneous models for NiN and AlexNet but a significantly higher increase in the inference attack accuracy.
 However, in case of VGGNet, we observe an increase of 4\% additional test accuracy compared to homogeneous knowledge distillation with a minimal decrease in the inference test accuracy.
 In Phase II, increase in test accuracy is accompanied with a small but acceptable increase in the inference attack accuracy indicating a privacy-utility trade-off.
@@ -379,35 +354,16 @@ The defences proposed in literature can be categorized into (a) regularization b
 Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
 Our proposed training framework exploits is part of category (a) where we modify the training of the machine learning model in order to provide acceptable levels of privacy and accuracy.
 
-%\subsubsection{Baselines}
-
-%In this work, we consider two state of the art baselines: Adversarial Regularization and Differential Privacy.
-%These defences have mainly focussed on improving the model's generalization and reduce overfitting which has been considered as the main cause for leakage through membership inference attacks.
-
-%\noindent\textbf{Adversarial Regularization (AdvReg)~\cite{DBLP:conf/ccs/NasrSH18}.} Here, the problem of defending against membership inference attack is modelled as a minimax game between two NNs: classifier network and attacker network.
-%The two networks are trained alternatively with contradictory objectives: first, the attacker network is trained to distinguish between the training data members and non-members followed by training the classifier network to minimize the loss as well as fool the attacker network.
-%Formally, the target classifier outputs a single probability $I(F(x),y) \in [0,1]$ which indicates the likelihood of $x$ being part of the training data.
-%The classifier minimizes the loss along with the output of the attacker classifier balanced with a privacy risk hyperparameter $\lambda$ : $min_{\theta} l(F(x),y) + \lambda log(I(F(x),y))$.
-
-%\noindent\textbf{Differential Privacy (DP)~\cite{Abadi:2016:DLD:2976749.2978318}.} In this work, we specifically consider DP-SGD which adds carefully crafted noise to the gradients during backpropagation in SGD algorithm.
-%The noise is sampled from a Laplacian or Gaussian distribution proportional to the model's Sensitivity which is then added to the gradients during backpropagation.
-%This provides provable bound on the information leaked about an individual data record in the dataset and ensures that the presence or absence of a data record does not change the model's output, hence defending against membership inference attacks.
-
-
-%\subsubsection{Results}
+\input{fig_comparedef}
 
 The comparison of models trained using \method\hspace{0.02in} is shown in Figure~\ref{fig:compare}.
 Models trained using \method\hspace{0.02in} are comparable in test accuracy and resisting membership inference leakage to Adversarial Regularization and Differential Privacy.
 The inference accuracy for NiN is 52.90\% (\method) compared to 54.09\% (DP) and 51.92\% (AdvReg) and test accuracy of 83.52\% (\method) compared to 85.11\% (DP) and 83.66\% (AdvReg).
 For AlexNet, the inference accuracy is 51.85\% (\method) compared to 52.81\% (DP) and 51.83\% (AdvReg) and test accuracy of 73.5\% (\method) compared to 79.27\% (DP) and 71.02\% (AdvReg).
 For VGGNet, the inference accuracy is 53.17\% (\method) compared to 52.90\% (DP) and 53.33\% (AdvReg) and test accuracy of 85.8\% (\method) compared to 84.91\% (DP) and 85.19\% (AdvReg).
-In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for low power embedded systems.
+In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for embedded systems.
 
-\input{fig_comparedef}
-
-\subsubsection{Comparison with MemGuard}
-
-MemGuard~\cite{10.1145/3319535.3363201} is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
+\noindent\textbf{Comparison with MemGuard.} MemGuard~\cite{10.1145/3319535.3363201} is a post-training defence, where the defender adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network.
 The defence assumes the adversary's attack model is an ML classifier vulnerable to adversarial examples.
 However, this post-training approach can be used in addition to the models trained using the \method\hspace{0.02in} framework assuming the adversary uses shadow model attack.
 Our attack does not rely on a "shadow" models but rather relies on output posterior to perform the attack.

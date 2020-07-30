@@ -1,5 +1,9 @@
 \section*{Appendix}
 
+\subsection{Impact of Model Compression}
+
+We evaluate the privacy leakage of model compression on two other datasets: Location and Purchase100.
+
 \noindent\textbf{Purchase100.} This dataset is a privacy sensitive dataset capturing the purchase preferences of online customers taken from the authors of~\cite{shokri2017membership}.
 The data records have 600 binary features and each record is classified into one of 100 classes identifying each user's purchase.
 For this dataset, we use a fully connected architecture with the nodes in each layers as [1024,512,256,128,100].
@@ -10,25 +14,25 @@ For this dataset, we use a fully connected architecture with the nodes in each l
     \centering
     \begin{minipage}[b]{1\linewidth}
     \centering
-    \subfigure[Pubmed]{
+    \subfigure[Impact of Pruning on Location (left) and Purchase (right)]{
     \label{fig:mem_soft_label}
     \includegraphics[width=0.5\linewidth]{figures/location_prune.pdf}
     \includegraphics[width=0.5\linewidth]{figures/purchase_prune.pdf}
     }
 
-    \subfigure[Citeseer]{
+    \subfigure[Impact of Retraining on Location (left) and Purchase (right)]{
     \label{fig:nonmem_soft_label}
     \includegraphics[width=0.5\linewidth]{figures/location_retrain.pdf}
     \includegraphics[width=0.5\linewidth]{figures/purchase_retrain.pdf}
     }
 
-    \subfigure[Cora]{
+    \subfigure[Mitigating Leakage via Weight sharing on Location (left) and Purchase (right)]{
    	\label{fig:mem_soft_label}
     \includegraphics[width=0.5\linewidth]{figures/location_wtsharing.pdf}
     \includegraphics[width=0.5\linewidth]{figures/purchase_wtsharing.pdf}
     }
 
     \end{minipage}
-    \caption{Model predictions are more confident for nodes in $G_{train}$ compared to test graph (left). The extent of overfitting can be detected by a non-overlapping region between the output prediction distributions across all data points (right).}
+    \caption{We extend the analysis of privacy leakage due to model compression on two additional datasets.}
     \label{fig:NIAcause}
 \end{figure}

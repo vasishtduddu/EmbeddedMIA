@@ -91,10 +91,9 @@ This provides provable bound on the information leaked about an individual data 
 \subsection{Metrics}
 \label{metrics}
 
-\paragraph{Efficiency} We evaluate efficiency of the three baseline algorithms based on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
+\noindent\textbf{Efficiency.} We evaluate efficiency of the three baseline algorithms based on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
 
-\paragraph{Privacy}
-We use the inference attack accuracy to estimate the success of membership inference attack.
+\noindent\textbf{Privacy.} We use the inference attack accuracy to estimate the success of membership inference attack.
 An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
 This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
 The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy (generalization error). Higher generalization error (overfitting) results in higher distinguishability between the test and train resulting in higher membership inference accuracy~\cite{shokri2017membership}.
