@@ -1,8 +1,9 @@
 \section{Evaluation of \method}\label{compare}
 
 We carried out an extensive evaluation of \method.
-We first analyse the three state of the art techniques for efficiency model computation in Section~\ref{eval-efficiency} and privacy leakage in Section~\ref{eval-leakage}.
-Finally, we evaluate the proposed training methodology in Section~\ref{evalPh1}.
+We first analyse the three state of the art techniques for efficiency model computation in Section~\ref{eval-efficiency} and privacy leakage in Section~\ref{eval-leakage}, before summarizing the comparison Section~\ref{eval-summary}.
+We then evaluate the proposed training methodology in Section~\ref{evalPh1} and Section~\ref{evalPh2} for Phase I and Phase II, respectively.
+Finally, we compare \method~ against state of the art defence schemes in Section~\ref{eval-defences}.
 
 
 \subsection{Evaluating Efficiency}
@@ -206,6 +207,7 @@ In summary, we observe that quantization, specifically binarization of parameter
 
 
 \subsection{Summary of Comparison}
+\label{eval-summary}
 
 We summarize the properties satisfied by each of the technique in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
 Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
@@ -241,7 +243,8 @@ Hence, we choose quantization as a NN design for \method\hspace{0.01in} to provi
 
 \input{plot_defence}
 
-\subsection{Evaluating Phase I}\label{evalPh1}
+\subsection{Evaluating Phase I}
+\label{evalPh1}
 
 In Phase I of \method, we quantize the model and replace the MACs with cheap XNOR operations.
 We observe that the inference attack accuracy decreases significantly for all the three architecture close to random guess ($\sim$50\%).
@@ -287,6 +290,7 @@ Further, the quantization acts as a noise to strongly regularize the model~\cite
 At the same time, this optimization provides high degree of efficiency to be executed on low powered embedded devices.
 
 \subsection{Evaluating Phase II}
+\label{evalPh2}
 
 The objective of Phase II of \method\hspace{0.02in} is to enhance the accuracy of the quantized model with XNOR computations which depicts high inference attack resistance and efficiency.
 In Phase II, we use the teacher-student model (described in Section~\ref{design}) to train the quantized student model being guided using the output predictions of the full precision teacher model.
@@ -347,7 +351,8 @@ The \method\hspace{0.02in} framework results in models which make the output con
 Further, the knowledge distillation enables to lower the loss of the model compared to the model trained in Phase I resulting in higher test accuracy as seen in Figure~\ref{fig:loss} (c).
 However, the loss trajectory is still higher than the full precision version indicating the test accuracy degradation of the proposed framework and a privacy-utility trade-off.
 
-\subsection{Comparison with Prior Defenses}
+\subsection{Comparison with Prior Defences}
+\label{eval-defences}
 
 The defences proposed in literature can be categorized into (a) regularization based train-time defences and (b) post-training inference time defence.
 Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
