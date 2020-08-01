@@ -147,7 +147,7 @@ As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower 
 \begin{figure}
   \includegraphics[width=0.7\columnwidth]{figures/efficientArch.pdf}
   \caption{The privacy leakage of off-the-shelf models is reduced by increasing the softmax temperature.}
-  \label{fig:wtsharing}
+  \label{softmax}
 \end{figure}
 
 Further, the membership inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
@@ -162,7 +162,7 @@ This reduction in membership inference accuracy is without any cost of the predi
 
 In this section, we evaluate the technique of reducing the precision of both model's parameters and intermediate activations.
 Further, we consider the extreme case of binarizing the parameters and activations allowing to evaluate on the most optimized case.
-We evaluate on FashionMNIST dataset for two architectures with convolutional and fully connected layers.
+We evaluate on FashionMNIST dataset for two architectures with convolutional and fully connected layers as seen in Table~\ref{fmnist_quantize}.
 
 \begin{table}[!htb]
 \begin{center}
@@ -193,7 +193,7 @@ XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000p
 
 In both the architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
 However, on replacing the MAC operations with XNOR operations, we observe that the inference risk decreases close to random guess, however, at the cost of prediction test accuracy.
-The CIFAR10 results corresponding to the XNOR operations and it's privacy comparison with full precision counterpart is indicated in Table~\ref{cifar10quant}.
+The CIFAR10 results corresponding to the XNOR operations and its privacy comparison with full precision counterpart is indicated in Table~\ref{cifar10quant}.
 
 In summary, we observe that quantization, specifically binarization of parameters and activation along with XNOR computation, provides strong resistance against inference attacks compared to model compression and off-the-shelf architectures.
 
