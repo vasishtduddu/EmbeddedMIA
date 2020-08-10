@@ -88,7 +88,7 @@ These additional optimizations have been used previously for XNOR based networks
 \subsection{Phase II}
 \label{p2}
 
-In Phase I, we optimize for both privacy and efficiency but these are achieved at the significant degradation of accuracy (Section~\ref{evalPh1}).
+In Phase I, we optimize for both privacy and efficiency but at the cost of significantly degrade the accuracy (Section~\ref{evalPh1}).
 In order to restore the accuracy close to the original full precision accuracy, we propose to use knowledge distillation~\cite{44873}.
 Here, we consider a pre-trained teacher model $f_{teacher}()$ with state of the art accuracy on the classification task and use it to guide the training of the quantized classifier.
 During training of the quantized model (student), we do not compute the loss between the true label $y$ and predicted label $f_{student}(x)$.

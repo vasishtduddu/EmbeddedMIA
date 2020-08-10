@@ -33,6 +33,7 @@ Model designers use three state of the art approaches for designing efficient NN
 %In this work, we consider these three approaches as baselines for comparison and evaluation to select the choice of optimization for \method.
 
 \begin{itemize}[leftmargin=*]
+
 \item {\em Model Compression (Pruning).}
 NNs are overparameterized, i.e, have large number of redundant weights.
 Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
@@ -50,7 +51,7 @@ For a sensitivity threshold $T$, the parameters close to zero are replaced by ze
 \]
 
 \item {\em Off-the-Shelf Efficient Architectures.}
-NNs can be redesigned by changing the hyperparameters (filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
+NNs can be redesigned by changing the hyperparameters (i.e., filter size in convolution, number of layers and their types) to reduce the number of parameters and hence, the memory footprint.
 One approach is to replace larger convolution filters with multiple smaller filters with less number of parameters but covering the same receptive fields.
 For instance, one 5x5 filter can be replaced by two 3x3 filters.
 Alternatively, 1x1 convolutional layers reduce the number of channels in output feature map, lowering the computation and number of parameters.
@@ -91,10 +92,10 @@ This provides provable bound on the information leaked about an individual data 
 \subsection{Metrics}
 \label{metrics}
 
-\noindent\textbf{Efficiency.} We evaluate efficiency of the three baseline algorithms based on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
+\noindent\textbf{Efficiency.} We evaluate efficiency on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
 
 \noindent\textbf{Privacy.} We use the inference attack accuracy to estimate the success of membership inference attack.
 An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.
 This indicates that the adversary is able to identify the membership details of a data record with an accuracy higher than random guess.
-The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy (generalization error). Higher generalization error (overfitting) results in higher distinguishability between the test and train resulting in higher membership inference accuracy~\cite{shokri2017membership}.
+The success of inference attack accuracy is strongly correlated with the model's extent of overfitting empirically measured as the difference between the train and test accuracy (i.e., generalization error). Higher generalization error (i.e., overfitting) results in higher distinguishability between the test and train resulting in higher membership inference accuracy~\cite{shokri2017membership}.
 Additionally, the accuracy of the model is computed using the model's performance on unseen test data.

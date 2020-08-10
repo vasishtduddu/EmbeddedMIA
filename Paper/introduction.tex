@@ -24,19 +24,19 @@ These observations motivate our design choice of quantizing NNs as part of \meth
 
 In Phase-I of \method, the model parameters and activations are binarized, i.e., constrained to \{-1,+1\} to reduce the memory, energy consumption, and computation overhead.
 To ensure computation efficiency, we replace the expensive multiply accumulate operations between parameter matrices and activation vectors to simple and cheaper XNOR operations.
-As our main contribution, we show that aggressively quantized NN architectures obtained in Phase-I ensure efficient privacy-preserving computation with higher resistance to membership inference attacks.
+As our main contribution, we show that aggressively quantized NN architectures obtained in Phase-I ensures efficient privacy-preserving computation with higher resistance to membership inference attacks.
 Phase-I of \method\hspace{0.02in} optimizes for efficiency \textit{and} privacy but at the cost of a significant drop in accuracy.
 In Phase-II, we restore this accuracy by transferring knowledge from larger full precision models to the quantized models~\cite{44873}.
 Here, the quantized XNOR model uses the output predictions of the full precision state of the art models as labels instead of using the true labels during training.
 This significantly increases the prediction accuracy of the model while limiting privacy leakage.
 
 
-Finally, we compare the models trained using \method\hspace{0.02in} with prior state-of-the-art defences against membership inference attacks, namely, Adversarial Regularization~\cite{DBLP:conf/ccs/NasrSH18} and Differential Privacy~\cite{Abadi:2016:DLD:2976749.2978318}.
+Finally, we compare the models trained using \method\hspace{0.02in} with prior state of the art defences against membership inference attacks, namely, Adversarial Regularization~\cite{DBLP:conf/ccs/NasrSH18} and Differential Privacy~\cite{Abadi:2016:DLD:2976749.2978318}.
 We show that our proposed models improve the trade-offs between the efficiency, accuracy, and privacy compared to the baselines approaches.
 Our work provides the first systematic evaluation efficiency-accuracy-privacy trade-offs to design a novel training methodology.
-The code is made publicly available\footnote{Anonymized for Submission}.
+The code of \method is publicly available\footnote{Anonymized for Submission}.
 
-The paper is outlined as follows: Section~\ref{background} presents background in embedded Deep Learning and describe \method\hspace{0.02in} in Section~\ref{design}.
+The paper is outlined as follows: Section~\ref{background} presents background in embedded Deep Learning and privacy threat, and Section~\ref{design} describes \method\hspace{0.02in}.
 We describe the baselines and experimental setup in Section~\ref{setting}.
 The evaluation of the proposed algorithm and a comparative analysis with state of the art baselines is given in Section~\ref{compare}.
 Related work are then presented Section~\ref{related} before concluding in Section ~\ref{conclusions}.

@@ -1,4 +1,5 @@
-\section{Evaluation of \method}\label{compare}
+\section{Evaluation}
+\label{compare}
 
 We carried out an extensive evaluation of \method.
 We first analyse the three state of the art techniques for efficiency model computation in Section~\ref{eval-efficiency} and privacy leakage in Section~\ref{eval-leakage}, before summarizing the comparison Section~\ref{eval-summary}.
@@ -23,7 +24,7 @@ This requires additional logic to check for zero valued parameters in a dictiona
 
 \noindent\textbf{Computation Efficiency.} Design of efficient off-the-shelf architectures replaces the complex matrix-vector multiplications to smaller dimensions.
 This reduces the overall number of parameters but it has been shown empirically\footnote{https://github.com/albanie/convnet-burden} that this does not necessarily reduce the number of multiply accumulate operations~\cite{article}.
-In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the the multiplications with "0" pruned values, the hardware optimization enables the user to skip the computation and replace the output by a "0" directly.
+In case of parameter pruning, achieving efficiency requires additional hardware optimization. Particularly, instead of actually computing the multiplications with "0" pruned values, the hardware optimization enables the user to skip the computation and replace the output by a "0" directly.
 For quantized models with binarized parameters and activations the MACs can be replaced by binary XNOR operations, maxpool replaced by OR operation, while the activations can be replaced by checking the sign bit and hence reducing the FLOPS drastically~\cite{235489}.
 This results in high computational efficiency and hence, faster inference.
 
@@ -33,10 +34,10 @@ Specifically, for the case of off-the-shelf architectures, while computation eff
 Alternatively, for the case of model compression, energy efficiency can be marginally improved by additionally providing hardware optimization~\cite{journals/corr/YangCS16a,DBLP:journals/corr/HanMD15}.
 For quantization, however, the energy efficiency is high as the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
 Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption~\cite{NIPS2016_6573,rastegari2016xnornet}.
-While some improvement is seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
+While some improvements are seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
 The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the readers to~\cite{8114708} for more details.
 
-In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefit for different efficiency requirements over the other alternatives.
+In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
 
 
 
@@ -191,7 +192,7 @@ XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000p
 \label{fmnist_quantize}
 \end{table}
 
-In both the architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
+In both architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
 However, on replacing the MAC operations with XNOR operations, we observe that the inference risk decreases close to random guess, however, at the cost of prediction test accuracy.
 The CIFAR10 results corresponding to the XNOR operations and it's privacy comparison with full precision counterpart is indicated in Table~\ref{cifar10quant}.
 
