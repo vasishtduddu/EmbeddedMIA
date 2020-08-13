@@ -28,6 +28,22 @@ In case of parameter pruning, achieving efficiency requires additional hardware 
 For quantized models with binarized parameters and activations the MACs can be replaced by binary XNOR operations, maxpool replaced by OR operation, while the activations can be replaced by checking the sign bit and hence reducing the FLOPS drastically~\cite{235489}.
 This results in high computational efficiency and hence, faster inference.
 
+\begin{figure*}[!htb]
+    \centering
+
+\subfloat[Impact of Model Pruning on Privacy (FashionMNIST)]{\label{fig:prune}{
+  \includegraphics[width=0.28\linewidth]{figures/fmnist_prune.pdf}}}
+\hspace{4mm}
+\subfloat[Impact of Retraining on Privacy]{\label{fig:retrain}{
+  \includegraphics[width=0.28\linewidth]{figures/retrain.pdf}}}
+\hspace{4mm}
+\subfloat[Mitigating Privacy Leakage via Weight Sharing (FashionMNIST)]{\label{fig:wtsharing}{
+  \includegraphics[width=0.28\linewidth]{figures/fmnist_wtsharing.pdf}}}
+    \caption{Pruning the model lowers the membership inference leakage at the cost of accuracy. Retraining the pruned model to restore accuracy results in a higher membership privacy leakage compared to uncompressed baseline model. This additional leakage can be mitigated by weight sharing at the cost of accuracy.}
+    \label{fig:NIAcause}
+\end{figure*}
+
+
 
 \noindent\textbf{Energy Efficiency.} Energy efficiency does not vary much with reduction of number of parameters and data type, but the number of memory accesses play vital role~\cite{6757323}.
 Specifically, for the case of off-the-shelf architectures, while computation efficiency improves, the energy efficiency is close to large scale state of the art models like AlexNet~\cite{DBLP:journals/corr/IandolaMAHDK16,8114708}.
@@ -37,8 +53,8 @@ Specifically, lowering the precision from 32 bit floating point to binary result
 While some improvements are seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
 The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the readers to~\cite{8114708} for more details.
 
-In summary, compared to different optimization techniques for NNs, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
-
+In summary, compared to different optimization techniques, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
+% for NNs
 
 
 
@@ -55,31 +71,34 @@ Here, pruning is achieved by replacing some of the parameters with "0" value.
 As described in the original paper~\cite{Han:2015:LBW:2969239.2969366,DBLP:journals/corr/HanPNMTECTD16}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
 We evaluate and validate the impact on membership privacy on compressing the model trained on two datasets: FashionMNIST and CIFAR10.
 
-\textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (as seen for FashionMNIST in Figure~\ref{fig:prune}).
+\textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}). % for FashionMNIST
 As the compression rate increases, the generalization error decreases (owing to a decrease in both train and test accuracy) with a decrease in membership accuracy to close to random guess.
 This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
 
-\begin{figure}[!htb]
-    \centering
-    \begin{minipage}[b]{1\linewidth}
-    \centering
-    \subfigure[Impact of Model Pruning on Privacy]{
-    \label{fig:prune}
-    \includegraphics[width=0.7\linewidth]{figures/fmnist_prune.pdf}
-    }
-    \subfigure[Impact of Retraining on Privacy]{
-    \label{fig:retrain}
-    \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
-    }
-    \subfigure[Mitigating Privacy Leakage via Weight Sharing]{
-    \label{fig:wtsharing}
-    \includegraphics[width=0.7\linewidth]{figures/fmnist_wtsharing.pdf}
-    }
 
-    \end{minipage}
-    \caption{Pruning the model lowers the membership inference leakage at the cost of accuracy. Retraining the pruned model to restore accuracy results in a higher membership privacy leakage compared to uncompressed baseline model. This additional leakage can be mitigated by weight sharing at the cost of accuracy.}
-    \label{fig:NIAcause}
-\end{figure}
+
+
+%\begin{figure}[!htb]
+%    \centering
+%    \begin{minipage}[b]{1\linewidth}
+%    \centering
+%    \subfigure[Impact of Model Pruning on Privacy]{
+%    \label{fig:prune}
+%    \includegraphics[width=0.7\linewidth]{figures/fmnist_prune.pdf}
+%    }
+%    \subfigure[Impact of Retraining on Privacy]{
+%    \label{fig:retrain}
+%    \includegraphics[width=0.7\columnwidth]{figures/retrain.pdf}
+%    }
+%    \subfigure[Mitigating Privacy Leakage via Weight Sharing]{
+%    \label{fig:wtsharing}
+%    \includegraphics[width=0.7\linewidth]{figures/fmnist_wtsharing.pdf}
+%    }
+%
+%    \end{minipage}
+%    \caption{Pruning the model lowers the membership inference leakage at the cost of accuracy. Retraining the pruned model to restore accuracy results in a higher membership privacy leakage compared to uncompressed baseline model. This additional leakage can be mitigated by weight sharing at the cost of accuracy.}
+%    \label{fig:NIAcause}
+%\end{figure*}
 
 
 \textbf{Impact of Retraining Pruned Model.} Interestingly, on retraining the pruned model, we observe that the membership inference accuracy is much higher than the original unpruned baseline model (Figure~\ref{fig:retrain}).
@@ -105,9 +124,9 @@ In summary, model compression results in a higher membership privacy leakage com
 
 \textbf{Mitigating the Privacy Risks in Pruned Models.} We describe on potential approach to mitigate the privacy risk of the compressed models without requiring to modify the model's training.
 The post-hoc approach utilizes the weight sharing (a class of quantization techniques) for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
-As seen in case of FashionMNIST in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST.
+As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST.
 This decrease in inference attack accuracy is caused by a decrease in generalization error due to decrease in prediction (both train and test) accuracy of the model.
-For the experiments, we use the compressed model with highest privacy leakage (by sweeping sensitivity threshold values) to evaluate the effectiveness of weight sharing on the worst case condition.
+For the experiments, we use the compressed model with highest privacy leakage (by sweeping sensitivity threshold values) to evaluate the effectiveness of weight sharing on the worst case condition. % in case of FashionMNIST 
 This pipeline approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
 
 
@@ -118,11 +137,13 @@ This pipeline approach of pruning followed by retraining followed by weight shar
 \subsubsection{Off-the-Shelf Efficient Architectures}
 
 
-\begin{table}[!htb]
+\begin{table}[h]
 \begin{center}
 \renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
+\fontsize{6.5pt}{6.5pt}\selectfont
 \begin{tabular}{|c|c|c|c|c|}
+\hline
+\multicolumn{5}{|c|}{\textbf{CIFAR10}}\\
 \hline
 \textbf{Architecture} & \textbf{Memory} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}   \\
  & \textbf{Footprint} & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
@@ -139,6 +160,7 @@ VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 \end{center}
 \caption{Model complexity influences the membership inference leakage.}
 \label{stdarch}
+\vspace{-4mm}
 \end{table}
 
 In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
@@ -146,9 +168,10 @@ The evaluation of these models is done only on CIFAR10 dataset as these state of
 As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower membership inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
 
 \begin{figure}
-  \includegraphics[width=0.7\columnwidth]{figures/efficientArch.pdf}
-  \caption{The privacy leakage of off-the-shelf models is reduced by increasing the softmax temperature.}
+  \includegraphics[width=0.6\columnwidth]{figures/efficientArch.pdf}
+  \caption{The privacy leakage of off-the-shelf models is reduced by increasing the softmax temperature (CIFAR10 dataset).}
   \label{softmax}
+\vspace{-2mm}
 \end{figure}
 
 Further, the membership inference accuracy of SqueezeNet and MobileNet can be further reduced close to random guess by increasing the temperature parameter of the softmax function applied to the output.
@@ -168,7 +191,7 @@ We evaluate on FashionMNIST dataset for two architectures with convolutional and
 \begin{table}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
+\fontsize{6.5pt}{6.5pt}\selectfont
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 \multicolumn{5}{|c|}{\textbf{FashionMNIST}}\\
@@ -188,8 +211,9 @@ XNOR-Net & 0.93 MB & 92.67\% & 86.68\% & \cellcolor{green!25}51.74\%\\ %937,000p
 \hline
 \end{tabular}
 \end{center}
-\caption{Reducing the model precision lowers the inference attack accuracy but at the cost of test accuracy.}
+\caption{Reducing the model precision reduces the inference attack but at the cost of test accuracy.}
 \label{fmnist_quantize}
+\vspace{-4mm}
 \end{table}
 
 In both architectures, we see that computation on  binarized parameters and activations reduces the inference risk by a small value.
@@ -216,7 +240,7 @@ Here, we mark the attributes which are satisfied with $\cmark$, requires additio
 \begin{table}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
+\fontsize{6.5pt}{6.5pt}\selectfont
 \begin{tabular}{|l||l|l|l|}
 \hline
 Requirements & Compression & Quantization & Off-the-shelf  \\
@@ -234,6 +258,7 @@ Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
 \caption{Only quantization satisfies all the requirements.}
 %\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
 \label{tbl:comparison}
+\vspace{-4mm}
 \end{table}
 
 In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
@@ -255,7 +280,7 @@ Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 
 \begin{table}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
+\fontsize{6.5pt}{6.5pt}\selectfont
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 \multicolumn{5}{|c|}{\textbf{CIFAR10}} \\
@@ -303,7 +328,7 @@ The standalone test accuracy of the DenseNet169 and ResNet50 architectures are 9
 \begin{table}[!htb]
 \begin{center}
 \renewcommand\arraystretch{1.5}
-\fontsize{6.7pt}{6.7pt}\selectfont
+\fontsize{6.5pt}{6.5pt}\selectfont
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline
 \textbf{Teacher} & \textbf{Student} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
