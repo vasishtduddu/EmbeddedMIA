@@ -5,14 +5,15 @@ We carried out an extensive evaluation of \method. %the three state of the art d
 %: a) Model Compression via pruning redundant parameters and nodes, b) Quantization to lower the precision of model parameters and activations, and c) Efficient off-the-shelf architectures.
 %
 %We show that ... In addition, we show that ...
-We first describe the datasets and architectures used in this analysis in Section~\ref{datasets} before to present the considered comparative baselines and metrics in Section~\ref{baselines} and Section~\ref{metrics}, respectively. %Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
+We first describe the datasets and architectures used in this analysis (Section~\ref{datasets}) before to present the considered comparative baselines (Section~\ref{baselines}) and metrics (Section~\ref{metrics}). %Finally, we analyse efficiency Section~\ref{eval-efficiency} and privacy leakage Section~\ref{eval-leakage}.
 
 
 \subsection{Datasets and Architectures}
 \label{datasets}
 
 For evaluating and comparing different efficiency algorithms, we use two standard benchmarking datasets: FashionMNIST and CIFAR10.
-For FashionMNIST dataset we train the model for 75 epochs and for CIFAR10, we train the models for 100-150 epochs.
+We train the model for 75 epochs for FashionMNIST and 100-150 epochs for CIFAR10.
+%For FashionMNIST dataset we train the model for 75 epochs and for CIFAR10, we train the models for 100-150 epochs.
 %These provide us with the necessary direction to choose the optimal efficiency algorithm which satisfies all the efficiency and privacy requirement as describes in Section~\ref{motivate}.
 
 \noindent\textbf{FashionMNIST.} This dataset consists of 60,000 training examples and a test set of 10,000 examples.
@@ -35,12 +36,12 @@ Model designers use three state of the art approaches for designing efficient NN
 \begin{itemize}[leftmargin=*]
 
 \item {\em Model Compression (Pruning).}
-NNs are overparameterized, i.e, have large number of redundant weights.
-Pruning of the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
+NNs are overparameterized, i.e, have a large number of redundant weights.
+Pruning the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
 The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
 Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{DBLP:journals/corr/HanMD15,10.1109/ISCA.2016.30,Han:2015:LBW:2969239.2969366}.
-Aggressive pruning, while compresses the model significantly, requires to be re-trained to restore the model's original accuracy.
-For a sensitivity threshold $T$, the parameters close to zero are replaced by zero which is given as:
+Aggressive pruning, while compressing the model significantly, requires to be re-trained to restore the model's original accuracy.
+For a sensitivity threshold $T$, the parameters close to zero are replaced by zero: % which is given as:
 \[
 \footnotesize
     f(W)=
@@ -63,11 +64,13 @@ Such optimizations enable to design compact network architecture with layers hav
 Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
 Quantization maps parameters and activations to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
 The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
-Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) lowers the energy consumption by lowering the memory accesses and increasing throughput.
+Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) reduces the energy consumption by lowering the memory accesses and increasing throughput.
 Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy~\cite{rastegari2016xnornet}.
 For instance, Binarized NNs quantize the operands to \{-1,+1\} values~\cite{NIPS2016_6573} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training~\cite{Li2016TernaryWN}. These are examples of uniform quantization.
 Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters~\cite{DBLP:journals/corr/HanMD15}.
-This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
+%This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
+This mapping is done using K-Means clustering or a hashing function where a "codebook" maps different parameters to the corresponding shared values.
+
 \end{itemize}
 
 

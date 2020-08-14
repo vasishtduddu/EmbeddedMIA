@@ -20,7 +20,7 @@ The accuracy degradation of the private and efficient model should be minimum as
 %Based on the efficiency and privacy analysis described in the previous section, we describe the detailed \method\hspace{0.02in} framework for designing efficient, private and accurate NNs in this section.
 \method~ is composed of two phases.
 In Phase I, the objective is to enhance the model's efficiency and privacy, however, at the cost of accuracy (Section~\ref{p1}).
-In Phase II, we optimize for accuracy and train the resultant model from Phase I (Section~\ref{p2}).
+In Phase II, we optimize for accuracy the resultant model from Phase I (Section~\ref{p2}). % and train the resultant model from Phase I (Section~\ref{p2}).
 
 
 %\subsection{Overall Design Requirements}
@@ -53,7 +53,7 @@ N - 2\times\operatorname{bitcount}(\operatorname{xnor}(\mathbf{x}, \mathbf{w}))
 \end{align}
 
 In terms of memory efficiency, binarization results in a direct reduction of the model size as well as intermediate output memory requirements by 32x to 64x.
-Lowering the precision also reduces the number of memory access by 32x to 64x resulting in a significant decrease in the total energy consumption.
+Lowering the precision also reduces the number of memory access by 32x to 64x resulting in a significant decrease in the energy consumption. %total
 
 
 \begin{algorithm}
@@ -88,8 +88,9 @@ These additional optimizations have been used previously for XNOR based networks
 \subsection{Phase II}
 \label{p2}
 
-In Phase I, we optimize for both privacy and efficiency but at the cost of significantly degrade the accuracy (Section~\ref{evalPh1}).
-In order to restore the accuracy close to the original full precision accuracy, we propose to use knowledge distillation~\cite{44873}.
+While we optimize for both privacy and efficiency in Phase I (at the cost of significantly degrade the accuracy), we restore in Phase II the accuracy close to the original full precision accuracy by using knowledge distillation~\cite{44873}.
+%In Phase I, we optimize for both privacy and efficiency but at the cost of significantly degrade the accuracy (Section~\ref{evalPh1}).
+%In order to restore the accuracy close to the original full precision accuracy, we propose to use knowledge distillation~\cite{44873}.
 Here, we consider a pre-trained teacher model $f_{teacher}()$ with state of the art accuracy on the classification task and use it to guide the training of the quantized classifier.
 During training of the quantized model (student), we do not compute the loss between the true label $y$ and predicted label $f_{student}(x)$.
 We instead estimate the loss between the predicted label $f_{student}(x)$ and the predicted label for the full precision teacher model $f_{teacher}(x)$.
@@ -101,6 +102,6 @@ The loss function in knowledge distillation $Loss_{KD} (f_{student}, f_{teacher}
 \end{equation}
 
 
-This ensures that the student model learns to map the prediction boundary of the teacher model and imitates the prediction behaviour for different inputs.
-Consequently, the accuracy of the student model increases compared to the original baseline of standalone training without the teacher model.
+This ensures that the student model learns to map the prediction boundary of the teacher model and mimics the prediction behaviour for different inputs. %imitates
+Therefore, the accuracy of the student model increases compared to the original baseline of standalone training without the teacher model. %Consequently
 % This results is an increase in the accuracy of the student model

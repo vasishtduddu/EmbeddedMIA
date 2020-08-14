@@ -2,9 +2,9 @@
 \label{compare}
 
 We carried out an extensive evaluation of \method.
-We first analyse the three state of the art techniques for efficiency model computation in Section~\ref{eval-efficiency} and privacy leakage in Section~\ref{eval-leakage}, before summarizing the comparison Section~\ref{eval-summary}.
-We then evaluate the proposed training methodology in Section~\ref{evalPh1} and Section~\ref{evalPh2} for Phase I and Phase II, respectively.
-Finally, we compare \method~ against state of the art defence schemes in Section~\ref{eval-defences}.
+We first analyse the three state of the art techniques for efficiency model computation (Section~\ref{eval-efficiency}) and privacy leakage (Section~\ref{eval-leakage}), before summarizing the comparison (Section~\ref{eval-summary}).
+We then evaluate the proposed training methodology for Phase I (Section~\ref{evalPh1}) and Phase II (Section~\ref{evalPh2}).
+Finally, we compare \method~ against defence schemes (Section~\ref{eval-defences}). %state of the art 
 
 
 \subsection{Evaluating Efficiency}
@@ -51,7 +51,7 @@ Alternatively, for the case of model compression, energy efficiency can be margi
 For quantization, however, the energy efficiency is high as the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
 Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption~\cite{NIPS2016_6573,rastegari2016xnornet}.
 While some improvements are seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
-The benchmarking of energy consumption for different optimization and architectures is well explored in the literature and out of scope of this work. We refer the readers to~\cite{8114708} for more details.
+The benchmarking of energy consumption for different optimization and architectures is well explored and out of scope of this work. We refer the readers to~\cite{8114708} for more details. %in the literature 
 
 In summary, compared to different optimization techniques, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
 % for NNs
@@ -69,7 +69,8 @@ This is the main contribution of our work where we evaluate the privacy leakage 
 We evaluate the privacy leakage on compressing a model by pruning the connections in the model.
 Here, pruning is achieved by replacing some of the parameters with "0" value.
 As described in the original paper~\cite{Han:2015:LBW:2969239.2969366,DBLP:journals/corr/HanPNMTECTD16}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
-We evaluate and validate the impact on membership privacy on compressing the model trained on two datasets: FashionMNIST and CIFAR10.
+%We evaluate and validate the impact on membership privacy on compressing the model trained on two datasets: FashionMNIST and CIFAR10.
+We validate the impact on membership privacy on model compression on four datasets~\footnote{including a dataset capturing the preferences of online customers and  another one capturing location check-ins~\cite{shokri2017membership}} but only report results for FashionMNIST and CIFAR10 for space reason.
 
 \textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}). % for FashionMNIST
 As the compression rate increases, the generalization error decreases (owing to a decrease in both train and test accuracy) with a decrease in membership accuracy to close to random guess.
@@ -137,6 +138,12 @@ This pipeline approach of pruning followed by retraining followed by weight shar
 \subsubsection{Off-the-Shelf Efficient Architectures}
 
 
+
+In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
+The evaluation of these models is done only on CIFAR10 dataset as these state of the art architectures are not used for the simpler case of FashionMNIST.
+As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower membership inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
+
+
 \begin{table}[h]
 \begin{center}
 \renewcommand\arraystretch{1.5}
@@ -163,9 +170,6 @@ VGG19 & 549 MB & 99.09\% & 88.18\% & \cellcolor{red!25}57.85\% \\
 \vspace{-4mm}
 \end{table}
 
-In this section, we evaluate two popular state of the art architectures, SqueezeNet and MobileNet, trained on CIFAR10 dataset used for low powered systems.
-The evaluation of these models is done only on CIFAR10 dataset as these state of the art architectures are not used for the simpler case of FashionMNIST.
-As seen in Table~\ref{stdarch}, the SqueezeNet and MobileNet models shows lower membership inference accuracy of 53.07\% and 55.57\% compared to larger models which have higher privacy leakage.
 
 \begin{figure}
   \includegraphics[width=0.6\columnwidth]{figures/efficientArch.pdf}
@@ -299,9 +303,10 @@ Specifically, the inference accuracy decreases from 56.69\% to 51.76\% for NiN, 
 \hline
 \end{tabular}
 \end{center}
-\caption{Reducing the precision of models lowers the membership privacy leakage but at the cost of accuracy.}
+\caption{Reducing the precision of models lowers the membership privacy leakage at the cost of accuracy.}
 %through membership inference attacks
 \label{cifar10quant}
+\vspace{-6mm}
 \end{table}
 
 
@@ -360,7 +365,7 @@ ResNet50 & VGG13 & 94.23\% & 86.52\% & 54.46\%\\
 \end{center}
 \caption{Phase II of \method\hspace{0.02in} improves the accuracy of the private-efficient model from Phase I.}
 \label{kd}
-\vspace{-0.3in}
+\vspace{-0.2in}
 \end{table}
 
 
