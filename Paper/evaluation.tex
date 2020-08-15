@@ -4,7 +4,7 @@
 We carried out an extensive evaluation of \method.
 We first analyse the three state of the art techniques for efficiency model computation (Section~\ref{eval-efficiency}) and privacy leakage (Section~\ref{eval-leakage}), before summarizing the comparison (Section~\ref{eval-summary}).
 We then evaluate the proposed training methodology for Phase I (Section~\ref{evalPh1}) and Phase II (Section~\ref{evalPh2}).
-Finally, we compare \method~ against defence schemes (Section~\ref{eval-defences}). %state of the art 
+Finally, we compare \method~ against defence schemes (Section~\ref{eval-defences}). %state of the art
 
 
 \subsection{Evaluating Efficiency}
@@ -51,7 +51,7 @@ Alternatively, for the case of model compression, energy efficiency can be margi
 For quantization, however, the energy efficiency is high as the memory access can be drastically reduced by increasing the throughput of data fetched from the memory.
 Specifically, lowering the precision from 32 bit floating point to binary results in lowering the memory accesses and 32x improvement in energy consumption~\cite{NIPS2016_6573,rastegari2016xnornet}.
 While some improvements are seen natively for quantized models (from replacing MACs with XNOR), higher benefits can be achieved via additional hardware optimization~\cite{Umuroglu2017FINNAF}.
-The benchmarking of energy consumption for different optimization and architectures is well explored and out of scope of this work. We refer the readers to~\cite{8114708} for more details. %in the literature 
+The benchmarking of energy consumption for different optimization and architectures is well explored and out of scope of this work. We refer the readers to~\cite{8114708} for more details. %in the literature
 
 In summary, compared to different optimization techniques, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
 % for NNs
@@ -70,7 +70,7 @@ We evaluate the privacy leakage on compressing a model by pruning the connection
 Here, pruning is achieved by replacing some of the parameters with "0" value.
 As described in the original paper~\cite{Han:2015:LBW:2969239.2969366,DBLP:journals/corr/HanPNMTECTD16}, pruning is followed by retraining the model to restore the model's original accuracy with the pruned connections.
 %We evaluate and validate the impact on membership privacy on compressing the model trained on two datasets: FashionMNIST and CIFAR10.
-We validate the impact on membership privacy on model compression on four datasets~\footnote{including a dataset capturing the preferences of online customers and  another one capturing location check-ins~\cite{shokri2017membership}} but only report results for FashionMNIST and CIFAR10 for space reason.
+We validate the impact on membership privacy on model compression on four datasets~\footnote{including a dataset capturing the preferences of online customers and  another one capturing location check-ins~\cite{shokri2017membership}} but only report results for FashionMNIST and CIFAR10 in the main text and the other two datasets in the Appendix for space reason.
 
 \textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}). % for FashionMNIST
 As the compression rate increases, the generalization error decreases (owing to a decrease in both train and test accuracy) with a decrease in membership accuracy to close to random guess.
@@ -127,7 +127,7 @@ In summary, model compression results in a higher membership privacy leakage com
 The post-hoc approach utilizes the weight sharing (a class of quantization techniques) for the compressed model. This is however, accompanied by a decrease in the model's prediction accuracy indicating a privacy-utility trade-off.
 As seen in Figure~\ref{fig:wtsharing}, reducing the precision from 32 bits to 2 bits results in a decrease in inference accuracy from 56.57\% to 52.64\% for FashionMNIST.
 This decrease in inference attack accuracy is caused by a decrease in generalization error due to decrease in prediction (both train and test) accuracy of the model.
-For the experiments, we use the compressed model with highest privacy leakage (by sweeping sensitivity threshold values) to evaluate the effectiveness of weight sharing on the worst case condition. % in case of FashionMNIST 
+For the experiments, we use the compressed model with highest privacy leakage (by sweeping sensitivity threshold values) to evaluate the effectiveness of weight sharing on the worst case condition. % in case of FashionMNIST
 This pipeline approach of pruning followed by retraining followed by weight sharing, not only maintains the algorithm's objective for efficiency but is used as a post-hoc approach to reduces the overall inference risk~\cite{DBLP:journals/corr/HanMD15,DBLP:journals/corr/HanPNMTECTD16}.
 
 
