@@ -3,7 +3,7 @@
 
 \subsection{Embedded Deep Learning}
 
-On-device processing is an attractive alternative compared to centralized processing of data from sensors, IoT and embedded edge devices.
+On-device processing is an attractive alternative compared to centralized processing of data from IoT devices.
 Such on-device processing reduces the overhead of communicating data from the devices to the servers, lowers the privacy and security risk associated with storing sensitive data on untrusted central server and lowers the latency for obtaining results from processing~\cite{8110880}.
 
 Different efficiency requirements can be adopted to design NNs for embedded systems.
@@ -28,13 +28,15 @@ This is achieved in two ways: (a) reducing the precision of the parameters and i
 \label{threatmodel}
 
 % section to reduce
-
-Although commonly not taken into account for the design of NNs for embedded systems, privacy threats still exist if personal and potentially sensitive data feed the system.
-Indeed, an adversary learns aggregate information about the entire data population through the model which generalizes this information from the train dataset to an unseen test data.
-This is desirable and quantified using the accuracy of the model.
-On the other hand, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
-In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
-This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
+NNs for embedded systems do not account for privacy threats, however these threats still exist if personal and potentially sensitive data feed the system.
+%Although commonly not taken into account for the design of NNs for embedded systems, privacy threats still exist if personal and potentially sensitive data feed the system.
+%Indeed, an adversary learns aggregate information about the entire data population through the model which generalizes this information from the train dataset to an unseen test data.
+%This is desirable and quantified using the accuracy of the model.
+%On the other hand, 
+For instance, if the adversary learns something specific about a user's data record used in the training dataset, we refer to such information as privacy leakage.
+%In other words, in context of machine learning, there is a privacy breach if the adversary learns unobservable information specific to an individual user's data record from observable information such as model's output predictions.
+%This inferred unobservable information about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
+This privacy leakage about a user's record can be, for instance, the membership details of the record in the training set of the model, referred to as membership inference attacks.
 Alternatively, an adversary can learn sensitive attributes about the user's data record which can be used to reconstruct the sensitive training dataset.
 In this work, we specifically use membership inference attacks to quantify information leakage in machine learning models~\cite{shokri2017membership}.
 
@@ -53,4 +55,17 @@ The attack is based on the observation that the maximal posterior of a member da
 In this threat model, we consider a blackbox setting where the adversary is assumed to have no knowledge about the target model.
 Formally, given a target model $f()$, the adversary only sees the final model prediction $f(x;\theta)$.
 The adversary does not know the architecture of $f()$ and the model parameters $\theta$.
-This is a practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output.
+We do not consider whitebox setting where the adversary has the access to both the model output predictions $f(x;\theta)$ as well as the architecture of $f()$ and the model parameters $\theta$.
+Indeed, this whitebox setting does not necessarily result in any benefit to the adversary in terms of attack accuracy (shown theoretically~\cite{pmlr-v97-sablayrolles19a} and empirically~\cite{DBLP:journals/corr/abs-1906-06589, song2020systematic}.
+Consequently, blackbox setting is the more practical setting seen typically in Machine Learning as a Service (MLaaS) where the adversary submits an input query to the trained model on the Cloud via an API and receives the corresponding output.
+
+
+
+
+
+
+
+
+
+
+

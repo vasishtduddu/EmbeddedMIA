@@ -7,7 +7,7 @@ We then evaluate the proposed training methodology for Phase I (Section~\ref{eva
 Finally, we compare \method~ against defence schemes (Section~\ref{eval-defences}). %state of the art
 
 
-\subsection{Evaluating Efficiency}
+\subsection{Efficiency Requirements}
 \label{eval-efficiency}
 
 In this section, in the view of the memory-computation-energy efficiency requirements, we compare the three baseline algorithms (i.e., model compression, off-the-shelf architecture, and quantization).
@@ -57,9 +57,45 @@ The benchmarking of energy consumption for different optimization and architectu
 In summary, compared to different optimization techniques, the quantized architectures show significant benefits for different efficiency requirements over the other alternatives.
 % for NNs
 
+\noindent\textbf{Summary.}
+We summarize the properties satisfied by each of the approach used for designing NN models for embedded systems in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
+%We summarize the properties satisfied by each of the technique in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
+Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.5pt}{6.5pt}\selectfont
+\begin{tabular}{|l||l|l|l|}
+\hline
+Requirements & Compression & Quantization & Off-the-shelf  \\
+\hline
+Computation Efficiency & $\smark$  & $\cmark$   & $\xmark$ \\
+\hline
+Memory Efficiency &  $\smark$ & $\cmark$   & $\cmark$ \\
+\hline
+Energy Efficiency &  $\smark$   & $\cmark$   & $\xmark$ \\
+\hline
+Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Only quantization satisfies all the requirements.}
+%\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
+\label{tbl:comparison}
+\vspace{-4mm}
+\end{table}
+
+In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
+On the other hand, model compression without any weight sharing modifications, leaks more training data membership details making it significantly more vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency.
+Off-the-shelf architectures, while provide decent privacy, does not satisfy all aspects of efficiency.
+%Hence, we choose quantization as a NN design for \method\hspace{0.01in} to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
+Consequently, \method\hspace{0.01in} adopts quantization as a NN design to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
 
 
-\subsection{Evaluating Privacy Leakage}
+
+
+\subsection{Privacy Leakage}
 \label{eval-leakage}
 
 In this section, we evaluate the information leakage through membership inference attacks for the three baseline algorithms considered.
@@ -76,7 +112,7 @@ for space reason\footnote{the two other datasets (capturing preferences of onlin
 
 \textbf{Impact of Pruning Parameters.} On pruning the model, the model's test accuracy decreases but also lowers the membership inference accuracy (Figure~\ref{fig:prune}). % for FashionMNIST
 As the compression rate increases, the generalization error decreases (owing to a decrease in both train and test accuracy) with a decrease in membership accuracy to close to random guess.
-This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077} and pruning the parameters lowers the adversary's attack success.
+This is expected as the parameters are responsible for memorizing the training data information~\cite{DBLP:journals/corr/abs-1812-00910,236216,10.1145/3133956.3134077}. % and pruning the parameters lowers the adversary's attack success.
 
 
 
@@ -238,42 +274,44 @@ In summary, we observe that quantization, specifically binarization of parameter
 %\end{tcolorbox}
 
 
-\subsection{Summary of Comparison}
-\label{eval-summary}
+%%%%%%%%%%%%%%v
 
-We summarize the properties satisfied by each of the approach used for designing NN models for embedded systems in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
-%We summarize the properties satisfied by each of the technique in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
-Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
+%\subsection{Summary of Comparison}
+%\label{eval-summary}
 
-\begin{table}[!htb]
-\begin{center}
-\renewcommand\arraystretch{1.5}
-\fontsize{6.5pt}{6.5pt}\selectfont
-\begin{tabular}{|l||l|l|l|}
-\hline
-Requirements & Compression & Quantization & Off-the-shelf  \\
-\hline
-Computation Efficiency & $\smark$  & $\cmark$   & $\xmark$ \\
-\hline
-Memory Efficiency &  $\smark$ & $\cmark$   & $\cmark$ \\
-\hline
-Energy Efficiency &  $\smark$   & $\cmark$   & $\xmark$ \\
-\hline
-Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
-\hline
-\end{tabular}
-\end{center}
-\caption{Only quantization satisfies all the requirements.}
-%\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
-\label{tbl:comparison}
-\vspace{-4mm}
-\end{table}
+%We summarize the properties satisfied by each of the approach used for designing NN models for embedded systems in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
+%%We summarize the properties satisfied by each of the technique in terms of privacy, computation, memory and energy efficiency in Table~\ref{tbl:comparison}.
+%Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
 
-In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
-On the other hand, model compression without any weight sharing modifications, leaks more training data membership details making it significantly more vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency.
-Off-the-shelf architectures, while provide decent privacy, does not satisfy all aspects of efficiency.
+%\begin{table}[!htb]
+%\begin{center}
+%\renewcommand\arraystretch{1.5}
+%\fontsize{6.5pt}{6.5pt}\selectfont
+%\begin{tabular}{|l||l|l|l|}
+%\hline
+%Requirements & Compression & Quantization & Off-the-shelf  \\
+%\hline
+%Computation Efficiency & $\smark$  & $\cmark$   & $\xmark$ \\
+%\hline
+%Memory Efficiency &  $\smark$ & $\cmark$   & $\cmark$ \\
+%\hline
+%Energy Efficiency &  $\smark$   & $\cmark$   & $\xmark$ \\
+%\hline
+%Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
+%\hline
+%\end{tabular}
+%\end{center}
+%\caption{Only quantization satisfies all the requirements.}
+%%\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
+%\label{tbl:comparison}
+%\vspace{-4mm}
+%\end{table}
+
+%In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
+%On the other hand, model compression without any weight sharing modifications, leaks more training data membership details making it significantly more vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency.
+%Off-the-shelf architectures, while provide decent privacy, does not satisfy all aspects of efficiency.
 %Hence, we choose quantization as a NN design for \method\hspace{0.01in} to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
-Consequently, \method\hspace{0.01in} adopts quantization as a NN design to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
+%Consequently, \method\hspace{0.01in} adopts quantization as a NN design to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
 
 
 

@@ -38,7 +38,7 @@ Model designers use three state of the art approaches for designing efficient NN
 \item {\em Model Compression (Pruning).}
 NNs are overparameterized, i.e, have a large number of redundant weights.
 Pruning the network refers to removing these redundant weights (setting them as zero) without a degradation of model accuracy.
-The pruning operation results in a model with sparse parameters for which the hardware can be designed to skip the multiplication and memory storage, improving the efficiency.
+The pruning operation results in a model with sparse parameters for which the hardware designers skip the multiplication and memory storage to improve efficiency.
 Sparse weights can be stored in a compressed format in the hardware using the compressed sparse row or column format which reduces the overall memory bandwidth~\cite{DBLP:journals/corr/HanMD15,10.1109/ISCA.2016.30,Han:2015:LBW:2969239.2969366}.
 Aggressive pruning, while compressing the model significantly, requires to be re-trained to restore the model's original accuracy.
 For a sensitivity threshold $T$, the parameters close to zero are replaced by zero: % which is given as:
@@ -64,12 +64,13 @@ Such optimizations enable to design compact network architecture with layers hav
 Quantization reduces the precision of the model's parameters and the intermediate activations during execution.
 Quantization maps parameters and activations to a fixed set of quantization levels~\cite{Hubara:2017:QNN:3122009.3242044}.
 The number of quantized levels determines the precision of the operands ($log_2(\#levels)$).
-Reducing the precision of the (a) parameters lowers the storage cost of the model in memory, (b) activations lowers the computation overhead by replacing MACs with binary arithmetic and (c) reduces the energy consumption by lowering the memory accesses and increasing throughput.
+Reducing the precision of the parameters lowers the storage cost of the model in memory. 
+In addition, reducing the precision of activations lowers the computation overhead by replacing MACs with binary arithmetic and reduces the energy consumption by lowering the memory accesses and increasing throughput.
 Aggressively quantizing the parameters and activations to binary and ternary precision significantly improves the overall efficiency, however, at the cost of accuracy~\cite{rastegari2016xnornet}.
 For instance, Binarized NNs quantize the operands to \{-1,+1\} values~\cite{NIPS2016_6573} while ternary NNs have values \{-w, 0, w\} where $w$ can be fixed or learnt during training~\cite{Li2016TernaryWN}. These are examples of uniform quantization.
 Alternatively, weight sharing maps several parameters to a single value reducing the number of unique parameters~\cite{DBLP:journals/corr/HanMD15}.
 %This mapping is done using K-Means clustering or a hashing function and the corresponding shared values are read from a "codebook" which maps different parameters to its shared value.
-This mapping is done using K-Means clustering or a hashing function where a "codebook" maps different parameters to the corresponding shared values.
+This mapping is done using K-Means clustering or a hashing function where a \emph{codebook} maps different parameters to the corresponding shared values.
 
 \end{itemize}
 
@@ -95,7 +96,7 @@ This provides provable bound on the information leaked about an individual data 
 \subsection{Metrics}
 \label{metrics}
 
-\noindent\textbf{Efficiency.} We evaluate efficiency on Memory efficiency, Computation efficiency and Energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
+\noindent\textbf{Efficiency.} We evaluate efficiency on memory efficiency, computation efficiency and energy efficiency. Memory efficiency is compared based on the reduction in the memory footprint of the model computed from the parameters stored in the memory. Computation efficiency is compared based on the reduction in the MAC operations which influences the execution time. Finally, the energy consumption is compared based on memory accesses from reading inputs and writing results to the memory. Since, significant literature has compared the efficiency empirically~\cite{8114708}, we provide a qualitative comparison for the baseline algorithms.
 
 \noindent\textbf{Privacy.} We use the inference attack accuracy to estimate the success of membership inference attack.
 An accuracy above random guess $50\%$ indicates a training data leakage through membership inference attack.

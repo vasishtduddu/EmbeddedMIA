@@ -2,7 +2,7 @@
 
 %Based on the comparative analysis described in the previous section
 In this section we detail \method\hspace{0.02in}.
-\method~ is a technique to construct NNs dedicated to embedded systems with efficiency, accuracy and privacy as main requirements:
+\method~ is a technique to construct NNs dedicated to IoT with efficiency, accuracy and privacy as main requirements:
 
 \begin{itemize}[leftmargin=*]
 
@@ -10,17 +10,22 @@ In this section we detail \method\hspace{0.02in}.
 The model should preserve the privacy of an individual's data record in the training set of the model against inference attacks.
 
 \item {\em Efficiency.}
-The private model should demonstrate high energy, memory and computation efficiency for practical deployment to embedded and mobile devices.
+The model should work with low energy, memory and computation capacity for practical deployment to embedded and mobile devices.
 
 \item {\em Accuracy.}
-The accuracy degradation of the private and efficient model should be minimum as compared to the non-private and non-efficient model accuracy.
+The model should be highly accurate.
+%accuracy degradation of the private and efficient model should be minimum as compared to the non-private and non-efficient model accuracy.
 \end{itemize}
 
 
 %Based on the efficiency and privacy analysis described in the previous section, we describe the detailed \method\hspace{0.02in} framework for designing efficient, private and accurate NNs in this section.
-\method~ is composed of two phases.
-In Phase I, the objective is to enhance the model's efficiency and privacy, however, at the cost of accuracy (Section~\ref{p1}).
-In Phase II, we optimize for accuracy the resultant model from Phase I (Section~\ref{p2}). % and train the resultant model from Phase I (Section~\ref{p2}).
+To fulfill these requirements, \method~ is composed of two phases.
+In Phase I (Section~\ref{p1}), a first model is trained to ensure the efficiency and privacy. 
+Ensuring these requirements is however done at the cost of the accuracy. 
+In Phase II (Section~\ref{p2}), this first model is then optimized for improving the accuracy.
+
+%In Phase I (Section~\ref{p1}), the objective is to enhance the model's efficiency and privacy, however, at the cost of accuracy .
+%In Phase II (Section~\ref{p2}), we optimize for accuracy the resultant model from Phase I (Section~\ref{p2}). % and train the resultant model from Phase I (Section~\ref{p2}).
 
 
 %\subsection{Overall Design Requirements}
@@ -40,7 +45,8 @@ In Phase II, we optimize for accuracy the resultant model from Phase I (Section~
 \subsection{Phase I}
 \label{p1}
 
-We first quantize the model's parameters and intermediate activations. We specifically binarize the values to restrict them to the values of \{+1,-1\}.
+We first quantize the model's parameters and intermediate activations. 
+We specifically binarize the values to restrict them to the values of \{+1,-1\}.
 This operation (as seen in Section~\ref{quant}) results in high resistance to inference attacks as well as satisfies the different efficiency requirements.
 The model achieves computation efficiency by replacing the expensive matrix multiplications with simple boolean arithmetic operations, i.e, XNOR computations.
 Alternatively, instead of using multiplication and addition circuits in the hardware, we leverage XNOR logic on the inputs followed by a bitcount operation (counting the number of high bits "1" in a binary output sequence).
@@ -67,7 +73,7 @@ Lowering the precision also reduces the number of memory access by 32x to 64x re
         \ENDIF
     \ENDFOR
 \end{algorithmic}
-\caption{Inference Stage of Binary Neural Network with XNOR Operations where $W_k^b$ are the binarized weights($W_k$) and $a_k$ is the activation of the $k^{th}$ layer}
+\caption{Inference Stage of Binary Neural Network with XNOR Operations where $W_k^b$ are the binarized weights ($W_k$) and $a_k$ is the activation of the $k^{th}$ layer}
 \label{alg:inference}
 \end{algorithm}
 
