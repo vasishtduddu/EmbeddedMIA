@@ -1,0 +1,70 @@
+\section{Appendix}
+
+Given the that XNOR-Nets have higher resistance to membership inference attacks but poor accuracy, the objective is to enhance the accuracy of the model with minimal effect on privacy leakage.
+We use the teacher-student model to train the quantized student model being guided using the output predictions of the full precision teacher model (Knowledge Distillation).
+Here, the training is heterogeneous, i.e, we are flexible to choose any full precision teacher model which can provide high accuracy on the considered dataset (shown below).
+Here, we consider pre-trained state of the art architectures\footnote{https://github.com/huyvnphan/PyTorch\_CIFAR10}: DenseNet169 and ResNet50, along with the full precision versions of NiN, Alexnet and VGGNet.
+The standalone test accuracy of the DenseNet169 and ResNet50 architectures are 92.84\% and 92.12\% respectively with inference accuracy around to 55\% while the full precision accuracies for NiN, AlexNet and VGGNet are given in Table~\ref{cifar10quant}.
+
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.5pt}{6.5pt}\selectfont
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Teacher} & \textbf{Student} & \textbf{Train}  & \textbf{Test}  & \textbf{Inference}  \\
+&  & \textbf{Accuracy} & \textbf{Accuracy} & \textbf{Accuracy}  \\
+\hline
+\multicolumn{5}{|c|}{Standalone Models}\\
+\hline
+Binary NiN & None & 81.93\% & 78.74\% & 51.76\% \\
+Binary AlexNet & None & 68.62\% & 66.8\% & 51.40\% \\
+Binary VGG13 & None & 79.67\% & 74.64\% & 52.65\%\\
+\hline
+\multicolumn{5}{|c|}{Homogeneous Architecture Distillation}\\
+\hline
+NiN & Binary NiN & 90.49\% & 83.52\% & 53.90\% \\
+AlexNet & Binary AlexNet & 76.79\% & 73.5\% & 51.85\% \\
+VGG13 & Binary VGG13 & 89.45\% & 81.58\% & 54.98\%\\
+\hline
+\multicolumn{5}{|c|}{\textbf{Heterogeneous Architecture Distillation}}\\
+\hline
+DenseNet169 & NiN & 92.84\% & 83.71\% & 54.95\%\\
+DenseNet169 & AlexNet & 81.87\% & 76.23\% & 53.51\%\\
+DenseNet169 & VGG13 & 93.45\% & 85.8\% & 54.17\%\\
+\hline
+ResNet50 & NiN & 91.74\% & 83.77\% & 54.53\% \\
+ResNet50 & AlexNet & 80.12\% & 74.92\% & 53.12\%\\
+ResNet50 & VGG13 & 94.23\% & 86.52\% & 54.46\%\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Knowledge Distillation improves the accuracy of the private-efficient quantized model.}
+\label{kd}
+\vspace{-0.2in}
+\end{table}
+
+
+The first set of experiments combine the same full precision model architectures with the quantized model versions, i.e, full precision NiN with Binarized NiN (i.e., homogeneous knowledge distillation).
+Here, we see that there is 5\% increase in test accuracy (from 78.74\% reported Table~\ref{cifar10quant} to 83.52\%) for NiN with an increase of 2\% in inference attack.
+Similarly, there is an increase of 7\% test accuracy for AlexNet with a very minimal privacy leakage increase of 0.45\%; and increase of 7\% test accuracy at the cost of 2\% inference attack accuracy for VGGNet.
+For heterogeneous knowledge distillation, i.e, combining other architectures (DenseNet169 and ResNet50) with the quantized models from Phase I, we see that the increase in test accuracy is only minimally higher than the homogeneous models for NiN and AlexNet but a significantly higher increase in the inference attack accuracy.
+However, in case of VGGNet, we observe an increase of 4\% additional test accuracy compared to homogeneous knowledge distillation with a minimal decrease in the inference test accuracy.
+The increase in test accuracy is accompanied with a small but acceptable increase in the inference attack accuracy indicating a privacy-utility trade-off.
+Hence, the choice of using homogeneous or heterogeneous knowledge distillation is specific to the architecture and the privacy-utility requirements of the application.
+Compared to the full precision counterparts, we observe that the distilled models show an accuracy degradation of only 3\% for NiN(86.66\% to 83.77\%), 4\% for AlexNet (80.34\% to 76.23\%) and 2\% for VGGNet (88.95\% to 86.52\%).
+
+\subsection{Comparison with Prior Defences}
+\label{eval-defences}
+
+The privacy defences proposed in literature can be categorized into (a) regularization based train-time defences and (b) post-training inference time defence.
+Adversarial Regularization, Differential Privacy and other standard regularization techniques such as L2 and Dropout modify the training of the neural network.
+Our training framework is also part of category (a) where we modify the training of the machine learning model in order to provide acceptable levels of privacy and accuracy.
+We do not consider post-training defences (e.g., MemGuard~\cite{10.1145/3319535.3363201} which adds carefully crafted noise to the target model's output observations to ensure the misclassification of the adversary's attack classifier network) in the comparison as they can be used in addition to the proposed training framework.
+
+Models trained using quatnization+distillation are comparable in test accuracy and resisting membership inference leakage to Adversarial Regularization and Differential Privacy.
+The inference accuracy for NiN is 52.90\% (proposed) compared to 54.09\% (DP) and 51.92\% (AdvReg) and test accuracy of 83.52\% (proposed) compared to 85.11\% (DP) and 83.66\% (AdvReg).
+For AlexNet, the inference accuracy is 51.85\% (proposed) compared to 52.81\% (DP) and 51.83\% (AdvReg) and test accuracy of 73.5\% (proposed) compared to 79.27\% (DP) and 71.02\% (AdvReg).
+For VGGNet, the inference accuracy is 53.17\% (proposed) compared to 52.90\% (DP) and 53.33\% (AdvReg) and test accuracy of 85.8\% (proposed) compared to 84.91\% (DP) and 85.19\% (AdvReg).
+In addition, our proposed models additionally provide efficiency guarantees enabling them to be used for embedded systems.

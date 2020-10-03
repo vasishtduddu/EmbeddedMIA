@@ -1,0 +1,111 @@
+\begin{thebibliography}{10}
+
+\bibitem{235489}
+{XONN}: Xnor-based oblivious deep neural network inference.
+\newblock In {\em {USENIX} Security\/} (2019).
+
+\bibitem{Abadi:2016:DLD:2976749.2978318}
+{\sc Abadi, M., Chu, A., Goodfellow, I., McMahan, H.~B., Mironov, I., Talwar,
+  K., and Zhang, L.}
+\newblock Deep learning with differential privacy.
+\newblock In {\em CCS\/} (2016), pp.~308--318.
+
+\bibitem{article}
+{\sc Canziani, A., Paszke, A., and Culurciello, E.}
+\newblock An analysis of deep neural network models for practical applications.
+
+\bibitem{236216}
+{\sc Carlini, N., Liu, C., Erlingsson, {\'U}., Kos, J., and Song, D.}
+\newblock The secret sharer: Evaluating and testing unintended memorization in
+  neural networks.
+\newblock In {\em USENIX Security\/} (2019), pp.~267--284.
+
+\bibitem{DBLP:journals/corr/HanMD15}
+{\sc Han, S., Mao, H., and Dally, W.~J.}
+\newblock Deep compression: Compressing deep neural network with pruning,
+  trained quantization and huffman coding.
+\newblock In {\em ICLR\/} (2016).
+
+\bibitem{DBLP:journals/corr/HanPNMTECTD16}
+{\sc Han, S., Pool, J., Narang, S., Mao, H., Gong, E., Tang, S., Elsen, E.,
+  Vajda, P., Paluri, M., Tran, J., Catanzaro, B., and Dally, W.~J.}
+\newblock Dsd: Dense-sparse-dense training for deep neural networks.
+\newblock {\em ICLR\/} (2017).
+
+\bibitem{Han:2015:LBW:2969239.2969366}
+{\sc Han, S., Pool, J., Tran, J., and Dally, W.~J.}
+\newblock Learning both weights and connections for efficient neural networks.
+\newblock In {\em NIPS\/} (2015), pp.~1135--1143.
+
+\bibitem{6757323}
+{\sc {Horowitz}, M.}
+\newblock Computing's energy problem (and what we can do about it).
+\newblock In {\em ISSCC\/} (2014), pp.~10--14.
+
+\bibitem{NIPS2016_6573}
+{\sc Hubara, I., Courbariaux, M., Soudry, D., El-Yaniv, R., and Bengio, Y.}
+\newblock Binarized neural networks.
+\newblock In {\em NIPS}. 2016, pp.~4107--4115.
+
+\bibitem{DBLP:journals/corr/IandolaMAHDK16}
+{\sc Iandola, F.~N., Moskewicz, M.~W., Ashraf, K., Han, S., Dally, W.~J., and
+  Keutzer, K.}
+\newblock Squeezenet: Alexnet-level accuracy with 50x fewer parameters and
+  {\textless}1mb model size.
+\newblock {\em CoRR abs/1602.07360\/} (2016).
+
+\bibitem{10.1145/3319535.3363201}
+{\sc Jia, J., Salem, A., Backes, M., Zhang, Y., and Gong, N.~Z.}
+\newblock Memguard: Defending against black-box membership inference attacks
+  via adversarial examples.
+\newblock In {\em CCS\/} (2019), p.~259–274.
+
+\bibitem{DBLP:conf/ccs/NasrSH18}
+{\sc Nasr, M., Shokri, R., and Houmansadr, A.}
+\newblock Machine learning with membership privacy using adversarial
+  regularization.
+\newblock In {\em CCS\/} (2018), pp.~634--646.
+
+\bibitem{DBLP:journals/corr/abs-1812-00910}
+{\sc Nasr, M., Shokri, R., and Houmansadr, A.}
+\newblock Comprehensive privacy analysis of deep learning: Stand-alone and
+  federated learning under passive and active white-box inference attacks.
+\newblock {\em SP\/} (2019).
+
+\bibitem{rastegari2016xnornet}
+{\sc Rastegari, M., Ordonez, V., Redmon, J., and Farhadi, A.}
+\newblock Xnor-net: Imagenet classification using binary convolutional neural
+  networks, 2016.
+
+\bibitem{conf/cvpr/SandlerHZZC18}
+{\sc Sandler, M., Howard, A.~G., Zhu, M., Zhmoginov, A., and Chen, L.-C.}
+\newblock Mobilenetv2: Inverted residuals and linear bottlenecks.
+\newblock In {\em CVPR\/} (2018), pp.~4510--4520.
+
+\bibitem{shokri2017membership}
+{\sc Shokri, R., Stronati, M., Song, C., and Shmatikov, V.}
+\newblock Membership inference attacks against machine learning models.
+\newblock In {\em SP\/} (2017).
+
+\bibitem{10.1145/3133956.3134077}
+{\sc Song, C., Ristenpart, T., and Shmatikov, V.}
+\newblock Machine learning models that remember too much.
+\newblock In {\em CCS\/} (2017), p.~587–601.
+
+\bibitem{8110880}
+{\sc {Sze}, V.}
+\newblock Designing hardware for machine learning: The important role played by
+  circuit designers.
+\newblock {\em IEEE Solid-State Circuits Magazine\/} (2017), 46--54.
+
+\bibitem{8114708}
+{\sc {Sze}, V., {Chen}, Y., {Yang}, T., and {Emer}, J.~S.}
+\newblock Efficient processing of deep neural networks: A tutorial and survey.
+\newblock {\em Proceedings of the IEEE\/} (2017), 2295--2329.
+
+\bibitem{journals/corr/YangCS16a}
+{\sc Yang, T.-J., Chen, Y.-H., and Sze, V.}
+\newblock Designing energy-efficient convolutional neural networks using
+  energy-aware pruning.
+
+\end{thebibliography}

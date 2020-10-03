@@ -1,0 +1,39 @@
+\section{Discussions and Conclusions}
+
+We quantify the privacy leakage using membership inference attacks where the adversary aims to infer whether a given data record was used in the model's training data.
+We first provide a comprehensive privacy and efficiency analysis of state of the art algorithms for improving efficiency: model compression (pruning), quantization and efficient off-the-shelf architectures.
+We show that model compression leaks more information compared to the original (uncompressed) model while off-the-shelf architectures do not provide the best efficiency guarantees.
+We summarize the properties satisfied by each of the approach used for designing NN models for embedded systems in terms of privacy, computation, memory and energy efficiency.
+Here, we mark the attributes which are satisfied with $\cmark$, requires additional hardware optimization as $\smark$ and does not satisfy the property with a $\xmark$.
+
+\begin{table}[!htb]
+\begin{center}
+\renewcommand\arraystretch{1.5}
+\fontsize{6.5pt}{6.5pt}\selectfont
+\begin{tabular}{|l||l|l|l|}
+\hline
+Requirements & Compression & Quantization & Off-the-shelf  \\
+\hline
+Computation Efficiency & $\smark$  & $\cmark$   & $\xmark$ \\
+\hline
+Memory Efficiency &  $\smark$ & $\cmark$   & $\cmark$ \\
+\hline
+Energy Efficiency &  $\smark$   & $\cmark$   & $\xmark$ \\
+\hline
+Privacy &  $\xmark$   & $\cmark$   & $\smark$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Only quantization satisfies all the requirements.}
+%\caption{Comparison of different optimizations for NNs. $\smark$: additional hardware optimization; $\xmark$: requirement not satisfied; $\cmark$: requirement satisfied.}
+\label{tbl:comparison}
+\vspace{-4mm}
+\end{table}
+
+In order to design NNs for embedded devices, quantization (binarization with XNOR computation) is an attractive design choice which not only satisfies the computation, memory and energy efficiency but also provides high resistance against inference attacks.
+On the other hand, model compression without any weight sharing modifications, leaks more training data membership details making it significantly more vulnerable to membership inference attacks. Additionally, it requires hardware support and optimization to achieve better efficiency.
+Off-the-shelf architectures, while provide decent privacy, does not satisfy all aspects of efficiency.
+Consequently, we adopt quantization as a NN design to provide a good three dimensional trade-off between privacy-efficiency-accuracy.
+XNOR-Net models are optimized for privacy and efficiency but at the cost of accuracy.
+We improve the accuracy of the resultant model using knowledge transfer from full precision models (see Appendix).
+Our extensive evaluations of state of the art architectures on CIFAR10 dataset indicates that models trained using the proposed framework provides high resistance against membership inference attacks (comparable to other state of the art defences) but keeping high efficiency.

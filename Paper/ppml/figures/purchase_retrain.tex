@@ -1,0 +1,67 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{backgrounds, positioning, fit}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{patterns}
+
+%% put tikzlibrary below if necessary
+
+% set up externalization
+\usetikzlibrary{external}
+\tikzset{external/system call={latex \tikzexternalcheckshellescape -halt-on-error
+-interaction=batchmode -jobname "\image" "\texsource";
+dvips -o "\image".ps "\image".dvi;
+ps2eps "\image.ps"}}
+\tikzexternalize
+
+
+
+\begin{document}
+
+
+\begin{tikzpicture}
+\begin{axis}[
+%title={(b) Purchase},
+%title style={at={(0.5,0)},anchor=north,yshift=-40, font=\LARGE},
+legend style={font=\small},
+legend pos =  south west,
+line width=1.0pt,
+mark size=1.0pt,
+xlabel near ticks,
+ylabel near ticks,
+ymin=80,
+xmin=0,
+xmax=2,
+legend entries={Retrain Inference Accuracy, Baseline Inference Accuracy},
+ylabel={Membership Inference Accuracy \%},
+xlabel={Sensitivity Threshold},
+grid=major
+]
+\addplot[
+    color=black,
+    solid,
+    mark=*,
+    mark options={solid},
+    smooth
+    ]
+    coordinates {
+    (0,83.06)(0.25,83.30)(0.5,84.31)(0.75,84.20)(1,84.50)(1.25,84.43)(1.5,83.33)(1.75,81.94)(2,80.11)
+      };
+\addplot[
+    color=black,
+    dashed,
+    smooth
+    ]
+    coordinates {
+    (0,83.06)(0.25,83.06)(0.5,83.06)(0.75,83.06)(1,83.06)(1.25,83.06)(1.5,83.06)(1.75,83.06)(2,83.06)
+      };
+
+\end{axis}
+\end{tikzpicture}
+
+
+
+\end{document}
