@@ -15,4 +15,4 @@ Following are the folders and their contents:
 
 ## Credits
 
-The code for binarization has been adapted from https://github.com/itayhubara/BinaryNet.pytorch and https://github.com/jiecaoyu/XNOR-Net-PyTorch.
+The code for binarization has been adapted from https://github.com/itayhubara/BinaryNet.pytorch and https://github.com/jiecaoyu/XNOR-Net-PyTorch. Code for pruning inspired from https://github.com/yangbingjie/DeepCompression-PyTorch and 
