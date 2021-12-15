@@ -1,15 +1,17 @@
-# Gecko: Reconciling Privacy, Accuracy and Efficiency in Embedded Neural Networks
+# Towards Privacy Aware Deep Learning for Embedded Systems (ACM SAC'22, PPML@NeurIPS'20)
 
-Summary: The paper is one of the first works which focusses on membership privacy by design where the goal is to design and train a model to inherently minimize membership privacy risk. We explore the design space of low capacity models and we find binarized models with XNOR operations to provide high privacy but at the cost of poor accuracy. We use knowledge distillation to train to boost the accuracy of the low precision model and find that it is indeed possible to have models with good accuracy, privacy while guaranteeing efficiency for low powered embedded devices.
+This is the code repository for the paper "Towards Privacy Aware Deep Learning for Embedded Systems".
 
 ## Experiments
 
-The experiments for 
+All the code is in Jupyter notebooks for easy reproducibility.
+Following are the folders and their contents:
 
-```bash
-temp
-```
-
+- Quantization: Contains the privacy risk analysis for binarization and XNOR networks.
+- StdArchitectures: Contains the privacy risk analysis for standard deep learning architectures designed for efficiency such as SqueezeNet and MobileNet.
+- Pruning: Contains the privacy risk analysis of pruning the models followed by retraining. "Sparsity" folder provides an alternate implementation in a different ML library.
+- Defences: Contains the code for blackbox defences such as adversarial regularization and differential privacy for comparison with Gecko models.
+- Knowledge Distillation: Contains the code for homogeneous and heterogenous knowledge distillation of quantized models which forms the Gecko training methodology.
 
 ## Credits
 
